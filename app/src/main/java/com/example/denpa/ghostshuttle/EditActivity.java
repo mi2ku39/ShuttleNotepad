@@ -73,7 +73,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         //初期設定系の関数
         findid();
 
-        debaglog.setText("Open Alpha (Version : 0.22)\nNotification : False");
+        debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : False");
 
         Intent ei = getIntent();
         Edit_flag = ei.getBooleanExtra("flag",false);
@@ -93,7 +93,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 Cursor cursor = read_db.query("NOTIFICATION",new String[] {"notifi_year","notifi_month","notifi_day","notifi_hour","notifi_min"},"_ID like '"+String.valueOf(db_id)+"'",null,null,null,null,null);
                 cursor.moveToFirst();
 
-                debaglog.setText("Open Alpha (Version : 0.22)\nNotification : True\n" + cursor.getString(0)+"/"+ cursor.getString(1)+ "/"+cursor.getString(2)+" "+ cursor.getString(3)+":"+ cursor.getString(4));
+                debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : True\n" + cursor.getString(0)+"/"+ cursor.getString(1)+ "/"+cursor.getString(2)+" "+ cursor.getString(3)+":"+ cursor.getString(4));
 
                 year = cursor.getInt(0);
                 month = cursor.getInt(1);
@@ -108,23 +108,23 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 Calendar calendar = Calendar.getInstance();
                 if(calendar.get(Calendar.YEAR) - year > 0){
                     Notifi_flag = false;
-                    debaglog.setText("Open Alpha (Version : 0.22)\nNotification : False");
+                    debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : False");
                 }else if(calendar.get(Calendar.MONTH) - month > 0){
                     Notifi_flag = false;
-                    debaglog.setText("Open Alpha (Version : 0.22)\nNotification : False");
+                    debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : False");
                 }else if(calendar.get(Calendar.DAY_OF_MONTH) - day > 0){
                     Notifi_flag = false;
-                    debaglog.setText("Open Alpha (Version : 0.22)\nNotification : False");
+                    debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : False");
                 }else if(calendar.get(Calendar.HOUR_OF_DAY) - hour > 0){
                     Notifi_flag = false;
-                    debaglog.setText("Open Alpha (Version : 0.22)\nNotification : False");
+                    debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : False");
                 }else if(calendar.get(Calendar.HOUR_OF_DAY) - min >= 0){
                     Notifi_flag = false;
-                    debaglog.setText("Open Alpha (Version : 0.22)\nNotification : False");
+                    debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : False");
                 }
 
             }else{
-                debaglog.setText("Open Alpha (Version : 0.22)\nNotification : False");
+                debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : False");
             }
 
         }
