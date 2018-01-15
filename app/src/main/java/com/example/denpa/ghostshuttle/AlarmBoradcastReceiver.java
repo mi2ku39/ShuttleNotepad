@@ -34,7 +34,7 @@ public class AlarmBoradcastReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setTicker("Ghost Shuttle")
                 .setWhen(System.currentTimeMillis())
-                .setContentTitle("Ghost Shuttle")
+                .setContentTitle("リマインダー")
                 .setContentText(text)
                 // 音、バイブレート、LEDで通知
                 .setDefaults(Notification.DEFAULT_ALL)
