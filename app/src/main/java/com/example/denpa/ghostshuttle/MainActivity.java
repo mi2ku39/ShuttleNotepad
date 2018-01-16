@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             read_db.close();
 
             startActivity(editer);
+            overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
         }
     }
 
@@ -190,8 +191,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onRestart(){
-        super.onRestart();
+    public void onResume(){
+        super.onResume();
         SyncList();
     }
 
