@@ -20,12 +20,16 @@ public class AlarmBoradcastReceiver extends BroadcastReceiver {
     @Override   // データを受信した
     public void onReceive(Context context, Intent intent) {
 
-        int id = intent.getIntExtra("PendingID",0);
+        int id = intent.getIntExtra("ID",-1);
         String text = intent.getStringExtra("Title");
         this.context = context;
 
         Intent intent2 = new Intent(context, MainActivity.class);
-        intent2.putExtra("test","ポプテピピック");
+        intent2.putExtra("Debug","色々渡したぞ。");
+        intent2.putExtra("FLAG",true);
+        intent2.putExtra("ID",id);
+        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -39,6 +43,7 @@ public class AlarmBoradcastReceiver extends BroadcastReceiver {
                 .setDefaults(Notification.DEFAULT_ALL)
                 // 通知をタップした時にMainActivityを立ち上げる
                 .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .build();
         // 通知
         notificationManager.notify( id ,  notification );

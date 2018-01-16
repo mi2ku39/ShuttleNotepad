@@ -494,7 +494,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         calendar.set(Calendar.MILLISECOND, 0);
 
         Intent intent = new Intent(getApplicationContext(), AlarmBoradcastReceiver.class);
-        intent.putExtra("PendingID", this.db_id);
+        intent.putExtra("ID", this.db_id);
         intent.putExtra("Title",notifi_title);
         PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, intent, 0);
 

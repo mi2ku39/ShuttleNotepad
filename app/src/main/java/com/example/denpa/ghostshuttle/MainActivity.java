@@ -52,15 +52,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar =findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        Intent intent = getIntent();
-        Log.d("test","インテントの取得成功");
-        if(intent.getStringExtra("test") == null){
-            Log.d("test","起動");}
-            else{
-            Log.d("test",intent.getStringExtra("test"));
-        }
-
         //findViewByIdをする関数
         findid();
         //setOnClickListenerをする関数
@@ -91,11 +82,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 editer.putExtra("_ID", cursor.getInt(1));
                 editer.putExtra("flag",true);
                 editer.putExtra("Notifi",cursor.getInt(2));
-                startActivity(editer);
 
                 //カーソルのクローズ
                 cursor.close();
                 read_db.close();
+
+                startActivity(editer);
 
             }
         });
@@ -157,6 +149,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listview.setChoiceMode(ListView.CHOICE_MODE_NONE);
         SyncList();
 
+        if(getIntent().getStringExtra("Debug")!=null)
+            Log.d("test",getIntent().getStringExtra("Debug"));
+        else
+            Log.d("test","失敗");
+
+        if(getIntent().getBooleanExtra("FLAG",false)){
+            int id = getIntent().getIntExtra("ID",-1);
+
+            //データベースの取得・クエリ実行
+            SQLiteDatabase read_db = DBHelper.getReadableDatabase();
+            Cursor cursor = read_db.query("memo",new String[] {"filepath","title","notifi_enabled"},"_id = '" + id + "'",null,null,null,null);
+
+            cursor.moveToFirst();
+
+            //EditActivityへ値を渡す処理
+            Intent editer = new Intent(getApplicationContext(),EditActivity.class);
+            editer.putExtra("TITLE", cursor.getString(1));
+            editer.putExtra("MEMO", readFile(cursor.getString(0) + ".gs"));
+            editer.putExtra("_ID", id);
+            editer.putExtra("flag",true);
+            editer.putExtra("Notifi",cursor.getInt(2));
+
+            //カーソルのクローズ
+            cursor.close();
+            read_db.close();
+
+            startActivity(editer);
+        }
     }
 
     @Override
