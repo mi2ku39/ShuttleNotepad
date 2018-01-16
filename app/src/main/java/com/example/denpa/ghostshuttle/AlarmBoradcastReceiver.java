@@ -24,9 +24,8 @@ public class AlarmBoradcastReceiver extends BroadcastReceiver {
         String text = intent.getStringExtra("Title");
         this.context = context;
 
-        Log.d("AlarmBroadcastReceiver","onReceive() pid=" + android.os.Process.myPid());
-
         Intent intent2 = new Intent(context, MainActivity.class);
+        intent2.putExtra("test","ポプテピピック");
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -42,6 +41,6 @@ public class AlarmBoradcastReceiver extends BroadcastReceiver {
                 .setContentIntent(pendingIntent)
                 .build();
         // 通知
-        notificationManager.notify( "Ghost Shuttle" , id ,  notification );
+        notificationManager.notify( id ,  notification );
     }
 }
