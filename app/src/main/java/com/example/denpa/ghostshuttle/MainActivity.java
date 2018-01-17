@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -149,11 +151,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listview.setChoiceMode(ListView.CHOICE_MODE_NONE);
         SyncList();
 
-        if(getIntent().getStringExtra("Debug")!=null)
-            Log.d("test",getIntent().getStringExtra("Debug"));
-        else
-            Log.d("test","失敗");
-
         if(getIntent().getBooleanExtra("FLAG",false)){
             int id = getIntent().getIntExtra("ID",-1);
 
@@ -161,22 +158,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SQLiteDatabase read_db = DBHelper.getReadableDatabase();
             Cursor cursor = read_db.query("memo",new String[] {"filepath","title","notifi_enabled"},"_id = '" + id + "'",null,null,null,null);
 
-            cursor.moveToFirst();
+            if(cursor.getCount() > 0) {
 
-            //EditActivityへ値を渡す処理
-            Intent editer = new Intent(getApplicationContext(),EditActivity.class);
-            editer.putExtra("TITLE", cursor.getString(1));
-            editer.putExtra("MEMO", readFile(cursor.getString(0) + ".gs"));
-            editer.putExtra("_ID", id);
-            editer.putExtra("flag",true);
-            editer.putExtra("Notifi",cursor.getInt(2));
+                cursor.moveToFirst();
+                //EditActivityへ値を渡す処理
+                Intent editer = new Intent(getApplicationContext(), EditActivity.class);
+                editer.putExtra("TITLE", cursor.getString(1));
+                editer.putExtra("MEMO", readFile(cursor.getString(0) + ".gs"));
+                editer.putExtra("_ID", id);
+                editer.putExtra("flag", true);
+                editer.putExtra("Notifi", cursor.getInt(2));
 
-            //カーソルのクローズ
-            cursor.close();
-            read_db.close();
+                //カーソルのクローズ
+                cursor.close();
+                read_db.close();
 
-            startActivity(editer);
-            overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
+                startActivity(editer);
+                overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
+
+            }else
+                Toast.makeText(this, "このメモは削除されています", Toast.LENGTH_SHORT).show();
         }
     }
 
