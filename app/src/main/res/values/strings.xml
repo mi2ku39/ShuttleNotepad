@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Ghost Shuttle</string>
-   <string name="app_version">Version : 0.32\nEarly access : Looking,icons &amp; Animations!</string>
+    <string name="app_version">Version : 0.32\nEarly access : Looking,icons &amp; Animations!</string>
+    <string name="copyright">&#169; GhostServerSTUDIO All Rights Reserved.</string>
+    <string name="portal_site">Ghost Shuttle - ポータルサイト</string>
+    <string name="feedback">フィードバックを送る</string>
+    <string name="delete_title">メモの削除</string>
+    <string name="edit_title">メモの編集</string>
+    <string name="icon_title">アイコンの変更</string>
 </resources>
