@@ -391,9 +391,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         values.put("title", title_raw);
         values.put("filepath",String.valueOf(filepath));
 
-        values.put("icon_img","paper");
-        values.put("icon_color","#ffffff");
-
         if(Notifi_flag == true){
             values.put("notifi_enabled",true);
         }else{
@@ -417,6 +414,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
         } else {
             //else（新規作成されていた場合。）
+
+            values.put("icon_img","paper");
+            values.put("icon_color","#ffffff");
 
             //データベースへ保存する記述
             long db_id = memo_db.insert("memo", null, values);
