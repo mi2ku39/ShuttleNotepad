@@ -8,20 +8,22 @@ import android.graphics.Bitmap;
 
 public class ShuttleListItem {
 
-    private Bitmap list_icon = null;
+    private int list_icon;
     private String list_title = null;
     private String detail = null;
     private String color = null;
+    private long id;
 
-    public ShuttleListItem(Bitmap thumbnail, String title,String detail,String color) {
-        list_icon = thumbnail;
+    public ShuttleListItem(int icon, String title,String detail,String color,long id) {
+        list_icon = icon;
         list_title = title;
         this.detail = detail;
         this.color = color;
+        this.id = id;
     }
 
-    public void setThumbnail(Bitmap thumbnail) {
-        list_icon = thumbnail;
+    public void setThumbnail(int icon) {
+        list_icon = icon;
     }
 
     public void setmTitle(String title) {
@@ -32,7 +34,7 @@ public class ShuttleListItem {
         this.detail = detail;
     }
 
-    public Bitmap getThumbnail() {
+    public int getThumbnail() {
         return list_icon;
     }
 
@@ -47,5 +49,7 @@ public class ShuttleListItem {
     public String getColor(){
         return color;
     }
+
+    public long getId(){return id;}
 
 }

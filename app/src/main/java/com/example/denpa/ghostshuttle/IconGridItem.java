@@ -8,10 +8,11 @@ package com.example.denpa.ghostshuttle;
 public class IconGridItem {
 
     private int icon;
-    private String color = null;
+    private String color = null,icon_name = null;
 
-    public IconGridItem(int icon,String now_color){
+    public IconGridItem(int icon,String icon_name,String now_color){
             this.icon = icon;
+            this.icon_name = icon_name;
             color = now_color;
         }
 
@@ -30,6 +31,10 @@ public class IconGridItem {
     public void setIcon(int icon) {
         this.icon = icon;
     }
+
+    public String getIcon_name(){return icon_name;}
+
+    public void setIcon_name(String name){icon_name = name;}
 
 }
 

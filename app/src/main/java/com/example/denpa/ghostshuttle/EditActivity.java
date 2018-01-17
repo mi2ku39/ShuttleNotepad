@@ -48,7 +48,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     String memo_before;
     String title_before;
-
     String notifi_title;
 
 
@@ -413,7 +412,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         if(Edit_flag){
             //編集Mode
 
-            String where_words= "_id = " + db_id;
+            String where_words = "_id = " + db_id;
             memo_db.update("memo", values, where_words , null);
 
         } else {

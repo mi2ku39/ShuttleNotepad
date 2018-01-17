@@ -12,7 +12,6 @@
         android:layout_height="60dp"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
-        android:src="@drawable/paper"
         android:background="#eee"
         app:riv_border_color="#aaa"
         app:riv_border_width="1dp"

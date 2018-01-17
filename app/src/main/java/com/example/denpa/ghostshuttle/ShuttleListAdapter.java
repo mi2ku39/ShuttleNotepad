@@ -46,7 +46,7 @@ public class ShuttleListAdapter extends ArrayAdapter<ShuttleListItem> {
 
         // サムネイル画像を設定
         RoundedImageView thumbnail = view.findViewById(R.id.icon);
-        thumbnail.setImageBitmap(item.getThumbnail());
+        thumbnail.setImageResource(item.getThumbnail());
         thumbnail.setBackgroundColor(Color.parseColor(item.getColor()));
 
         // タイトルを設定
