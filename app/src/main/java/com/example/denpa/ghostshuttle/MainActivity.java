@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FloatingActionButton fab ;
     ListView listview;
     TextView debugMes;
-    int itemcount = 0;
+    int itemcount = 0,context_potision = 0;
+    String context_title;
 
     CoordinatorLayout cl;
 
@@ -60,14 +62,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setlistener();
 
         listview = (ListView)findViewById(R.id.listview);
-
         //ListViewのアイテムがタップされたときの処理
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 //変数宣言
-                ListView list = (ListView)parent;
                 ShuttleListItem item = (ShuttleListItem)listview.getItemAtPosition(position);
                 String title = item.getmTitle();
 
@@ -94,7 +94,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        registerForContextMenu(listview);
+
+        /* listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
 
@@ -145,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 return true;
             }
-        });
+        }); */
 
         listview.setEmptyView(findViewById(R.id.EmptyText));
         listview.setChoiceMode(ListView.CHOICE_MODE_NONE);
@@ -190,6 +192,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onCreateOptionsMenu(menu);
 
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo Info) {
+        super.onCreateContextMenu(menu, v, Info);
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) Info;
+
+        ShuttleListItem item = (ShuttleListItem)listview.getItemAtPosition(info.position);
+        context_potision = info.position;
+        context_title = item.getmTitle();
+        String title = item.getmTitle();
+        menu.setHeaderTitle(title);
+
+        getMenuInflater().inflate(R.menu.context_menu, menu);
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.delete_memo:
+
+                //ダイアログの表示
+                AlertDialog.Builder alertDlg = new AlertDialog.Builder(MainActivity.this);
+                alertDlg.setTitle(context_title);
+                alertDlg.setMessage("このメモを削除します");
+                alertDlg.setPositiveButton(
+                        "いいよ！",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // OK ボタンクリック処理
+                                ShuttleListItem item = (ShuttleListItem) listview.getItemAtPosition(context_potision);
+                                String title = item.getmTitle();
+
+                                //データベースの取得・クエリ実行
+                                SQLiteDatabase write_db = DBHelper.getReadableDatabase();
+                                Cursor cursor = write_db.query("memo", new String[]{"filepath", "_id"}, "title = '" + title + "'", null, null, null, null);
+
+                                //データベースからの情報を格納する変数のゼロクリア
+                                cursor.moveToFirst();
+                                int db_id = cursor.getInt(1);
+                                String path = cursor.getString(0);
+
+                                write_db.delete("memo", "_id = " + db_id, null);
+                                write_db.delete("NOTIFICATION", "_id = " + db_id, null);
+
+                                deleteFile(path + ".gs");
+
+                                cursor.close();
+                                write_db.close();
+
+                                SyncList();
+                            }
+                        });
+                alertDlg.setNegativeButton(
+                        "ダメです",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Cancel ボタンクリック処理
+                            }
+                        });
+
+                // 表示
+                alertDlg.create().show();
+                break;
+
+
+        }
+        return false;
+    }
+
 
     @Override
     public void onResume(){

@@ -7,4 +7,5 @@
     <string name="delete_title">メモの削除</string>
     <string name="edit_title">メモの編集</string>
     <string name="icon_title">アイコンの変更</string>
+    <string name="bgc_title">背景色</string>
 </resources>
