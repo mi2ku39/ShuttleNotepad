@@ -11,14 +11,13 @@ public class ShuttleListItem {
     private Bitmap list_icon = null;
     private String list_title = null;
     private String detail = null;
-    private int color;
+    private String color = null;
 
-    public ShuttleListItem() {}
-
-    public ShuttleListItem(Bitmap thumbnail, String title,String detail) {
+    public ShuttleListItem(Bitmap thumbnail, String title,String detail,String color) {
         list_icon = thumbnail;
         list_title = title;
         this.detail = detail;
+        this.color = color;
     }
 
     public void setThumbnail(Bitmap thumbnail) {
@@ -37,10 +36,16 @@ public class ShuttleListItem {
         return list_icon;
     }
 
-    public String getmTitle() { return list_title; }
+    public String getmTitle() {
+        return list_title;
+    }
 
     public String getDetail(){
         return detail;
+    }
+
+    public String getColor(){
+        return color;
     }
 
 }

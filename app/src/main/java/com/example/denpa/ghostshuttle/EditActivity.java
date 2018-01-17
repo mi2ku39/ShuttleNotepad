@@ -392,6 +392,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         values.put("title", title_raw);
         values.put("filepath",String.valueOf(filepath));
 
+        values.put("icon_img","paper");
+        values.put("icon_color","#ffffff");
+
         if(Notifi_flag == true){
             values.put("notifi_enabled",true);
         }else{

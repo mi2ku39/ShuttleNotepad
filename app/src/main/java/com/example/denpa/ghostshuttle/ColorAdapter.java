@@ -5,56 +5,48 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.util.List;
 
 /**
  * Created by denpa on 2018/01/17.
  */
 
-public class ColorAdapter extends BaseAdapter {
+public class ColorAdapter extends ArrayAdapter<ColorGridItem> {
 
-    private Context mContext;
-    private LayoutInflater mLayoutInflater;
-    private String[] iconArray = {"#E0E0E0","#757575","#E57373","#4FC3F7","#81C784","#FFF176","#FF8A65"};
-    private static class ViewHolder {
-        public RoundedImageView ImageView;
+    private int mResource;
+    private List<ColorGridItem> mItems;
+    private LayoutInflater mInflater;
+
+    public ColorAdapter(Context context, int resource, List<ColorGridItem> items) {
+        super(context, resource, items);
+        mResource = resource;
+        mItems = items;
+        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public ColorAdapter(Context context) {
-        mContext = context;
-        mLayoutInflater = LayoutInflater.from(context);
-    }
-
-    public int getCount() {
-        return iconArray.length;
-    }
-
-    public Object getItem(int position) {
-        return iconArray[position];
-    }
-
-    public long getItemId(int position) {
-        return position;
-    }
-
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        View view;
 
-        ColorAdapter.ViewHolder holder;
-        if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.icon_item, null);
-            holder = new ColorAdapter.ViewHolder();
-            holder.ImageView = convertView.findViewById(R.id.icon);
-            convertView.setTag(holder);
-        } else {
-            holder = (ColorAdapter.ViewHolder)convertView.getTag();
+        if (convertView != null) {
+            view = convertView;
+        }
+        else {
+            view = mInflater.inflate(mResource, null);
         }
 
-        holder.ImageView.setBackgroundColor(Color.parseColor(iconArray[position]));
+        // リストビューに表示する要素を取得
+        ColorGridItem item = mItems.get(position);
+        RoundedImageView thumbnail = view.findViewById(R.id.icon);
+        thumbnail.setBackgroundColor(Color.parseColor(item.getColor()));
 
-        return convertView;
+        return view;
     }
 
 }

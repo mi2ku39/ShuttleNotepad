@@ -46,14 +46,14 @@ public class DeleteActivity extends AppCompatActivity {
         setTitle("まとめて削除");
 
         ArrayList<String> arraylist = new ArrayList<>();
-        listview = (ListView)findViewById(R.id.listview);
+        listview = findViewById(R.id.listview);
         adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_multiple_choice,arraylist);
         listview.setAdapter(adapter);
 
         Intent ei = getIntent();
         itemcount = ei.getIntExtra("item",0);
 
-        debug=(TextView)findViewById(R.id.textView6);
+        debug = findViewById(R.id.textView6);
 
         SyncList();
 

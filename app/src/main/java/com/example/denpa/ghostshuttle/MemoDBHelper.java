@@ -32,6 +32,9 @@ public class MemoDBHelper extends SQLiteOpenHelper {
     public static final String NOTIFI_HOUR ="notifi_hour";
     public static final String NOTIFI_MIN ="notifi_min";
 
+    public static final String icon_img = "icon_img";
+    public static final String icon_color ="icon_color";
+
     //更新日時
     public static final String DATE_MODIFIED = "data_modified";
 
@@ -45,7 +48,7 @@ public class MemoDBHelper extends SQLiteOpenHelper {
         //データベースのクリエイト文
         String createTable = "CREATE TABLE " + TABLE_NAME + " ( "+ _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TITLE + " TEXT UNIQUE, "
                 + FILEPATH +" TEXT UNIQUE, "+ NOTIFI_ENABLED + " BOOLEAN NOT NULL DEFAULT FALSE, "
-                + DATE_MODIFIED + " TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
+                + DATE_MODIFIED + " TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," + icon_img + " TEXT NOT NULL," + icon_color + " TEXT NOT NULL)";
 
         //SQL文実行
         db.execSQL(createTable);

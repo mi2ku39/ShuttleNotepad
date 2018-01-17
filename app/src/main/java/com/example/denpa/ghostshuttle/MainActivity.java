@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //setOnClickListenerをする関数
         setlistener();
 
-        listview = (ListView)findViewById(R.id.listview);
+        listview = findViewById(R.id.listview);
         //ListViewのアイテムがタップされたときの処理
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         SQLiteDatabase read_db = DBHelper.getReadableDatabase();
 
-        Cursor cursor = read_db.query("memo",new String[] {"title","data_modified"},null,null,null,null,"data_modified desc" );
+        Cursor cursor = read_db.query("memo",new String[] {"title","data_modified","icon_img","icon_color"},null,null,null,null,"data_modified desc" );
         cursor.moveToFirst();
 
         itemcount = cursor.getCount();
@@ -253,8 +253,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ArrayList<ShuttleListItem> listItems = new ArrayList<>();
         for(int i=0;i<cursor.getCount();i++){
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.paper);
-            ShuttleListItem item = new ShuttleListItem(bmp,cursor.getString(0),"作成日時(UTC) : " + cursor.getString(1));
+            //Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.paper);
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(cursor.getString(2), "drawable",getPackageName()));
+            ShuttleListItem item = new ShuttleListItem(bmp,cursor.getString(0),"作成日時(UTC) : " + cursor.getString(1),cursor.getString(3));
             listItems.add(item);
             cursor.moveToNext();
         }

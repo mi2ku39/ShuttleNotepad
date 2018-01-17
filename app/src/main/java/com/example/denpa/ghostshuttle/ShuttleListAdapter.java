@@ -25,7 +25,6 @@ public class ShuttleListAdapter extends ArrayAdapter<ShuttleListItem> {
 
     public ShuttleListAdapter(Context context, int resource, List<ShuttleListItem> items) {
         super(context, resource, items);
-
         mResource = resource;
         mItems = items;
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -48,13 +47,13 @@ public class ShuttleListAdapter extends ArrayAdapter<ShuttleListItem> {
         // サムネイル画像を設定
         RoundedImageView thumbnail = view.findViewById(R.id.icon);
         thumbnail.setImageBitmap(item.getThumbnail());
-        thumbnail.setBackgroundColor(Color.parseColor("#FF0000"));
+        thumbnail.setBackgroundColor(Color.parseColor(item.getColor()));
 
         // タイトルを設定
-        TextView title = (TextView)view.findViewById(R.id.title);
+        TextView title = view.findViewById(R.id.title);
         title.setText(item.getmTitle());
 
-        TextView detail = (TextView)view.findViewById(R.id.detail);
+        TextView detail = view.findViewById(R.id.detail);
         detail.setText(item.getDetail());
 
         return view;
