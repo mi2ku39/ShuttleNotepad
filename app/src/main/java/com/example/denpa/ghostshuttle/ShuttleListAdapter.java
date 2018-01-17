@@ -1,6 +1,7 @@
 package com.example.denpa.ghostshuttle;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class ShuttleListAdapter extends ArrayAdapter<ShuttleListItem> {
         // サムネイル画像を設定
         RoundedImageView thumbnail = view.findViewById(R.id.icon);
         thumbnail.setImageBitmap(item.getThumbnail());
+        thumbnail.setBackgroundColor(Color.parseColor("#FF0000"));
 
         // タイトルを設定
         TextView title = (TextView)view.findViewById(R.id.title);

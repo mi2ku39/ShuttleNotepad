@@ -94,63 +94,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        registerForContextMenu(listview);
-
-        /* listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
-
-                //ダイアログの表示
-                AlertDialog.Builder alertDlg = new AlertDialog.Builder(MainActivity.this);
-                alertDlg.setTitle("メモの削除");
-                alertDlg.setMessage("このメモ消しちゃうよ？");
-                alertDlg.setPositiveButton(
-                        "いいよ！",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // OK ボタンクリック処理
-                                ListView list = (ListView)parent;
-                                ShuttleListItem item = (ShuttleListItem)listview.getItemAtPosition(position);
-                                String msg = item.getmTitle();
-
-                                //データベースの取得・クエリ実行
-                                SQLiteDatabase write_db = DBHelper.getReadableDatabase();
-                                Cursor cursor = write_db.query("memo",new String[] {"filepath","_id"},"title = '" + msg + "'",null,null,null,null);
-
-                                //データベースからの情報を格納する変数のゼロクリア
-                                cursor.moveToFirst();
-                                int db_id = cursor.getInt(1);
-                                String path = cursor.getString(0);
-
-                                write_db.delete("memo", "_id = " + db_id, null);
-                                write_db.delete("NOTIFICATION","_id = " + db_id,null);
-
-                                deleteFile( path + ".gs" );
-
-                                cursor.close();
-                                write_db.close();
-
-                                SyncList();
-
-                            }
-                        });
-                alertDlg.setNegativeButton(
-                        "ダメです",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Cancel ボタンクリック処理
-                            }
-                        });
-
-                // 表示
-                alertDlg.create().show();
-
-                return true;
-            }
-        }); */
-
         listview.setEmptyView(findViewById(R.id.EmptyText));
         listview.setChoiceMode(ListView.CHOICE_MODE_NONE);
+        registerForContextMenu(listview);
         SyncList();
 
         if(getIntent().getBooleanExtra("FLAG",false)){
@@ -259,6 +205,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 alertDlg.create().show();
                 break;
 
+            case R.id.change_icon:
+
+                Intent editer = new Intent(getApplicationContext(), iconActivity.class);
+
+                startActivity(editer);
+                overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
+
 
         }
         return false;
@@ -304,7 +257,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ShuttleListItem item = new ShuttleListItem(bmp,cursor.getString(0),"作成日時(UTC) : " + cursor.getString(1));
             listItems.add(item);
             cursor.moveToNext();
-
         }
 
         ShuttleListAdapter adapter = new ShuttleListAdapter(this, R.layout.shuttle_listitem, listItems);

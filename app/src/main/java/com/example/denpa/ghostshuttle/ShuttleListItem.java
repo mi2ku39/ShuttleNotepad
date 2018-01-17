@@ -11,6 +11,7 @@ public class ShuttleListItem {
     private Bitmap list_icon = null;
     private String list_title = null;
     private String detail = null;
+    private int color;
 
     public ShuttleListItem() {}
 

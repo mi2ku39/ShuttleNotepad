@@ -60,7 +60,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_edit);
 
         //画面上部の「戻るボタン」設定
-        Toolbar toolbar =(Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar =findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //画面上部のタイトル設定
