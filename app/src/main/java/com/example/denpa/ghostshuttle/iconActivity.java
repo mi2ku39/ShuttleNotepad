@@ -51,7 +51,7 @@ public class iconActivity extends AppCompatActivity {
 
         icon_grid = findViewById(R.id.grid_icon);
         bgc_grid = findViewById(R.id.grid_bgc);
-        String color[] = {"#E0E0E0","#757575","#E57373","#4FC3F7","#81C784","#FFF176","#FF8A65"};
+        String color[] = {"#ffffff","#E0E0E0","#9E9E9E","#ef9a9a","#90CAF9","#A5D6A7","#FFF59D","#FFAB91"};
         ArrayList<ColorGridItem> listItems = new ArrayList<>();
 
         for(int i=0;i<color.length;i++){
