@@ -113,7 +113,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 }else if(calendar.get(Calendar.HOUR_OF_DAY) - hour > 0){
                     Notifi_flag = false;
                     debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : False");
-                }else if(calendar.get(Calendar.HOUR_OF_DAY) - min >= 0){
+                }else if(calendar.get(Calendar.MINUTE) - min >= 0){
                     Notifi_flag = false;
                     debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : False");
                 }
@@ -410,7 +410,25 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             //編集Mode
 
             String where_words = "_id = " + db_id;
-            memo_db.update("memo", values, where_words , null);
+
+            while(true) {
+                try {
+                    memo_db.update("memo", values, where_words, null);
+                    break;
+                } catch (Exception e) {
+                    if (title_not) {
+                        //データベースへ追加に失敗したときの処理
+                        ConstraintLayout cl = findViewById(R.id.cl);
+                        Snackbar.make(cl, "データベースへ追加失敗 : タイトルが他のメモと重複しています。", Snackbar.LENGTH_SHORT).show();
+                        break;
+                    } else {
+                            count++;
+                            title_raw = "タイトルのないメモ(" + count + ")";
+                            values.put("title", title_raw);
+                        title.setText(title_raw);
+                    }
+                }
+            }
 
         } else {
             //else（新規作成されていた場合。）
@@ -495,7 +513,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
-        Intent intent = new Intent(getApplicationContext(), AlarmBoradcastReceiver.class);
+        Intent intent = new Intent(getApplicationContext(), AlarmBroadcastReceiver.class);
         intent.putExtra("ID", this.db_id);
         intent.putExtra("Title",notifi_title);
         PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, intent, 0);
@@ -510,7 +528,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void Notify_cancel(){
-        Intent indent = new Intent(getApplicationContext(), AlarmBoradcastReceiver.class);
+        Intent indent = new Intent(getApplicationContext(), AlarmBroadcastReceiver.class);
         PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, indent, 0);
 
         // アラームを解除する

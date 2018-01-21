@@ -13,7 +13,7 @@ import android.util.Log;
  * Created by denpa on 2017/09/06.
  */
 
-public class AlarmBoradcastReceiver extends BroadcastReceiver {
+public class AlarmBroadcastReceiver extends BroadcastReceiver {
 
     Context context;
 
