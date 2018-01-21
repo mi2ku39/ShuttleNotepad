@@ -16,7 +16,11 @@
     <string name="osl">オープンソースライセンス</string>
     <string name="toast_delete">このメモは削除されています</string>
     <string name="close">閉じる</string>
-    <string name="delete_question">このメモを削除します</string>
+    <string name="delete_question">このメモを削除してよろしいですか？</string>
+    <string name="leave_question">メモを保存しますか？</string>
+    <string name="cancel">キャンセル</string>
+    <string name="disable">解除</string>
+    <string name="notify_disable">通知を解除してよろしいですか？</string>
 
     <!-- オープンソースライセンス -->
     <!-- RoundedImageView -->

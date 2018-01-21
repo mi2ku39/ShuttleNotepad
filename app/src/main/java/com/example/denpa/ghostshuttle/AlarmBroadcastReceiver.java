@@ -15,17 +15,13 @@ import android.util.Log;
 
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
 
-    Context context;
-
     @Override   // データを受信した
     public void onReceive(Context context, Intent intent) {
 
         int id = intent.getIntExtra("ID",-1);
         String text = intent.getStringExtra("Title");
-        this.context = context;
 
         Intent intent2 = new Intent(context, MainActivity.class);
-        intent2.putExtra("Debug","色々渡したぞ。");
         intent2.putExtra("FLAG",true);
         intent2.putExtra("ID",id);
         intent2.setFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
@@ -33,7 +29,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new NotificationCompat.Builder(context)
+        Notification notification = new Notification.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setTicker("Ghost Shuttle")
                 .setWhen(System.currentTimeMillis())
@@ -46,6 +42,6 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .build();
         // 通知
-        notificationManager.notify( id ,  notification );
+        notificationManager.notify("Remind",id,notification);
     }
 }

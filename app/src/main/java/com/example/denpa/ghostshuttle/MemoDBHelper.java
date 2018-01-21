@@ -47,7 +47,7 @@ public class MemoDBHelper extends SQLiteOpenHelper {
 
         //データベースのクリエイト文
         String createTable = "CREATE TABLE " + TABLE_NAME + " ( "+ _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TITLE + " TEXT UNIQUE, "
-                + FILEPATH +" TEXT UNIQUE, "+ NOTIFI_ENABLED + " BOOLEAN NOT NULL DEFAULT FALSE, "
+                + FILEPATH +" TEXT, "+ NOTIFI_ENABLED + " BOOLEAN NOT NULL DEFAULT FALSE, "
                 + DATE_MODIFIED + " TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," + icon_img + " TEXT NOT NULL," + icon_color + " TEXT NOT NULL)";
 
         //SQL文実行

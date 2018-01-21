@@ -48,7 +48,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     String memo_before;
     String title_before;
-    String notifi_title;
 
 
     MemoDBHelper DBHelper = new MemoDBHelper(this);
@@ -137,9 +136,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     //findViewByIdする関数
     private void findid(){
-        title=(EditText)findViewById(R.id.editText);
-        editmemo=(EditText)findViewById(R.id.editmemo);
-        debaglog = (TextView)findViewById(R.id.textView5);
+        title = findViewById(R.id.editText);
+        editmemo = findViewById(R.id.editmemo);
+        debaglog = findViewById(R.id.textView5);
     }
 
     @Override
@@ -232,7 +231,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
-        boolean result = true;
+        boolean result;
         switch(id){
 
             //「戻るボタン」のクリックイベント
@@ -267,9 +266,22 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
                 if(Notifi_flag){
 
-                    Notifi_flag = false;
-
-                    invalidateOptionsMenu();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getResources().getString(R.string.notify_disable));
+                    builder.setPositiveButton(getResources().getString(R.string.disable), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // OK ボタンクリック処理
+                            Notifi_flag = false;
+                            invalidateOptionsMenu();
+                        }
+                    });
+                    builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Cancel ボタンクリック処理
+                        }
+                    });
+                    // 表示
+                    builder.create().show();
 
                 }else{
                     // アラートダイアログ を生成
@@ -300,18 +312,17 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
                     // 表示
-                    builder.create();
-                    builder.show();
+                    builder.create().show();
                 }
 
                 break;
 
             default:
 
-                result = super.onOptionsItemSelected(item);
+                break;
 
         }
-
+        result = super.onOptionsItemSelected(item);
         return result;
 
     }
@@ -363,7 +374,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private boolean db_save(){
+    private boolean db_save() {
         //データベースオブジェクトの取得（書き込み可能）
         SQLiteDatabase memo_db = DBHelper.getWritableDatabase();
 
@@ -376,42 +387,40 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         Random rand = new Random();
         long filepath = rand.nextLong();
 
-        if(title.length()!=0){
+        if (title.length() != 0) {
             // タイトルの取得
             title_raw = title.getText().toString();
-            notifi_title = title.getText().toString();
-        }else{
+        } else {
             title_raw = "タイトルのないメモ";
-            notifi_title = title_raw;
             title_not = false;
         }
 
         //データベースに保存するレコードの用意
         ContentValues values = new ContentValues();
         values.put("title", title_raw);
-        values.put("filepath",String.valueOf(filepath));
+        values.put("filepath", String.valueOf(filepath));
 
-        if(Notifi_flag == true){
-            values.put("notifi_enabled",true);
-        }else{
-            values.put("notifi_enabled",false);
+        if (Notifi_flag == true) {
+            values.put("notifi_enabled", true);
+        } else {
+            values.put("notifi_enabled", false);
         }
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        String timestamp = String.format("%d-%02d-%02d %02d:%02d:%02d",calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH) + 1,calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),calendar.get(Calendar.SECOND));
+        String timestamp = String.format("%d-%02d-%02d %02d:%02d:%02d", calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
 
         values.put("data_modified", timestamp);
 
         //編集か、新規作成かの分岐
         //true=編集 false=新規作成
-        if(Edit_flag){
+        if (Edit_flag) {
             //編集Mode
 
             String where_words = "_id = " + db_id;
 
-            while(true) {
+            while (true) {
                 try {
                     memo_db.update("memo", values, where_words, null);
                     break;
@@ -420,11 +429,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                         //データベースへ追加に失敗したときの処理
                         ConstraintLayout cl = findViewById(R.id.cl);
                         Snackbar.make(cl, "データベースへ追加失敗 : タイトルが他のメモと重複しています。", Snackbar.LENGTH_SHORT).show();
-                        break;
+                        return false;
                     } else {
-                            count++;
-                            title_raw = "タイトルのないメモ(" + count + ")";
-                            values.put("title", title_raw);
+                        count++;
+                        title_raw = "タイトルのないメモ(" + count + ")";
+                        values.put("title", title_raw);
                         title.setText(title_raw);
                     }
                 }
@@ -433,54 +442,33 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             //else（新規作成されていた場合。）
 
-            values.put("icon_img","paper");
-            values.put("icon_color","#ffffff");
+            values.put("icon_img", "paper");
+            values.put("icon_color", "#ffffff");
 
             //データベースへ保存する記述
             long db_id = memo_db.insert("memo", null, values);
 
             if (db_id == -1) {
-                if(title_not){
-
-                //データベースへ追加に失敗したときの処理
-                ConstraintLayout cl =findViewById(R.id.cl);
-                Snackbar.make(cl, "データベースへ追加失敗 : タイトルが他のメモと重複しています。", Snackbar.LENGTH_SHORT).show();
-                return false;
-
-                }else{
-                    while(db_id == -1){
+                if (title_not) {
+                    //データベースへ追加に失敗したときの処理
+                    ConstraintLayout cl = findViewById(R.id.cl);
+                    Snackbar.make(cl, "データベースへ追加失敗 : タイトルが他のメモと重複しています。", Snackbar.LENGTH_SHORT).show();
+                    return false;
+                } else {
+                    while (db_id == -1) {
                         count++;
-                        title_raw = "タイトルのないメモ("+count+")";
-
-                        notifi_title = title_raw;
+                        title_raw = "タイトルのないメモ(" + count + ")";
                         values.put("title", title_raw);
-
                         filepath = rand.nextLong();
                         values.put("filepath", String.valueOf(filepath));
-
                         db_id = memo_db.insert("memo", null, values);
                     }
-
-                    saveFile(String.valueOf(filepath),memo_raw);
-
                     title.setText(title_raw);
-
-                    this.db_id = (int)db_id;
-                    return true;
+                    this.db_id = (int) db_id;
                 }
             }
-
-            this.db_id = (int)db_id;
-
         }
-
-        //データベースのclose
-
-        memo_db.close();
-        saveFile(String.valueOf(filepath),memo_raw);
-
-        title.setText(title_raw);
-
+        saveFile(String.valueOf(filepath), memo_raw);
         return true;
     }
 
@@ -515,7 +503,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = new Intent(getApplicationContext(), AlarmBroadcastReceiver.class);
         intent.putExtra("ID", this.db_id);
-        intent.putExtra("Title",notifi_title);
+        intent.putExtra("Title",title.getText().toString());
         PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, intent, 0);
 
         // アラームをセットする
@@ -528,8 +516,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void Notify_cancel(){
-        Intent indent = new Intent(getApplicationContext(), AlarmBroadcastReceiver.class);
-        PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, indent, 0);
+        Intent intent = new Intent(getApplicationContext(), AlarmBroadcastReceiver.class);
+        PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, intent, 0);
 
         // アラームを解除する
         AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
