@@ -219,6 +219,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(Icon);
                 overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
 
+                break;
+
 
         }
         return false;
