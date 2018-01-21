@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar =findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setTitle(getResources().getString(R.string.app_name));
+
         //findViewByIdをする関数
         findid();
         //setOnClickListenerをする関数
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listview.setEmptyView(findViewById(R.id.EmptyText));
         listview.setChoiceMode(ListView.CHOICE_MODE_NONE);
         registerForContextMenu(listview);
+
         SyncList();
 
         if(getIntent().getBooleanExtra("FLAG",false)){
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
 
             }else
-                Toast.makeText(this, "このメモは削除されています", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_delete), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -165,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //ダイアログの表示
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(MainActivity.this);
                 alertDlg.setTitle(context_title);
-                alertDlg.setMessage("このメモを削除します");
+                alertDlg.setMessage(getResources().getString(R.string.delete_question));
                 alertDlg.setPositiveButton(
                         "いいよ！",
                         new DialogInterface.OnClickListener() {
@@ -299,6 +302,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     Snackbar.make(cl, "削除する項目がありません。", Snackbar.LENGTH_SHORT).show();
                 }
+                break;
+
+            case R.id.settings:
+
                 break;
 
             default:

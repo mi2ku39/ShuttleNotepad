@@ -4,14 +4,14 @@
 
     <item
         android:id="@+id/settings"
-        android:title="設定" />
+        android:title="@string/setting_title" />
 
     <item
-        android:title="まとめて削除"
-        android:id="@+id/mode"/>
+        android:id="@+id/mode"
+        android:title="@string/choose_delete" />
 
     <item
         android:id="@+id/detail"
-        android:title="このアプリについて" />
+        android:title="@string/app_details" />
 
 </menu>

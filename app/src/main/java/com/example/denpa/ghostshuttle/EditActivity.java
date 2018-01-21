@@ -63,7 +63,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //画面上部のタイトル設定
-        setTitle("メモの編集");
+        setTitle(getResources().getString(R.string.edit_title));
 
         //初期設定系の関数
         findid();

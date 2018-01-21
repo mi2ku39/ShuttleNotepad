@@ -15,29 +15,36 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
+
             <!-- android:screenOrientation="portrait" -->
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".EditActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AppDetail"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name=".AlarmBoradcastReceiver"
             android:process=":remote" />
 
-        <activity android:name=".DeleteActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".iconActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".DeleteActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".iconActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".PreferenceActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" />
     </application>
 
 </manifest>
