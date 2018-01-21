@@ -49,7 +49,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     String memo_before;
     String title_before;
 
-
     MemoDBHelper DBHelper = new MemoDBHelper(this);
 
     @Override
