@@ -342,7 +342,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else{
             ArrayList<SimpleListItem> listItems = new ArrayList<>();
             for(int i=0;i<cursor.getCount();i++){
-                int icon = getResources().getIdentifier(cursor.getString(2), "drawable",getPackageName());
                 SimpleListItem item = new SimpleListItem(cursor.getString(0),cursor.getInt(4));
                 listItems.add(item);
                 cursor.moveToNext();

@@ -8,9 +8,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -120,6 +122,14 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : False");
             }
 
+        }else{
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+            if(pref.getString("title_template","").length() == 0){}else{
+                title.setText(pref.getString("title_template",""));
+            }
+            if(pref.getString("memo_template","").length() == 0){}else{
+                editmemo.setText(pref.getString("memo_template",""));
+            }
         }
 
         search_before();
@@ -390,7 +400,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             // タイトルの取得
             title_raw = title.getText().toString();
         } else {
-            title_raw = "タイトルのないメモ";
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+            title_raw = pref.getString("default_title","");
             title_not = false;
         }
 
@@ -431,7 +442,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                         return false;
                     } else {
                         count++;
-                        title_raw = "タイトルのないメモ(" + count + ")";
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+                        title_raw =  pref.getString("default_title","") + "(" + count + ")";
                         values.put("title", title_raw);
                         title.setText(title_raw);
                     }
@@ -456,7 +468,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     while (db_id == -1) {
                         count++;
-                        title_raw = "タイトルのないメモ(" + count + ")";
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+                        title_raw = pref.getString("default_title","") + "(" + count + ")";
                         values.put("title", title_raw);
                         filepath = rand.nextLong();
                         values.put("filepath", String.valueOf(filepath));
