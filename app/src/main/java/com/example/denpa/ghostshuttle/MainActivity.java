@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_main);
 
+        PreferenceManager.getDefaultSharedPreferences(this);
+        PreferenceManager.setDefaultValues(this, R.xml.preference_setting, true);
+
         Toolbar toolbar =findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

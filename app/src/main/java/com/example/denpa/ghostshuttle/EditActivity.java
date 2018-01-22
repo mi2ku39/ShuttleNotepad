@@ -18,6 +18,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -85,9 +86,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
                 //データベースの取得・クエリ実行
                 SQLiteDatabase read_db = DBHelper.getReadableDatabase();
-                Cursor cursor = read_db.query("NOTIFICATION",new String[] {"notifi_year","notifi_month","notifi_day","notifi_hour","notifi_min"},"_ID like '"+String.valueOf(db_id)+"'",null,null,null,null,null);
+                Cursor cursor = read_db.query("NOTIFICATION",new String[] {"notifi_year","notifi_month","notifi_day","notifi_hour","notifi_min"},"_id = '" + db_id + "'",null,null,null,null,null);
                 cursor.moveToFirst();
-
+                Log.d("test",String.valueOf(db_id));
                 debaglog.setText(getResources().getString(R.string.app_version)+"\nNotification : True\n" + cursor.getString(0)+"/"+ cursor.getString(1)+ "/"+cursor.getString(2)+" "+ cursor.getString(3)+":"+ cursor.getString(4));
 
                 year = cursor.getInt(0);
@@ -476,9 +477,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                         db_id = memo_db.insert("memo", null, values);
                     }
                     title.setText(title_raw);
-                    this.db_id = (int) db_id;
                 }
             }
+
+            Log.d("test",String.valueOf(db_id));
+            this.db_id = (int) db_id;
         }
         saveFile(String.valueOf(filepath), memo_raw);
         return true;
@@ -492,7 +495,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         //データベースに保存するレコードの用意
         ContentValues values = new ContentValues();
 
-        values.put("_ID",this.db_id);
+        values.put("_id",this.db_id);
         values.put("notifi_year", this.year);
         values.put("notifi_month", this.month);
         values.put("notifi_day", this.day);
@@ -500,7 +503,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         values.put("notifi_min", this.min);
 
         if(Notifi_db.insert("NOTIFICATION", null, values) == -1){
-            String where_words= "_ID = " + this.db_id;
+            String where_words= "_id = " + this.db_id;
             Notifi_db.update("NOTIFICATION", values, where_words , null);
         }
 
@@ -515,7 +518,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = new Intent(getApplicationContext(), AlarmBroadcastReceiver.class);
         intent.putExtra("ID", this.db_id);
-        intent.putExtra("Title",title.getText().toString());
+        intent.putExtra("title",title.getText().toString());
         PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, intent, 0);
 
         // アラームをセットする

@@ -19,7 +19,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         int id = intent.getIntExtra("ID",-1);
-        String text = intent.getStringExtra("Title");
+        String text = intent.getStringExtra("title");
 
         Intent intent2 = new Intent(context, MainActivity.class);
         intent2.putExtra("FLAG",true);
