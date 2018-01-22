@@ -12,21 +12,27 @@
         android:roundIcon="@mipmap/gs_logo_color"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditActivity"/>
+        <activity android:name=".EditActivity" />
         <activity android:name=".AppDetail" />
-        <receiver android:name=".AlarmBroadcastReceiver" android:process=":remote" />
+
+        <receiver
+            android:name=".AlarmBroadcastReceiver"
+            android:process=":remote" />
+
         <activity android:name=".DeleteActivity" />
-        <activity android:name=".iconActivity"/>
+        <activity android:name=".iconActivity" />
         <!--
             縦固定
-            android:screenOrientation="portrait" -->
+            android:screenOrientation="portrait"
+        -->
+        <activity android:name=".OSLActivity"></activity>
     </application>
 
 </manifest>
