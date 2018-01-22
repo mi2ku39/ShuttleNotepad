@@ -212,9 +212,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.change_icon:
                 ShuttleListItem list_item = (ShuttleListItem) listview.getItemAtPosition(context_potision);
 
+                Log.d("test",String.valueOf(list_item.getId()));
+
                 Intent Icon = new Intent(getApplicationContext(), iconActivity.class);
                 Icon.putExtra("memo_id",list_item.getId());
                 Icon.putExtra("memo_title",list_item.getmTitle());
+
+                Log.d("TEST",String.valueOf(list_item.getId()));
+
+                SQLiteDatabase read_db = DBHelper.getReadableDatabase();
+                Cursor cursor = read_db.query("memo",new String[] {"icon_img","icon_color"},"_id = '" + list_item.getId() + "'",null,null,null,null );
+                cursor.moveToFirst();
+                Icon.putExtra("icon_img",cursor.getString(0));
+                Icon.putExtra("icon_color",cursor.getString(1));
+
+                cursor.close();
+                read_db.close();
 
                 startActivity(Icon);
                 overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
@@ -263,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayList<ShuttleListItem> listItems = new ArrayList<>();
         for(int i=0;i<cursor.getCount();i++){
             int icon = getResources().getIdentifier(cursor.getString(2), "drawable",getPackageName());
-            ShuttleListItem item = new ShuttleListItem(icon,cursor.getString(0),"作成日時(UTC) : " + cursor.getString(1),cursor.getString(3),cursor.getLong(4));
+            ShuttleListItem item = new ShuttleListItem(icon,cursor.getString(0),"作成日時(UTC) : " + cursor.getString(1),cursor.getString(3),cursor.getInt(4));
             listItems.add(item);
             cursor.moveToNext();
         }

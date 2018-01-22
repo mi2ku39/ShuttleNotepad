@@ -45,8 +45,15 @@ public class GridAdapter extends ArrayAdapter<IconGridItem> {
         // リストビューに表示する要素を取得
         IconGridItem item = mItems.get(position);
         RoundedImageView thumbnail = view.findViewById(R.id.icon);
+        ImageView check = view.findViewById(R.id.check);
         thumbnail.setImageResource(item.getIcon());
         thumbnail.setBackgroundColor(Color.parseColor(item.getColor()));
+
+        if(item.getCheck()){
+            check.setVisibility(View.VISIBLE);
+        }else{
+            check.setVisibility(View.INVISIBLE);
+        }
 
         return view;
     }

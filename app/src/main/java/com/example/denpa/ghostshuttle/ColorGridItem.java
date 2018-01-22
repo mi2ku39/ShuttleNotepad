@@ -8,8 +8,19 @@ public class ColorGridItem {
 
     private String color = null;
 
-    public ColorGridItem(String color){
+    public boolean getFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
+    private boolean flag;
+
+    public ColorGridItem(String color,boolean flag){
         this.color = color;
+        this.flag = flag;
     }
 
     public String getColor() {
@@ -19,5 +30,7 @@ public class ColorGridItem {
     public void setColor(String color) {
         this.color = color;
     }
+
+
 
 }

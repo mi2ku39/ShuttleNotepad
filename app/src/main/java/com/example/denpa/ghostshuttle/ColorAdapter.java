@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -44,7 +45,14 @@ public class ColorAdapter extends ArrayAdapter<ColorGridItem> {
         // リストビューに表示する要素を取得
         ColorGridItem item = mItems.get(position);
         RoundedImageView thumbnail = view.findViewById(R.id.icon);
+        ImageView check = view.findViewById(R.id.check);
+
         thumbnail.setBackgroundColor(Color.parseColor(item.getColor()));
+        if(item.getFlag()){
+            check.setVisibility(View.VISIBLE);
+        }else{
+            check.setVisibility(View.INVISIBLE);
+        }
 
         return view;
     }

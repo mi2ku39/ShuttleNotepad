@@ -9,11 +9,13 @@ public class IconGridItem {
 
     private int icon;
     private String color = null,icon_name = null;
+    private boolean check_flag;
 
-    public IconGridItem(int icon,String icon_name,String now_color){
+    public IconGridItem(int icon,String icon_name,String now_color,boolean flag){
             this.icon = icon;
             this.icon_name = icon_name;
             color = now_color;
+            check_flag = flag;
         }
 
     public String getColor() {
@@ -35,6 +37,10 @@ public class IconGridItem {
     public String getIcon_name(){return icon_name;}
 
     public void setIcon_name(String name){icon_name = name;}
+
+    public void setChesk(Boolean flag){ check_flag = flag;}
+
+    public boolean getCheck(){return check_flag;}
 
 }
 
