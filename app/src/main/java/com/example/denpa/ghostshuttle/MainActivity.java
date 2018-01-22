@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView debugMes;
     int itemcount = 0,context_potision = 0;
     String context_title;
+    Boolean list_style;
 
     CoordinatorLayout cl;
 
@@ -72,22 +74,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //変数宣言
-                ShuttleListItem item = (ShuttleListItem)listview.getItemAtPosition(position);
-                String title = item.getmTitle();
-
                 //データベースの取得・クエリ実行
                 SQLiteDatabase read_db = DBHelper.getReadableDatabase();
-                Cursor cursor = read_db.query("memo",new String[] {"filepath","_id","notifi_enabled"},"title like '" + title + "'",null,null,null,null);
-                cursor.moveToFirst();
+                String title;
 
-                //EditActivityへ値を渡す処理
-                Intent editer = new Intent(getApplicationContext(),EditActivity.class);
-                editer.putExtra("TITLE", title);
-                editer.putExtra("MEMO", readFile(cursor.getString(0) + ".gs"));
-                editer.putExtra("_ID", cursor.getInt(1));
-                editer.putExtra("flag",true);
-                editer.putExtra("Notifi",cursor.getInt(2));
+                if(list_style){
+                    //変数宣言
+                    ShuttleListItem item = (ShuttleListItem) listview.getItemAtPosition(position);
+                    title = item.getmTitle();
+                }else{
+                    SimpleListItem item = (SimpleListItem)listview.getItemAtPosition(position);
+                    title = item.getTitle();
+                }
+
+                    Cursor cursor = read_db.query("memo", new String[]{"filepath", "_id", "notifi_enabled"}, "title like '" + title + "'", null, null, null, null);
+                    cursor.moveToFirst();
+
+                    //EditActivityへ値を渡す処理
+                    Intent editer = new Intent(getApplicationContext(), EditActivity.class);
+                    editer.putExtra("TITLE", title);
+                    editer.putExtra("MEMO", readFile(cursor.getString(0) + ".gs"));
+                    editer.putExtra("_ID", cursor.getInt(1));
+                    editer.putExtra("flag", true);
+                    editer.putExtra("Notifi", cursor.getInt(2));
+
 
                 //カーソルのクローズ
                 cursor.close();
@@ -102,7 +112,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listview.setChoiceMode(ListView.CHOICE_MODE_NONE);
         registerForContextMenu(listview);
 
+        /* たぶんいらない
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        list_style=pref.getBoolean("list_style",false);
         SyncList();
+        */
 
         if(getIntent().getBooleanExtra("FLAG",false)){
             int id = getIntent().getIntExtra("ID",-1);
@@ -150,11 +164,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) Info;
 
-        ShuttleListItem item = (ShuttleListItem)listview.getItemAtPosition(info.position);
-        context_potision = info.position;
-        context_title = item.getmTitle();
-        String title = item.getmTitle();
-        menu.setHeaderTitle(title);
+        if(list_style){
+            ShuttleListItem item = (ShuttleListItem)listview.getItemAtPosition(info.position);
+            context_potision = info.position;
+            context_title = item.getmTitle();
+            String title = item.getmTitle();
+            menu.setHeaderTitle(title);
+        }else{
+            SimpleListItem item = (SimpleListItem)listview.getItemAtPosition(info.position);
+            context_potision = info.position;
+            context_title = item.getTitle();
+            String title = item.getTitle();
+            menu.setHeaderTitle(title);
+        }
 
         getMenuInflater().inflate(R.menu.context_menu, menu);
 
@@ -176,8 +198,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // OK ボタンクリック処理
-                                ShuttleListItem item = (ShuttleListItem) listview.getItemAtPosition(context_potision);
-                                String title = item.getmTitle();
+                                String title;
+                                if(list_style) {
+                                    ShuttleListItem item = (ShuttleListItem) listview.getItemAtPosition(context_potision);
+                                    title = item.getmTitle();
+                                }else{
+                                    SimpleListItem item = (SimpleListItem)listview.getItemAtPosition(context_potision);
+                                    title = item.getTitle();
+                                }
 
                                 //データベースの取得・クエリ実行
                                 SQLiteDatabase write_db = DBHelper.getReadableDatabase();
@@ -212,27 +240,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.change_icon:
-                ShuttleListItem list_item = (ShuttleListItem) listview.getItemAtPosition(context_potision);
+                if(list_style) {
+                    ShuttleListItem list_item = (ShuttleListItem) listview.getItemAtPosition(context_potision);
 
-                Log.d("test",String.valueOf(list_item.getId()));
+                    Intent Icon = new Intent(getApplicationContext(), iconActivity.class);
+                    Icon.putExtra("memo_id",list_item.getId());
+                    Icon.putExtra("memo_title",list_item.getmTitle());
 
-                Intent Icon = new Intent(getApplicationContext(), iconActivity.class);
-                Icon.putExtra("memo_id",list_item.getId());
-                Icon.putExtra("memo_title",list_item.getmTitle());
+                    Log.d("TEST",String.valueOf(list_item.getId()));
 
-                Log.d("TEST",String.valueOf(list_item.getId()));
+                    SQLiteDatabase read_db = DBHelper.getReadableDatabase();
+                    Cursor cursor = read_db.query("memo",new String[] {"icon_img","icon_color"},"_id = '" + list_item.getId() + "'",null,null,null,null );
+                    cursor.moveToFirst();
+                    Icon.putExtra("icon_img",cursor.getString(0));
+                    Icon.putExtra("icon_color",cursor.getString(1));
 
-                SQLiteDatabase read_db = DBHelper.getReadableDatabase();
-                Cursor cursor = read_db.query("memo",new String[] {"icon_img","icon_color"},"_id = '" + list_item.getId() + "'",null,null,null,null );
-                cursor.moveToFirst();
-                Icon.putExtra("icon_img",cursor.getString(0));
-                Icon.putExtra("icon_color",cursor.getString(1));
+                    cursor.close();
+                    read_db.close();
 
-                cursor.close();
-                read_db.close();
+                    startActivity(Icon);
+                    overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
+                }else{
+                    SimpleListItem list_item = (SimpleListItem)listview.getItemAtPosition(context_potision);
 
-                startActivity(Icon);
-                overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
+                    Log.d("test",String.valueOf(list_item.getId()));
+
+                    Intent Icon = new Intent(getApplicationContext(), iconActivity.class);
+                    Icon.putExtra("memo_id",list_item.getId());
+                    Icon.putExtra("memo_title",list_item.getTitle());
+
+                    Log.d("TEST",String.valueOf(list_item.getId()));
+
+                    SQLiteDatabase read_db = DBHelper.getReadableDatabase();
+                    Cursor cursor = read_db.query("memo",new String[] {"icon_img","icon_color"},"_id = '" + list_item.getId() + "'",null,null,null,null );
+                    cursor.moveToFirst();
+                    Icon.putExtra("icon_img",cursor.getString(0));
+                    Icon.putExtra("icon_color",cursor.getString(1));
+
+                    cursor.close();
+                    read_db.close();
+
+                    startActivity(Icon);
+                    overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
+                }
 
                 break;
 
@@ -245,6 +295,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onResume(){
         super.onResume();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        list_style=pref.getBoolean("list_style",false);
         SyncList();
     }
 
