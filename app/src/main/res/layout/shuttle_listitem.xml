@@ -32,13 +32,17 @@
             android:layout_height="wrap_content"
             android:text="タイトル"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:ellipsize="end"
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="詳細" />
+            android:text="詳細"
+            android:ellipsize="end"
+            android:singleLine="true"/>
 
     </LinearLayout>
 
