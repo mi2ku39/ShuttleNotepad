@@ -26,16 +26,16 @@
         android:id="@+id/EmptyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="メモが作成されていません ( ˘ω˘)ｽﾔｧ"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/empty_memo"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
-        tools:ignore="HardcodedText" />
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <ListView
         android:id="@+id/listview"

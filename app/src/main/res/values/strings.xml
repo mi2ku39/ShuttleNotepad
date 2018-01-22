@@ -32,6 +32,9 @@
     <string name="memo_tmp_summary">メモに自動で挿入される文を設定</string>
     <string name="setting_memo_title">メモ設定</string>
     <string name="setting_list_title">リスト設定</string>
+    <string name="empty_memo">メモを作りましょう！</string>
+    <string name="title">タイトル</string>
+    <string name="memo">メモ</string>
 
     <!-- オープンソースライセンス -->
     <!-- RoundedImageView -->
