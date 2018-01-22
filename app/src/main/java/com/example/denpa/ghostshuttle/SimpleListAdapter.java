@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -14,16 +13,16 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.util.List;
 
 /**
- * Created by denpa on 2018/01/10.
+ * Created by denpa on 2018/01/22.
  */
 
-public class ShuttleListAdapter extends ArrayAdapter<ShuttleListItem> {
+public class SimpleListAdapter extends ArrayAdapter<SimpleListItem> {
 
     private int mResource;
-    private List<ShuttleListItem> mItems;
+    private List<SimpleListItem> mItems;
     private LayoutInflater mInflater;
 
-    public ShuttleListAdapter(Context context, int resource, List<ShuttleListItem> items) {
+    public SimpleListAdapter(Context context, int resource, List<SimpleListItem> items) {
         super(context, resource, items);
         mResource = resource;
         mItems = items;
@@ -42,19 +41,10 @@ public class ShuttleListAdapter extends ArrayAdapter<ShuttleListItem> {
         }
 
         // リストビューに表示する要素を取得
-        ShuttleListItem item = mItems.get(position);
+        SimpleListItem item = mItems.get(position);
 
-        // サムネイル画像を設定
-        RoundedImageView thumbnail = view.findViewById(R.id.icon);
-        thumbnail.setImageResource(item.getThumbnail());
-        thumbnail.setBackgroundColor(Color.parseColor(item.getColor()));
-
-        // タイトルを設定
         TextView title = view.findViewById(R.id.title);
-        title.setText(item.getmTitle());
-
-        TextView detail = view.findViewById(R.id.detail);
-        detail.setText(item.getDetail());
+        title.setText(item.getTitle());
 
         return view;
 

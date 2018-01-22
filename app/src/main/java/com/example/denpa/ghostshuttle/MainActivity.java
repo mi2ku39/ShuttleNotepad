@@ -1,12 +1,15 @@
 package com.example.denpa.ghostshuttle;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -76,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //データベースの取得・クエリ実行
                 SQLiteDatabase read_db = DBHelper.getReadableDatabase();
                 Cursor cursor = read_db.query("memo",new String[] {"filepath","_id","notifi_enabled"},"title like '" + title + "'",null,null,null,null);
-
                 cursor.moveToFirst();
 
                 //EditActivityへ値を渡す処理
@@ -272,18 +274,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         itemcount = cursor.getCount();
         debugMes.setText("アイテム数 : " + cursor.getCount());
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        ArrayList<ShuttleListItem> listItems = new ArrayList<>();
-        for(int i=0;i<cursor.getCount();i++){
-            int icon = getResources().getIdentifier(cursor.getString(2), "drawable",getPackageName());
-            ShuttleListItem item = new ShuttleListItem(icon,cursor.getString(0),"作成日時(UTC) : " + cursor.getString(1),cursor.getString(3),cursor.getInt(4));
-            listItems.add(item);
-            cursor.moveToNext();
+        if(pref.getBoolean("list_style",false)){
+            ArrayList<ShuttleListItem> listItems = new ArrayList<>();
+            for(int i=0;i<cursor.getCount();i++){
+                int icon = getResources().getIdentifier(cursor.getString(2), "drawable",getPackageName());
+                ShuttleListItem item = new ShuttleListItem(icon,cursor.getString(0),"作成日時(UTC) : " + cursor.getString(1),cursor.getString(3),cursor.getInt(4));
+                listItems.add(item);
+                cursor.moveToNext();
+            }
+
+            ShuttleListAdapter adapter = new ShuttleListAdapter(this, R.layout.shuttle_listitem, listItems);
+            listview.setAdapter(adapter);
+        }else{
+            ArrayList<SimpleListItem> listItems = new ArrayList<>();
+            for(int i=0;i<cursor.getCount();i++){
+                int icon = getResources().getIdentifier(cursor.getString(2), "drawable",getPackageName());
+                SimpleListItem item = new SimpleListItem(cursor.getString(0),cursor.getInt(4));
+                listItems.add(item);
+                cursor.moveToNext();
+            }
+
+            SimpleListAdapter adapter = new SimpleListAdapter(this,R.layout.simple_listitem,listItems);
+            listview.setAdapter(adapter);
         }
-
-        ShuttleListAdapter adapter = new ShuttleListAdapter(this, R.layout.shuttle_listitem, listItems);
-        listview.setAdapter(adapter);
-
 
         cursor.close();
         read_db.close();
