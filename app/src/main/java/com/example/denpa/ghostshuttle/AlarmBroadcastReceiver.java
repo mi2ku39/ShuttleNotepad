@@ -19,7 +19,6 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         int id = intent.getIntExtra("ID",-1);
-        String text = intent.getStringExtra("title");
 
         Intent intent2 = new Intent(context, MainActivity.class);
         intent2.putExtra("FLAG",true);
@@ -34,7 +33,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
                 .setTicker("Ghost Shuttle")
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle("リマインダー")
-                .setContentText(text)
+                .setContentText(intent.getStringExtra("title"))
                 // 音、バイブレート、LEDで通知
                 .setDefaults(Notification.DEFAULT_ALL)
                 // 通知をタップした時にMainActivityを立ち上げる

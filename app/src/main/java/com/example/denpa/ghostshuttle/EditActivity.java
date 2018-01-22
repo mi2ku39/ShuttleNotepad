@@ -483,6 +483,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             Log.d("test",String.valueOf(db_id));
             this.db_id = (int) db_id;
         }
+
+        memo_db.close();
+
         saveFile(String.valueOf(filepath), memo_raw);
         return true;
     }
@@ -502,8 +505,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         values.put("notifi_hour", this.hour);
         values.put("notifi_min", this.min);
 
-        if(Notifi_db.insert("NOTIFICATION", null, values) == -1){
-            String where_words= "_id = " + this.db_id;
+        long test = Notifi_db.insert("NOTIFICATION", null, values);
+        if(test == -1){
+            String where_words= "_ID = '" + this.db_id + "'";
             Notifi_db.update("NOTIFICATION", values, where_words , null);
         }
 
@@ -517,11 +521,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         calendar.set(Calendar.MILLISECOND, 0);
 
         Intent intent = new Intent(getApplicationContext(), AlarmBroadcastReceiver.class);
-        intent.putExtra("ID", this.db_id);
-        intent.putExtra("title",title.getText().toString());
-        PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, intent, 0);
+        intent.putExtra("ID",this.db_id);
+        intent.putExtra("title", title.getText().toString());
 
-        // アラームをセットする
+        PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, intent, 0);
         AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending);
 

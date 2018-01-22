@@ -53,7 +53,7 @@ public class MemoDBHelper extends SQLiteOpenHelper {
         //SQL文実行
         db.execSQL(createTable);
 
-        String createTable2 = "CREATE TABLE NOTIFICATION ( _ID INTEGER NOT NULL PRIMARY KEY," + NOTIFI_YEAR + " INTEGER NOT NULL,"
+        String createTable2 = "CREATE TABLE NOTIFICATION ( _id_primal INTEGER PRIMARY KEY AUTOINCREMENT, _ID INTEGER NOT NULL," + NOTIFI_YEAR + " INTEGER NOT NULL,"
                 + NOTIFI_MONTH + " INTEGER NOT NULL," + NOTIFI_DAY + " INTEGER NOT NULL,"
                 + NOTIFI_HOUR + " INTEGER NOT NULL," + NOTIFI_MIN + " INTEGER NOT NULL)";
 
