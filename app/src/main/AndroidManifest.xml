@@ -32,7 +32,8 @@
             縦固定
             android:screenOrientation="portrait"
         -->
-        <activity android:name=".OSLActivity"></activity>
+        <activity android:name=".OSLActivity" />
+        <activity android:name=".SettingActivity"></activity>
     </application>
 
 </manifest>

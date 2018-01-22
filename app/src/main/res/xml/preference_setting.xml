@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/setting_list_title">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="list_style"
+            android:summary="@string/enhance_summary"
+            android:title="@string/enable_enhance" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/setting_memo_title">
+
+        <EditTextPreference
+            android:defaultValue="タイトルのないメモ"
+            android:key="default_title"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/not_title_summary"
+            android:title="@string/not_title" />
+        <EditTextPreference
+            android:key="title_template"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/title_tmp_summary"
+            android:title="@string/tmp_title" />
+        <EditTextPreference
+            android:key="memo_template"
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:summary="@string/memo_tmp_summary"
+            android:title="@string/memo_tmp" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

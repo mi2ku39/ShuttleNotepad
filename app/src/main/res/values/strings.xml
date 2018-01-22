@@ -21,6 +21,16 @@
     <string name="cancel">キャンセル</string>
     <string name="disable">解除</string>
     <string name="notify_disable">通知を解除してよろしいですか？</string>
+    <string name="tmp_title">タイトルのテンプレート設定</string>
+    <string name="enable_enhance">拡張リストを有効</string>
+    <string name="enhance_summary">アイコンと詳細を表示</string>
+    <string name="not_title">タイトル未設定時のタイトル</string>
+    <string name="not_title_summary">自動で設定されるタイトルを変更</string>
+    <string name="title_tmp_summary">タイトルに自動で挿入する文を設定</string>
+    <string name="memo_tmp">メモのテンプレート</string>
+    <string name="memo_tmp_summary">メモに自動で挿入される文を設定</string>
+    <string name="setting_memo_title">メモ設定</string>
+    <string name="setting_list_title">リスト設定</string>
 
     <!-- オープンソースライセンス -->
     <!-- RoundedImageView -->

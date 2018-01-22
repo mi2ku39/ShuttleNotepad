@@ -320,7 +320,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.settings:
-
+                    Intent setting_intent = new Intent(this,SettingActivity.class);
+                    startActivity(setting_intent);
                 break;
 
             default:
