@@ -362,17 +362,25 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setTitle("メモの作成/編集をキャンセル");
-            alertDialogBuilder.setMessage("保存しないでいいの？");
-            alertDialogBuilder.setPositiveButton("いいよ！",
+            alertDialogBuilder.setMessage("リストへ戻ります");
+            alertDialogBuilder.setPositiveButton("保存",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
+                            if(db_save()) {
+                                if (Notifi_flag) {
+                                    setNotification();
+                                }else{
+                                    Notify_cancel();
+                                }
+                                finish();
+                            }
                         }
                     });
 
-            alertDialogBuilder.setNegativeButton("ダメです",
+            alertDialogBuilder.setNegativeButton("保存せずに終了",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            finish();
                         }
                     });
 
