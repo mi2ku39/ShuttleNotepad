@@ -35,6 +35,11 @@
     <string name="empty_memo">メモを作りましょう！</string>
     <string name="title">タイトル</string>
     <string name="memo">メモ</string>
+    <string name="move_s">挙動設定</string>
+    <string name="backKey_settings_title">保存ボタンを統合</string>
+    <string name="backKey_settings_summary">戻るキーに保存ボタンを統合</string>
+    <string name="viewer_settings_title">ビュワーを使う</string>
+    <string name="viewer_settings_summary">編集画面に移る前に閲覧画面を表示</string>
 
     <!-- オープンソースライセンス -->
     <!-- RoundedImageView -->

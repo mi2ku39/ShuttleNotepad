@@ -31,5 +31,18 @@
             android:title="@string/memo_tmp" />
 
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/move_s">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="backKey_move"
+            android:summary="@string/backKey_settings_summary"
+            android:title="@string/backKey_settings_title" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="viewer_used"
+            android:summary="@string/viewer_settings_summary"
+            android:title="@string/viewer_settings_title" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
