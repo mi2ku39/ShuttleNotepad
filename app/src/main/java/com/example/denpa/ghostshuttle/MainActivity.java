@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import jp.ghostserver.ghostshuttle.ViewerActivity;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     //変数宣言
@@ -62,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Toolbar toolbar =findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         setTitle(getResources().getString(R.string.app_name));
 
         //findViewByIdをする関数
@@ -92,6 +93,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Cursor cursor = read_db.query("memo", new String[]{"filepath", "_id", "notifi_enabled"}, "title like '" + title + "'", null, null, null, null);
                     cursor.moveToFirst();
 
+                if(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("viewer_used",false)) {
+
+                    //ViewerActivityへ値を渡す処理
+                    Intent viewer = new Intent(getApplicationContext(), ViewerActivity.class);
+                    viewer.putExtra("TITLE", title);
+                    viewer.putExtra("MEMO", readFile(cursor.getString(0) + ".gs"));
+                    viewer.putExtra("_ID", cursor.getInt(1));
+                    viewer.putExtra("Notifi", cursor.getInt(2));
+
+                    //カーソルのクローズ
+                    cursor.close();
+                    read_db.close();
+
+                    //Activity開始
+                    startActivity(viewer);
+
+                }else{
+
                     //EditActivityへ値を渡す処理
                     Intent editer = new Intent(getApplicationContext(), EditActivity.class);
                     editer.putExtra("TITLE", title);
@@ -100,13 +119,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     editer.putExtra("flag", true);
                     editer.putExtra("Notifi", cursor.getInt(2));
 
+                    //カーソルのクローズ
+                    cursor.close();
+                    read_db.close();
 
-                //カーソルのクローズ
-                cursor.close();
-                read_db.close();
+                    startActivity(editer);
 
-                startActivity(editer);
-
+                }
             }
         });
 

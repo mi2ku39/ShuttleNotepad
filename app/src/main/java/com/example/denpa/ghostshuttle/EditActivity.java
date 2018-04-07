@@ -35,6 +35,7 @@ import android.widget.TimePicker;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.Random;
 import java.util.TimeZone;
 
@@ -61,7 +62,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         //画面上部の「戻るボタン」設定
         Toolbar toolbar =findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         //画面上部のタイトル設定
         setTitle(getResources().getString(R.string.edit_title));
 
