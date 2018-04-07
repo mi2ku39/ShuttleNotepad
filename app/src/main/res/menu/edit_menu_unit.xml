@@ -8,11 +8,9 @@
         android:title="Item"
         app:showAsAction="always" />
     <item
-        android:id="@+id/save"
-        android:icon="@mipmap/check"
-        android:title="Item"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/now_save"
         android:title="@string/kepp_save" />
+    <item
+        android:id="@+id/edit_cancel"
+        android:title="@string/edit_cancel" />
 </menu>

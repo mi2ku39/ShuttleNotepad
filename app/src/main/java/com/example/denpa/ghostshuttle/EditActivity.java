@@ -170,7 +170,12 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(final Menu menu){
         final MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.edit_menu,menu);
+
+        if(PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move",false)){
+            inflater.inflate(R.menu.edit_menu_unit,menu);
+        }else{
+            inflater.inflate(R.menu.edit_menu,menu);
+        }
 
         if(Notifi_flag){
 
@@ -236,8 +241,22 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             //「戻るボタン」のクリックイベント
             case android.R.id.home:
 
-                //ダイアログの表示
-               backdialog();
+                if(PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move",false)){
+
+                    //統合戻るキーの挙動
+                    if(db_save()) {
+                        if (Notifi_flag) {
+                            setNotification();
+                        }else{
+                            Notify_cancel();
+                        }
+
+                        finish();
+                    }
+                }else{
+                    //旧バージョン挙動・確認ダイアログの表示
+                    backdialog();
+                }
 
                 break;
 
@@ -333,7 +352,21 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         if (event.getAction()==KeyEvent.ACTION_DOWN) {
             if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 
-                backdialog();
+                if(PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move",false)){
+
+                    //統合戻るキーの挙動
+                    if(db_save()) {
+                        if (Notifi_flag) {
+                            setNotification();
+                        }else{
+                            Notify_cancel();
+                        }
+                        finish();
+                    }
+                }else{
+                    //旧バージョン挙動・確認ダイアログの表示
+                    backdialog();
+                }
 
                 return false;
             }

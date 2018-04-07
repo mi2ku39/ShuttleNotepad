@@ -5,19 +5,21 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import com.example.denpa.ghostshuttle.EditActivity
+import com.example.denpa.ghostshuttle.MemoDBHelper
 import com.example.denpa.ghostshuttle.R
 import kotlinx.android.synthetic.main.activity_viewer.*
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 import java.util.*
 
 class ViewerActivity : AppCompatActivity() {
 
-    var memo_title = ""
-    var memo_text = ""
     var memo_id = 0
-    var Notify_flag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,25 +28,25 @@ class ViewerActivity : AppCompatActivity() {
         Objects.requireNonNull<ActionBar>(supportActionBar).setDisplayHomeAsUpEnabled(true)
 
         //変数にIntentの値を代入
-        memo_title = intent.getStringExtra("TITLE")
-        memo_text = intent.getStringExtra("MEMO")
         memo_id = intent.getIntExtra("_ID",-1)
-        Notify_flag = intent.getBooleanExtra("Notifi",false)
-
-        title = memo_title
-
-        val memo_field = findViewById<TextView>(R.id.Memo_field)
-        memo_field.text = memo_text
 
         fab.setOnClickListener { view ->
             //FAB押された時の挙動
-
+            val memo_field = findViewById<TextView>(R.id.Memo_field)
             val edit_intent = Intent(applicationContext, EditActivity::class.java)
-            edit_intent.putExtra("TITLE",memo_title)
-            edit_intent.putExtra("MEMO",memo_text)
+
+            val read_db = MemoDBHelper(this).readableDatabase
+            val cursor = read_db.query("memo", arrayOf("filepath", "title", "notifi_enabled"), "_id = '$memo_id'", null, null, null, null)
+            cursor.moveToFirst()
+
+            edit_intent.putExtra("TITLE",cursor.getString(1))
+            edit_intent.putExtra("MEMO",memo_field.text)
             edit_intent.putExtra("_ID",memo_id)
             edit_intent.putExtra("flag",true)
-            edit_intent.putExtra("Notifi",Notify_flag)
+            edit_intent.putExtra("Notifi",cursor.getInt(2))
+
+            read_db.close()
+            cursor.close()
 
             startActivity(edit_intent)
 
@@ -59,6 +61,48 @@ class ViewerActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val read_db = MemoDBHelper(this).readableDatabase
+        val cursor = read_db.query("memo", arrayOf("filepath", "title"), "_id = '$memo_id'", null, null, null, null)
+        cursor.moveToFirst()
+
+        title = cursor.getString(1)
+
+        val memo_field = findViewById<TextView>(R.id.Memo_field)
+        memo_field.text = readFile(cursor.getString(0) + ".gs")
+
+        read_db.close()
+        cursor.close()
+
+    }
+
+    private fun readFile(path:String):String{
+
+        var str = ""
+        var memo_tmp: String?
+
+        try{
+            val fis = openFileInput(path)
+            val reader = BufferedReader(InputStreamReader(fis,"UTF-8") )
+            while(true){
+                memo_tmp = reader.readLine()
+
+                if(memo_tmp != null)
+                    str = str + memo_tmp + "\n"
+                else{
+                    break
+                }
+
+            }
+        }catch (e: IOException){
+            e.printStackTrace()
+        }
+
+        return str
     }
 
 }

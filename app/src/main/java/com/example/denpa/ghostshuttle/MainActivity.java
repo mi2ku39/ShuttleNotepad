@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //ViewerActivityへ値を渡す処理
                     Intent viewer = new Intent(getApplicationContext(), ViewerActivity.class);
                     viewer.putExtra("TITLE", title);
-                    viewer.putExtra("MEMO", readFile(cursor.getString(0) + ".gs"));
+                    viewer.putExtra("MEMO", cursor.getString(0) + ".gs");
                     viewer.putExtra("_ID", cursor.getInt(1));
                     viewer.putExtra("Notifi", cursor.getInt(2));
 
@@ -132,12 +132,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listview.setEmptyView(findViewById(R.id.EmptyText));
         listview.setChoiceMode(ListView.CHOICE_MODE_NONE);
         registerForContextMenu(listview);
-
-        /* たぶんいらない
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        list_style=pref.getBoolean("list_style",false);
-        SyncList();
-        */
 
         if(getIntent().getBooleanExtra("FLAG",false)){
             int id = getIntent().getIntExtra("ID",-1);
