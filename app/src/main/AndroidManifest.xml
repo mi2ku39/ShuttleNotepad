@@ -33,8 +33,12 @@
             android:screenOrientation="portrait"
         -->
         <activity android:name=".OSLActivity" />
-
-        <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".SettingActivity" />
+        <activity android:name="jp.ghostserver.ghostshuttle.MemoViewActivity" />
+        <activity
+            android:name="jp.ghostserver.ghostshuttle.ViewerActivity"
+            android:label="@string/title_activity_viewer"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

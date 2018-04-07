@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //変数宣言
     FloatingActionButton fab ;
     ListView listview;
-    TextView debugMes;
     int itemcount = 0,context_potision = 0;
     String context_title;
     Boolean list_style;
@@ -309,9 +308,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listview=findViewById(R.id.listview);
         cl= findViewById(R.id.coordinatorLayout);
 
-        debugMes=findViewById(R.id.debugMes);
-
-
     }
 
     private void setlistener(){
@@ -328,7 +324,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cursor.moveToFirst();
 
         itemcount = cursor.getCount();
-        debugMes.setText("アイテム数 : " + cursor.getCount());
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
         if(pref.getBoolean("list_style",false)){
