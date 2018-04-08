@@ -208,8 +208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(MainActivity.this);
                 alertDlg.setTitle(context_title);
                 alertDlg.setMessage(getResources().getString(R.string.delete_question));
-                alertDlg.setPositiveButton(
-                        "いいよ！",
+                alertDlg.setPositiveButton(getResources().getString(R.string.ok),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // OK ボタンクリック処理
@@ -243,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         });
                 alertDlg.setNegativeButton(
-                        "ダメです",
+                        getResources().getString(R.string.no),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // Cancel ボタンクリック処理
@@ -343,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ArrayList<ShuttleListItem> listItems = new ArrayList<>();
             for(int i=0;i<cursor.getCount();i++){
                 int icon = getResources().getIdentifier(cursor.getString(2), "drawable",getPackageName());
-                ShuttleListItem item = new ShuttleListItem(icon,cursor.getString(0),"作成日時(UTC) : " + cursor.getString(1),cursor.getString(3),cursor.getInt(4));
+                ShuttleListItem item = new ShuttleListItem(icon,cursor.getString(0),getResources().getString(R.string.cd) + cursor.getString(1),cursor.getString(3),cursor.getInt(4));
                 listItems.add(item);
                 cursor.moveToNext();
             }
@@ -392,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     delete_intent.putExtra("item",itemcount);
                     startActivityForResult(delete_intent, REQUEST_CODE_ANOTHER_CALC_1);
                 }else{
-                    Snackbar.make(cl, "削除する項目がありません。", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(cl, getResources().getString(R.string.error_d), Snackbar.LENGTH_SHORT).show();
                 }
                 break;
 

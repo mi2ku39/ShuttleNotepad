@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -314,16 +315,16 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     setPrimary();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("通知設定");
+                    builder.setTitle(getResources().getString(R.string.Notify));
                     builder.setView(notifi_dialog);
-                    builder.setPositiveButton("設定", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // OK ボタンクリック処理
                             Notifi_flag = true;
                             invalidateOptionsMenu();
                         }
                     });
-                    builder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // Cancel ボタンクリック処理
                             invalidateOptionsMenu();
@@ -332,6 +333,12 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     // 表示
                     builder.create().show();
                 }
+
+                break;
+
+            case R.id.edit_cancel:
+
+                finish();
 
                 break;
 
@@ -383,9 +390,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         }else{
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            alertDialogBuilder.setTitle("メモの作成/編集をキャンセル");
-            alertDialogBuilder.setMessage("リストへ戻ります");
-            alertDialogBuilder.setPositiveButton("保存",
+            alertDialogBuilder.setTitle(getResources().getString(R.string.edit_cancel));
+            alertDialogBuilder.setMessage(getResources().getString(R.string.cancel));
+            alertDialogBuilder.setPositiveButton(getResources().getString(R.string.save),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if(db_save()) {
@@ -399,7 +406,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
 
-            alertDialogBuilder.setNegativeButton("保存せずに終了",
+            alertDialogBuilder.setNegativeButton(getResources().getString(R.string.edit_cancel),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             finish();
@@ -469,7 +476,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     if (title_not) {
                         //データベースへ追加に失敗したときの処理
                         ConstraintLayout cl = findViewById(R.id.cl);
-                        Snackbar.make(cl, "データベースへ追加失敗 : タイトルが他のメモと重複しています。", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(cl, getResources().getString(R.string.DB_failed), Snackbar.LENGTH_SHORT).show();
                         return false;
                     } else {
                         count++;
@@ -494,7 +501,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 if (title_not) {
                     //データベースへ追加に失敗したときの処理
                     ConstraintLayout cl = findViewById(R.id.cl);
-                    Snackbar.make(cl, "データベースへ追加失敗 : タイトルが他のメモと重複しています。", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(cl, getResources().getString(R.string.DB_failed), Snackbar.LENGTH_SHORT).show();
                     return false;
                 } else {
                     while (db_id == -1) {
@@ -574,10 +581,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private String hour_convert(int hour){
-        String am_pm="午前";
+        String am_pm=getResources().getString(R.string.am);
 
         if (hour >= 12){
-            am_pm ="午後";
+            am_pm =getResources().getString(R.string.pm);
             hour = hour - 12;
         }
         return (am_pm+" "+hour);
