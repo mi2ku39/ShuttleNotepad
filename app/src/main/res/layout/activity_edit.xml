@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:id="@+id/cl"
-    tools:context="com.example.denpa.ghostshuttle.EditActivity">
+    tools:context="com.example.denpa.ghostshuttle.EditActivity"
+    android:background="#EEEEEE">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -20,60 +21,65 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="@string/title"
-        android:inputType="textPersonName"
-        android:text=""
-        android:textSize="24sp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <requestFocus />
-    </EditText>
-
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:fitsSystemWindows="true">
+            android:clipToPadding="false">
 
-            <EditText
-                android:id="@+id/editmemo"
-                style="@style/Widget.AppCompat.EditText"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="40dp"
-                android:layout_weight="1.43"
-                android:background="#d6d6d6"
-                android:ems="10"
-                android:gravity="start"
-                android:hint="@string/memo"
-                android:inputType="textMultiLine"
-                android:minHeight="400dp"
-                android:padding="16dp"></EditText>
+                android:layout_height="match_parent"
+                android:background="#FAFAFA"
+                android:fitsSystemWindows="true"
+                android:orientation="vertical"
+                android:layout_margin="8dp"
+                android:elevation="2dp">
+
+                <EditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/title"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:textSize="24sp"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+                    <requestFocus />
+                </EditText>
+
+                <EditText
+                    android:id="@+id/editmemo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="start"
+                    android:hint="@string/memo"
+                    android:inputType="textMultiLine"
+                    android:minHeight="400dp"
+                    android:padding="4dp"
+                    android:background="#FAFAFA"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

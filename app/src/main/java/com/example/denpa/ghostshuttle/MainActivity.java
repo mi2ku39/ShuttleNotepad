@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(MainActivity.this);
                 alertDlg.setTitle(context_title);
                 alertDlg.setMessage(getResources().getString(R.string.delete_question));
-                alertDlg.setPositiveButton(getResources().getString(R.string.ok),
+                alertDlg.setPositiveButton(getResources().getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // OK ボタンクリック処理
@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onResume(){
         super.onResume();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        list_style=pref.getBoolean("list_style",false);
+        list_style = pref.getBoolean("list_style",false);
         SyncList();
     }
 

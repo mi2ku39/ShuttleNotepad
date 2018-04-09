@@ -360,16 +360,23 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 
                 if(PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move",false)){
-
                     //統合戻るキーの挙動
-                    if(db_save()) {
-                        if (Notifi_flag) {
-                            setNotification();
-                        }else{
-                            Notify_cancel();
-                        }
+                    if(title.length() <= 0 && editmemo.length() <= 0){
+                        //タイトルかメモが空白の時
                         finish();
+
+                    }else{
+
+                        if(db_save()) {
+                            if (Notifi_flag) {
+                                setNotification();
+                            }else{
+                                Notify_cancel();
+                            }
+                        }
+
                     }
+
                 }else{
                     //旧バージョン挙動・確認ダイアログの表示
                     backdialog();

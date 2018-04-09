@@ -56,7 +56,7 @@ public class iconActivity extends AppCompatActivity implements View.OnClickListe
         now_color = ei.getStringExtra("icon_color");
         Log.d("test",now_icon +" "+now_color);
 
-        setTitle(memo_title + "のアイコンの変更");
+        setTitle(getResources().getString(R.string.icon_change));
 
         icon_grid = findViewById(R.id.grid_icon);
         bgc_grid = findViewById(R.id.grid_bgc);

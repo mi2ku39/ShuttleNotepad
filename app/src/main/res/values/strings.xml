@@ -52,6 +52,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cd">Date created (UTC) : </string>
+    <string name="icon_change">Change icon</string>
 
     <string name="error_d">There are no items to delete.</string>
 

@@ -6,7 +6,7 @@ android {
         applicationId "jp.ghostserver.ghostshuttle"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 3
+        versionCode 4
         versionName "0.51"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
