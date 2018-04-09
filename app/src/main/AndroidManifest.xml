@@ -32,7 +32,6 @@
             縦固定
             android:screenOrientation="portrait"
         -->
-        <activity android:name=".OSLActivity" />
         <activity android:name=".SettingActivity" />
         <activity android:name="jp.ghostserver.ghostshuttle.MemoViewActivity" />
         <activity

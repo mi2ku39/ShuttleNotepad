@@ -43,7 +43,7 @@ public class DeleteActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         //コメント
-        setTitle("まとめて削除");
+        setTitle(getResources().getString(R.string.choose_delete));
 
         ArrayList<String> arraylist = new ArrayList<>();
         listview = findViewById(R.id.listview);
@@ -121,14 +121,14 @@ public class DeleteActivity extends AppCompatActivity {
                 }
 
                 if(counter > 4)
-                    Selected = Selected + "...など\n";
+                    Selected = Selected + getResources().getString(R.string.etc);
 
                 //ダイアログの表示
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(DeleteActivity.this);
-                alertDlg.setTitle("まとめて削除");
-                alertDlg.setMessage(Selected + "\n選んだメモ消しちゃうよ？");
+                alertDlg.setTitle(getResources().getString(R.string.choose_delete));
+                alertDlg.setMessage(Selected + "\n" + getResources().getString(R.string.select_erase));
                 alertDlg.setPositiveButton(
-                        "いいよ！",
+                        getResources().getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // OK ボタンクリック処理
@@ -163,7 +163,7 @@ public class DeleteActivity extends AppCompatActivity {
                             }
                         });
                 alertDlg.setNegativeButton(
-                        "ダメです",
+                        getResources().getString(R.string.no),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // Cancel ボタンクリック処理

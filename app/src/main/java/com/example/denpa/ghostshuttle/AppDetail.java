@@ -83,9 +83,6 @@ public class AppDetail extends AppCompatActivity implements View.OnClickListener
                 // 表示
                 builder.create().show();
 
-                //Intent intent = new Intent(getApplicationContext(),OSLActivity.class);
-                //startActivity(intent);
-
                 break;
         }
     }

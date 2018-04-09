@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Ghost Shuttle</string>
-    <string name="app_version">Version : 0.51(Early Access)</string>
+    <string name="app_version">Version : 0.52(Early Access)</string>
     <string name="app_details">ソフトウェア情報</string>
     <string name="app_settings">設定</string>
     <string name="copyright">&#169; GhostServer STUDIO All Rights Reserved.</string>
@@ -53,8 +53,9 @@
     <string name="no">いいえ</string>
     <string name="cd">作成日時(UTC) : </string>
     <string name="icon_change">アイコンの変更</string>
-
+    <string name="etc">...など\n</string>
     <string name="error_d">削除する項目がありません。</string>
+    <string name="select_erase">選択されたメモを削除します。</string>
 
     <!-- オープンソースライセンス -->
     <!-- RoundedImageView -->
