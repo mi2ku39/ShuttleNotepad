@@ -33,13 +33,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //変数宣言
     public FloatingActionButton fab ;
     public ListView listView;
-    private int itemCount = 0, contextPosition = 0;
+    public CoordinatorLayout cl;
+
+    private int contextPosition = 0;
     private String context_title;
     private Boolean list_style;
 
-    public CoordinatorLayout cl;
-
-    private MemoDBHelper Helper = new MemoDBHelper(this);
+    //private MemoDBHelper Helper = new MemoDBHelper(this);
 
     //画面遷移で使うやつ
     private static final int REQUEST_CODE_ANOTHER_CALC_1 = 1;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                MemoDBHelper Helper = new MemoDBHelper(MainActivity.this);
                 //データベースの取得・クエリ実行
                 SQLiteDatabase read_db = Helper.getReadableDatabase();
                 String title;
@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int id = getIntent().getIntExtra("ID",-1);
 
             //データベースの取得・クエリ実行
+            MemoDBHelper Helper = new MemoDBHelper(this);
             SQLiteDatabase read_db = Helper.getReadableDatabase();
             Cursor cursor = read_db.query("memo",new String[] {"filepath","title","notifi_enabled"},"_id = '" + id + "'",null,null,null,null);
 
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
 
                                 //データベースの取得・クエリ実行
+                                MemoDBHelper Helper = new MemoDBHelper(MainActivity.this);
                                 SQLiteDatabase write_db = Helper.getReadableDatabase();
                                 Cursor cursor = write_db.query("memo", new String[]{"filepath", "_id"}, "title = '" + title + "'", null, null, null, null);
 
@@ -222,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 cursor.close();
                                 write_db.close();
 
-                                SyncList();
+                                setViews.syncList(MainActivity.this);
                             }
                         });
                 alertDlg.setNegativeButton(
@@ -247,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     Log.d("TEST",String.valueOf(list_item.getId()));
 
+                    MemoDBHelper Helper = new MemoDBHelper(this);
                     SQLiteDatabase read_db = Helper.getReadableDatabase();
                     Cursor cursor = read_db.query("memo",new String[] {"icon_img","icon_color"},"_id = '" + list_item.getId() + "'",null,null,null,null );
                     cursor.moveToFirst();
@@ -269,6 +272,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     Log.d("TEST",String.valueOf(list_item.getId()));
 
+                    MemoDBHelper Helper = new MemoDBHelper(this);
                     SQLiteDatabase read_db = Helper.getReadableDatabase();
                     Cursor cursor = read_db.query("memo",new String[] {"icon_img","icon_color"},"_id = '" + list_item.getId() + "'",null,null,null,null );
                     cursor.moveToFirst();
@@ -295,53 +299,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         list_style = pref.getBoolean("list_style",false);
-        SyncList();
-    }
-
-    private void findid(){
-
-        fab=findViewById(R.id.fab);
-        listView =findViewById(R.id.listview);
-        cl= findViewById(R.id.coordinatorLayout);
-
-    }
-
-    private void SyncList(){
-
-        SQLiteDatabase read_db = Helper.getReadableDatabase();
-
-        Cursor cursor = read_db.query("memo",new String[] {"title","data_modified","icon_img","icon_color","_id"},null,null,null,null,"data_modified desc" );
-        cursor.moveToFirst();
-
-        itemCount = cursor.getCount();
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if(pref.getBoolean("list_style",false)){
-            ArrayList<ShuttleListItem> listItems = new ArrayList<>();
-            for(int i=0;i<cursor.getCount();i++){
-                int icon = getResources().getIdentifier(cursor.getString(2), "drawable",getPackageName());
-                ShuttleListItem item = new ShuttleListItem(icon,cursor.getString(0),getResources().getString(R.string.cd) + cursor.getString(1),cursor.getString(3),cursor.getInt(4));
-                listItems.add(item);
-                cursor.moveToNext();
-            }
-
-            ShuttleListAdapter adapter = new ShuttleListAdapter(this, R.layout.shuttle_listitem, listItems);
-            listView.setAdapter(adapter);
-        }else{
-            ArrayList<SimpleListItem> listItems = new ArrayList<>();
-            for(int i=0;i<cursor.getCount();i++){
-                SimpleListItem item = new SimpleListItem(cursor.getString(0),cursor.getInt(4));
-                listItems.add(item);
-                cursor.moveToNext();
-            }
-
-            SimpleListAdapter adapter = new SimpleListAdapter(this,R.layout.simple_listitem,listItems);
-            listView.setAdapter(adapter);
-        }
-
-        cursor.close();
-        read_db.close();
-
+        setViews.syncList(this);
     }
 
     @Override
@@ -364,9 +322,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.mode:
-                if(itemCount != 0) {
+                if(listView.getCount() != 0) {
                     Intent delete_intent = new Intent(this, DeleteActivity.class);
-                    delete_intent.putExtra("item", itemCount);
+                    delete_intent.putExtra("item", listView.getCount());
                     startActivityForResult(delete_intent, REQUEST_CODE_ANOTHER_CALC_1);
                 }else{
                     Snackbar.make(cl, getResources().getString(R.string.error_d), Snackbar.LENGTH_SHORT).show();

@@ -1,6 +1,7 @@
 package com.example.denpa.ghostshuttle.MainActivityFunctions;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
@@ -13,6 +14,8 @@ import com.example.denpa.ghostshuttle.*;
 import com.example.denpa.ghostshuttle.memofileaccessor.MemoFileManager;
 import com.example.denpa.ghostshuttle.preferenceaccessor.PreferenceAccessor;
 import jp.ghostserver.ghostshuttle.ViewerActivity;
+
+import java.util.ArrayList;
 
 public class setViews {
     public static void findIDs(MainActivity targetActivity){
@@ -125,5 +128,42 @@ public class setViews {
             }else
                 Toast.makeText(activity, activity.getResources().getString(R.string.toast_delete), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static void syncList(MainActivity activity){
+        MemoDBHelper Helper = new MemoDBHelper(activity);
+        SQLiteDatabase read_db = Helper.getReadableDatabase();
+
+        Cursor cursor = read_db.query("memo",new String[] {"title","data_modified","icon_img","icon_color","_id"},null,null,null,null,"data_modified desc" );
+        cursor.moveToFirst();
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        if(pref.getBoolean("list_style",false)){
+            ArrayList<ShuttleListItem> listItems = new ArrayList<>();
+            for(int i=0; i<cursor.getCount(); i++){
+                int icon = activity.getResources().getIdentifier(cursor.getString(2), "drawable",activity.getPackageName());
+                ShuttleListItem item = new ShuttleListItem(icon,cursor.getString(0),activity.getResources().getString(R.string.cd) + cursor.getString(1),cursor.getString(3),cursor.getInt(4));
+                listItems.add(item);
+                cursor.moveToNext();
+            }
+
+            ShuttleListAdapter adapter = new ShuttleListAdapter(activity, R.layout.shuttle_listitem, listItems);
+            activity.listView.setAdapter(adapter);
+        }else{
+            ArrayList<SimpleListItem> listItems = new ArrayList<>();
+            for(int i=0; i<cursor.getCount(); i++){
+                SimpleListItem item = new SimpleListItem(cursor.getString(0),cursor.getInt(4));
+                listItems.add(item);
+                cursor.moveToNext();
+            }
+
+            SimpleListAdapter adapter = new SimpleListAdapter(activity,R.layout.simple_listitem,listItems);
+            activity.listView.setAdapter(adapter);
+        }
+
+        cursor.close();
+        read_db.close();
+
     }
 }
