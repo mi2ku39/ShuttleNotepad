@@ -373,6 +373,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                             }else{
                                 Notify_cancel();
                             }
+
+                            finish();
+
                         }
 
                     }

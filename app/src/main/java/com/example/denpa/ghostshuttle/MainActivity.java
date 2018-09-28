@@ -35,18 +35,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import com.example.denpa.ghostshuttle.MainActivityFunctions.setViews;
 import jp.ghostserver.ghostshuttle.ViewerActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     //変数宣言
-    FloatingActionButton fab ;
-    ListView listview;
+    public FloatingActionButton fab ;
+    public ListView listview;
     int itemcount = 0,context_potision = 0;
     String context_title;
     Boolean list_style;
 
-    CoordinatorLayout cl;
+    public CoordinatorLayout cl;
 
     MemoDBHelper DBHelper = new MemoDBHelper(this);
 
@@ -66,10 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         setTitle(getResources().getString(R.string.app_name));
 
-        //findViewByIdをする関数
-        findid();
-        //setOnClickListenerをする関数
-        setlistener();
+        setViews.findIDs(this);
 
         listview = findViewById(R.id.listview);
         //ListViewのアイテムがタップされたときの処理
@@ -319,12 +317,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab=findViewById(R.id.fab);
         listview=findViewById(R.id.listview);
         cl= findViewById(R.id.coordinatorLayout);
-
-    }
-
-    private void setlistener(){
-
-        fab.setOnClickListener(this);
 
     }
 
