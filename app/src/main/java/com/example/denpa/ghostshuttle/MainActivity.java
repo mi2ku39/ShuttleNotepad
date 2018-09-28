@@ -22,10 +22,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import com.example.denpa.ghostshuttle.MainActivityFunctions.setViews;
@@ -37,13 +33,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //変数宣言
     public FloatingActionButton fab ;
     public ListView listView;
-    int itemcount = 0,context_potision = 0;
-    String context_title;
-    Boolean list_style;
+    private int itemCount = 0, contextPosition = 0;
+    private String context_title;
+    private Boolean list_style;
 
     public CoordinatorLayout cl;
 
-    MemoDBHelper Helper = new MemoDBHelper(this);
+    private MemoDBHelper Helper = new MemoDBHelper(this);
 
     //画面遷移で使うやつ
     private static final int REQUEST_CODE_ANOTHER_CALC_1 = 1;
@@ -168,13 +164,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(list_style){
             ShuttleListItem item = (ShuttleListItem) listView.getItemAtPosition(info.position);
-            context_potision = info.position;
+            contextPosition = info.position;
             context_title = item.getmTitle();
             String title = item.getmTitle();
             menu.setHeaderTitle(title);
         }else{
             SimpleListItem item = (SimpleListItem) listView.getItemAtPosition(info.position);
-            context_potision = info.position;
+            contextPosition = info.position;
             context_title = item.getTitle();
             String title = item.getTitle();
             menu.setHeaderTitle(title);
@@ -202,10 +198,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 String title;
 
                                 if(list_style) {
-                                    ShuttleListItem item = (ShuttleListItem) listView.getItemAtPosition(context_potision);
+                                    ShuttleListItem item = (ShuttleListItem) listView.getItemAtPosition(contextPosition);
                                     title = item.getmTitle();
                                 }else{
-                                    SimpleListItem item = (SimpleListItem) listView.getItemAtPosition(context_potision);
+                                    SimpleListItem item = (SimpleListItem) listView.getItemAtPosition(contextPosition);
                                     title = item.getTitle();
                                 }
 
@@ -243,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.change_icon:
                 if(list_style) {
-                    ShuttleListItem list_item = (ShuttleListItem) listView.getItemAtPosition(context_potision);
+                    ShuttleListItem list_item = (ShuttleListItem) listView.getItemAtPosition(contextPosition);
 
                     Intent Icon = new Intent(getApplicationContext(), iconActivity.class);
                     Icon.putExtra("memo_id",list_item.getId());
@@ -263,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(Icon);
                     overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
                 }else{
-                    SimpleListItem list_item = (SimpleListItem) listView.getItemAtPosition(context_potision);
+                    SimpleListItem list_item = (SimpleListItem) listView.getItemAtPosition(contextPosition);
 
                     Log.d("test",String.valueOf(list_item.getId()));
 
@@ -317,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Cursor cursor = read_db.query("memo",new String[] {"title","data_modified","icon_img","icon_color","_id"},null,null,null,null,"data_modified desc" );
         cursor.moveToFirst();
 
-        itemcount = cursor.getCount();
+        itemCount = cursor.getCount();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
         if(pref.getBoolean("list_style",false)){
@@ -368,9 +364,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.mode:
-                if(itemcount != 0) {
+                if(itemCount != 0) {
                     Intent delete_intent = new Intent(this, DeleteActivity.class);
-                    delete_intent.putExtra("item",itemcount);
+                    delete_intent.putExtra("item", itemCount);
                     startActivityForResult(delete_intent, REQUEST_CODE_ANOTHER_CALC_1);
                 }else{
                     Snackbar.make(cl, getResources().getString(R.string.error_d), Snackbar.LENGTH_SHORT).show();
