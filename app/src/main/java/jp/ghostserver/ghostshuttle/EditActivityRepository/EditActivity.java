@@ -1,4 +1,4 @@
-package jp.ghostserver.ghostshuttle;
+package jp.ghostserver.ghostshuttle.EditActivityRepository;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -21,7 +21,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import com.example.denpa.ghostshuttle.R;
+import jp.ghostserver.ghostshuttle.AlarmBroadcastReceiver;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDBHelper;
+import jp.ghostserver.ghostshuttle.DatePickerDialogFragment;
+import jp.ghostserver.ghostshuttle.TimePickerFragment;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

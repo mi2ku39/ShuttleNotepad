@@ -1,4 +1,4 @@
-package jp.ghostserver.ghostshuttle;
+package jp.ghostserver.ghostshuttle.MainActivityRepository;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,10 +17,14 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.example.denpa.ghostshuttle.R;
+import jp.ghostserver.ghostshuttle.AppDetail;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDBHelper;
+import jp.ghostserver.ghostshuttle.DeleteActivity;
+import jp.ghostserver.ghostshuttle.EditActivityRepository.EditActivity;
 import jp.ghostserver.ghostshuttle.ListViewClasses.EnhancedListView.ShuttleListItem;
 import jp.ghostserver.ghostshuttle.ListViewClasses.SimpleListView.SimpleListItem;
-import jp.ghostserver.ghostshuttle.MainActivityFunctions.SetViews;
+import jp.ghostserver.ghostshuttle.SettingActivity;
+import jp.ghostserver.ghostshuttle.iconActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                 //データベースの取得・クエリ実行
                                 MemoDBHelper Helper = new MemoDBHelper(MainActivity.this);
-                                SQLiteDatabase write_db = Helper.getReadableDatabase();
+                                SQLiteDatabase write_db = Helper.getWritableDatabase();
                                 Cursor cursor = write_db.query("memo", new String[]{"filepath", "_id"}, "title = '" + title + "'", null, null, null, null);
 
                                 //データベースからの情報を格納する変数のゼロクリア
@@ -208,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId()){
             case R.id.fab:
                 //FABが押されたときの動作
-                Intent intent = new Intent(this,EditActivity.class);
+                Intent intent = new Intent(this, EditActivity.class);
                 startActivityForResult(intent,REQUEST_CODE_ANOTHER_CALC_1);
                 break;
         }
@@ -218,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.detail:
-                Intent intent = new Intent(this,AppDetail.class);
+                Intent intent = new Intent(this, AppDetail.class);
                 startActivityForResult(intent,REQUEST_CODE_ANOTHER_CALC_1);
                 break;
 
@@ -233,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.settings:
-                    Intent setting_intent = new Intent(this,SettingActivity.class);
+                Intent setting_intent = new Intent(this, SettingActivity.class);
                     startActivity(setting_intent);
                 break;
 

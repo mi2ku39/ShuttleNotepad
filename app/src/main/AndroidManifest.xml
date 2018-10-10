@@ -12,14 +12,14 @@
         android:roundIcon="@mipmap/gs_logo_color"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="jp.ghostserver.ghostshuttle.MainActivity">
+        <activity android:name="jp.ghostserver.ghostshuttle.MainActivityRepository.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="jp.ghostserver.ghostshuttle.EditActivity"/>
+        <activity android:name="jp.ghostserver.ghostshuttle.EditActivityRepository.EditActivity"/>
         <activity android:name="jp.ghostserver.ghostshuttle.AppDetail"/>
 
         <receiver

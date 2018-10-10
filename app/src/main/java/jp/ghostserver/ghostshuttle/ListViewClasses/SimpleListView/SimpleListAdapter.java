@@ -1,6 +1,7 @@
 package jp.ghostserver.ghostshuttle.ListViewClasses.SimpleListView;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,30 +17,30 @@ import java.util.List;
 
 public class SimpleListAdapter extends ArrayAdapter<SimpleListItem> {
 
-    private int mResource;
-    private List<SimpleListItem> mItems;
-    private LayoutInflater mInflater;
+    private int _resource;
+    private List<SimpleListItem> _items;
+    private LayoutInflater _inflater;
 
     public SimpleListAdapter(Context context, int resource, List<SimpleListItem> items) {
         super(context, resource, items);
-        mResource = resource;
-        mItems = items;
-        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        _resource = resource;
+        _items = items;
+        _inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view;
 
         if (convertView != null) {
             view = convertView;
-        }
-        else {
-            view = mInflater.inflate(mResource, null);
+        } else {
+            view = _inflater.inflate(_resource, null);
         }
 
         // リストビューに表示する要素を取得
-        SimpleListItem item = mItems.get(position);
+        SimpleListItem item = _items.get(position);
 
         TextView title = view.findViewById(R.id.title);
         title.setText(item.getTitle());

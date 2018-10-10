@@ -1,4 +1,4 @@
-package jp.ghostserver.ghostshuttle.MainActivityFunctions;
+package jp.ghostserver.ghostshuttle.MainActivityRepository;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,12 +12,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.example.denpa.ghostshuttle.R;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDBHelper;
-import jp.ghostserver.ghostshuttle.EditActivity;
+import jp.ghostserver.ghostshuttle.EditActivityRepository.EditActivity;
 import jp.ghostserver.ghostshuttle.ListViewClasses.EnhancedListView.ShuttleListAdapter;
 import jp.ghostserver.ghostshuttle.ListViewClasses.EnhancedListView.ShuttleListItem;
 import jp.ghostserver.ghostshuttle.ListViewClasses.SimpleListView.SimpleListAdapter;
 import jp.ghostserver.ghostshuttle.ListViewClasses.SimpleListView.SimpleListItem;
-import jp.ghostserver.ghostshuttle.MainActivity;
 import jp.ghostserver.ghostshuttle.ViewerActivity;
 import jp.ghostserver.ghostshuttle.memofileaccessor.MemoFileManager;
 import jp.ghostserver.ghostshuttle.preferenceaccessor.PreferenceAccessor;

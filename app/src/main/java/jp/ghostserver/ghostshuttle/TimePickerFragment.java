@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.TimePicker;
+import jp.ghostserver.ghostshuttle.EditActivityRepository.EditActivity;
 
 import java.util.Calendar;
 

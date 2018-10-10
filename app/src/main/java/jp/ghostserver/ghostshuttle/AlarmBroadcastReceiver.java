@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import com.example.denpa.ghostshuttle.R;
+import jp.ghostserver.ghostshuttle.MainActivityRepository.MainActivity;
 
 /**
  * Created by denpa on 2017/09/06.
