@@ -19,30 +19,30 @@ import java.util.List;
 
 public class ShuttleListAdapter extends ArrayAdapter<ShuttleListItem> {
 
-    private int mResource;
-    private List<ShuttleListItem> mItems;
-    private LayoutInflater mInflater;
+    private int _resource;
+    private List<ShuttleListItem> _items;
+    private LayoutInflater _inflater;
 
     public ShuttleListAdapter(Context context, int resource, List<ShuttleListItem> items) {
         super(context, resource, items);
-        mResource = resource;
-        mItems = items;
-        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        _resource = resource;
+        _items = items;
+        _inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view;
 
         if (convertView != null) {
             view = convertView;
         } else {
-            view = mInflater.inflate(mResource, null);
+            view = _inflater.inflate(_resource, null);
         }
 
         // リストビューに表示する要素を取得
-        ShuttleListItem item = mItems.get(position);
+        ShuttleListItem item = _items.get(position);
 
         // サムネイル画像を設定
         RoundedImageView thumbnail = view.findViewById(R.id.icon);

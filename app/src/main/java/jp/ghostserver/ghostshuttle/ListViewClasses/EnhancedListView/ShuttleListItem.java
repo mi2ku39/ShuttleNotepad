@@ -7,9 +7,9 @@ package jp.ghostserver.ghostshuttle.ListViewClasses.EnhancedListView;
 public class ShuttleListItem {
 
     private int list_icon;
-    private String list_title = null;
-    private String detail = null;
-    private String color = null;
+    private String list_title;
+    private String detail;
+    private String color;
     private int id;
 
     public ShuttleListItem(int icon, String title,String detail,String color,int id) {
