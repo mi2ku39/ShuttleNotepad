@@ -1,4 +1,4 @@
-package com.example.denpa.ghostshuttle;
+package com.example.denpa.ghostshuttle.DataBaseAccesser;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

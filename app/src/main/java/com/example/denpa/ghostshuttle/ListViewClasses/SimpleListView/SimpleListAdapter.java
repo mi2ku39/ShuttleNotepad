@@ -1,30 +1,26 @@
-package com.example.denpa.ghostshuttle;
+package com.example.denpa.ghostshuttle.ListViewClasses.SimpleListView;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.makeramen.roundedimageview.RoundedImageView;
+import com.example.denpa.ghostshuttle.R;
 
 import java.util.List;
 
 /**
- * Created by denpa on 2018/01/17.
+ * Created by denpa on 2018/01/22.
  */
 
-public class ColorAdapter extends ArrayAdapter<ColorGridItem> {
+public class SimpleListAdapter extends ArrayAdapter<SimpleListItem> {
 
     private int mResource;
-    private List<ColorGridItem> mItems;
+    private List<SimpleListItem> mItems;
     private LayoutInflater mInflater;
 
-    public ColorAdapter(Context context, int resource, List<ColorGridItem> items) {
+    public SimpleListAdapter(Context context, int resource, List<SimpleListItem> items) {
         super(context, resource, items);
         mResource = resource;
         mItems = items;
@@ -43,18 +39,13 @@ public class ColorAdapter extends ArrayAdapter<ColorGridItem> {
         }
 
         // リストビューに表示する要素を取得
-        ColorGridItem item = mItems.get(position);
-        RoundedImageView thumbnail = view.findViewById(R.id.icon);
-        ImageView check = view.findViewById(R.id.check);
+        SimpleListItem item = mItems.get(position);
 
-        thumbnail.setBackgroundColor(Color.parseColor(item.getColor()));
-        if(item.getFlag()){
-            check.setVisibility(View.VISIBLE);
-        }else{
-            check.setVisibility(View.INVISIBLE);
-        }
+        TextView title = view.findViewById(R.id.title);
+        title.setText(item.getTitle());
 
         return view;
+
     }
 
 }

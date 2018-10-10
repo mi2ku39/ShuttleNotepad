@@ -1,4 +1,4 @@
-package com.example.denpa.ghostshuttle;
+package com.example.denpa.ghostshuttle.ListViewClasses.IconGridItem;
 
 /**
  * Created by denpa on 2018/01/17.

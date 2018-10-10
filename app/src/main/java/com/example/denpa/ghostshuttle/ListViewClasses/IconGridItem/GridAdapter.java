@@ -1,4 +1,4 @@
-package com.example.denpa.ghostshuttle;
+package com.example.denpa.ghostshuttle.ListViewClasses.IconGridItem;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,23 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
-
+import com.example.denpa.ghostshuttle.R;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
 /**
- * Created by denpa on 2018/01/10.
+ * Created by denpa on 2018/01/17.
  */
 
-public class ShuttleListAdapter extends ArrayAdapter<ShuttleListItem> {
+public class GridAdapter extends ArrayAdapter<IconGridItem> {
+
 
     private int mResource;
-    private List<ShuttleListItem> mItems;
+    private List<IconGridItem> mItems;
     private LayoutInflater mInflater;
 
-    public ShuttleListAdapter(Context context, int resource, List<ShuttleListItem> items) {
+    public GridAdapter(Context context, int resource, List<IconGridItem> items) {
         super(context, resource, items);
         mResource = resource;
         mItems = items;
@@ -42,22 +42,19 @@ public class ShuttleListAdapter extends ArrayAdapter<ShuttleListItem> {
         }
 
         // リストビューに表示する要素を取得
-        ShuttleListItem item = mItems.get(position);
-
-        // サムネイル画像を設定
+        IconGridItem item = mItems.get(position);
         RoundedImageView thumbnail = view.findViewById(R.id.icon);
-        thumbnail.setImageResource(item.getThumbnail());
+        ImageView check = view.findViewById(R.id.check);
+        thumbnail.setImageResource(item.getIcon());
         thumbnail.setBackgroundColor(Color.parseColor(item.getColor()));
 
-        // タイトルを設定
-        TextView title = view.findViewById(R.id.title);
-        title.setText(item.getmTitle());
-
-        TextView detail = view.findViewById(R.id.detail);
-        detail.setText(item.getDetail());
+        if(item.getCheck()){
+            check.setVisibility(View.VISIBLE);
+        }else{
+            check.setVisibility(View.INVISIBLE);
+        }
 
         return view;
-
     }
 
 }

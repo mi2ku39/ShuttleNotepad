@@ -10,14 +10,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.example.denpa.ghostshuttle.*;
+import com.example.denpa.ghostshuttle.DataBaseAccesser.MemoDBHelper;
+import com.example.denpa.ghostshuttle.EditActivity;
+import com.example.denpa.ghostshuttle.ListViewClasses.EnhancedListView.ShuttleListAdapter;
+import com.example.denpa.ghostshuttle.ListViewClasses.EnhancedListView.ShuttleListItem;
+import com.example.denpa.ghostshuttle.ListViewClasses.SimpleListView.SimpleListAdapter;
+import com.example.denpa.ghostshuttle.ListViewClasses.SimpleListView.SimpleListItem;
+import com.example.denpa.ghostshuttle.MainActivity;
+import com.example.denpa.ghostshuttle.R;
 import com.example.denpa.ghostshuttle.memofileaccessor.MemoFileManager;
 import com.example.denpa.ghostshuttle.preferenceaccessor.PreferenceAccessor;
 import jp.ghostserver.ghostshuttle.ViewerActivity;
 
 import java.util.ArrayList;
 
-public class setViews {
+public class SetViews {
     public static void findIDs(MainActivity targetActivity){
         targetActivity.fab = targetActivity.findViewById(R.id.fab);
         targetActivity.listView = targetActivity.findViewById(R.id.listview);

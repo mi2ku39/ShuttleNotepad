@@ -5,28 +5,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-
-import com.example.denpa.ghostshuttle.MainActivityFunctions.setViews;
-import com.example.denpa.ghostshuttle.memofileaccessor.MemoFileManager;
-import jp.ghostserver.ghostshuttle.ViewerActivity;
+import com.example.denpa.ghostshuttle.DataBaseAccesser.MemoDBHelper;
+import com.example.denpa.ghostshuttle.ListViewClasses.EnhancedListView.ShuttleListItem;
+import com.example.denpa.ghostshuttle.ListViewClasses.SimpleListView.SimpleListItem;
+import com.example.denpa.ghostshuttle.MainActivityFunctions.SetViews;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -48,10 +41,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_main);
 
-        setViews.setPreferenceScreen(this);
-        setViews.setToolbar(this);
-        setViews.findIDs(this);
-        setViews.initListView(this);
+        SetViews.setPreferenceScreen(this);
+        SetViews.setToolbar(this);
+        SetViews.findIDs(this);
+        SetViews.initListView(this);
 
     }
 
@@ -68,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo Info) {
         super.onCreateContextMenu(menu, v, Info);
-
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) Info;
 
         if(list_style){
@@ -132,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 cursor.close();
                                 write_db.close();
 
-                                setViews.syncList(MainActivity.this);
+                                SetViews.syncList(MainActivity.this);
                             }
                         });
                 alertDlg.setNegativeButton(
@@ -207,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         list_style = pref.getBoolean("list_style",false);
-        setViews.syncList(this);
+        SetViews.syncList(this);
     }
 
     @Override

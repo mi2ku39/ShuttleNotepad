@@ -1,32 +1,25 @@
 package com.example.denpa.ghostshuttle;
 
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import com.example.denpa.ghostshuttle.DataBaseAccesser.MemoDBHelper;
+import com.example.denpa.ghostshuttle.ListViewClasses.ColorGridView.ColorAdapter;
+import com.example.denpa.ghostshuttle.ListViewClasses.ColorGridView.ColorGridItem;
+import com.example.denpa.ghostshuttle.ListViewClasses.IconGridItem.GridAdapter;
+import com.example.denpa.ghostshuttle.ListViewClasses.IconGridItem.IconGridItem;
 
 import java.util.ArrayList;
-
-import static com.example.denpa.ghostshuttle.DeleteActivity.adapter;
 
 public class iconActivity extends AppCompatActivity implements View.OnClickListener{
 
