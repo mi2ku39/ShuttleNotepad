@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String context_title;
     private Boolean list_style;
 
-    //private MemoDBHelper Helper = new MemoDBHelper(this);
-
     //画面遷移で使うやつ
     private static final int REQUEST_CODE_ANOTHER_CALC_1 = 1;
 
@@ -55,96 +53,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setViews.findIDs(this);
         setViews.initListView(this);
 
-        //ListViewのアイテムがタップされたときの処理
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MemoDBHelper Helper = new MemoDBHelper(MainActivity.this);
-                //データベースの取得・クエリ実行
-                SQLiteDatabase read_db = Helper.getReadableDatabase();
-                String title;
-
-                if(list_style){
-                    //変数宣言
-                    ShuttleListItem item = (ShuttleListItem) listView.getItemAtPosition(position);
-                    title = item.getmTitle();
-                }else{
-                    SimpleListItem item = (SimpleListItem) listView.getItemAtPosition(position);
-                    title = item.getTitle();
-                }
-
-                    Cursor cursor = read_db.query("memo", new String[]{"filepath", "_id", "notifi_enabled"}, "title like '" + title + "'", null, null, null, null);
-                    cursor.moveToFirst();
-
-                if(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("viewer_used",false)) {
-
-                    //ViewerActivityへ値を渡す処理
-                    Intent viewer = new Intent(getApplicationContext(), ViewerActivity.class);
-                    viewer.putExtra("TITLE", title);
-                    viewer.putExtra("MEMO", cursor.getString(0) + ".gs");
-                    viewer.putExtra("_ID", cursor.getInt(1));
-                    viewer.putExtra("Notifi", cursor.getInt(2));
-
-                    //カーソルのクローズ
-                    cursor.close();
-                    read_db.close();
-
-                    //Activity開始
-                    startActivity(viewer);
-
-                }else{
-
-                    //EditActivityへ値を渡す処理
-                    Intent editor = new Intent(getApplicationContext(), EditActivity.class);
-                    editor.putExtra("TITLE", title);
-                    editor.putExtra("MEMO", MemoFileManager.readFile(cursor.getString(0) + ".gs", MainActivity.this));
-                    editor.putExtra("_ID", cursor.getInt(1));
-                    editor.putExtra("flag", true);
-                    editor.putExtra("Notifi", cursor.getInt(2));
-
-                    //カーソルのクローズ
-                    cursor.close();
-                    read_db.close();
-
-                    startActivity(editor);
-
-                }
-            }
-        });
-
-        listView.setEmptyView(findViewById(R.id.EmptyText));
-        listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
-        registerForContextMenu(listView);
-
-        if(getIntent().getBooleanExtra("FLAG",false)){
-            int id = getIntent().getIntExtra("ID",-1);
-
-            //データベースの取得・クエリ実行
-            MemoDBHelper Helper = new MemoDBHelper(this);
-            SQLiteDatabase read_db = Helper.getReadableDatabase();
-            Cursor cursor = read_db.query("memo",new String[] {"filepath","title","notifi_enabled"},"_id = '" + id + "'",null,null,null,null);
-
-            if(cursor.getCount() > 0) {
-
-                cursor.moveToFirst();
-                //EditActivityへ値を渡す処理
-                Intent editer = new Intent(getApplicationContext(), EditActivity.class);
-                editer.putExtra("TITLE", cursor.getString(1));
-                editer.putExtra("MEMO", MemoFileManager.readFile(cursor.getString(0) + ".gs", this));
-                editer.putExtra("_ID", id);
-                editer.putExtra("flag", true);
-                editer.putExtra("Notifi", cursor.getInt(2));
-
-                //カーソルのクローズ
-                cursor.close();
-                read_db.close();
-
-                startActivity(editer);
-                overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
-
-            }else
-                Toast.makeText(this, getResources().getString(R.string.toast_delete), Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
