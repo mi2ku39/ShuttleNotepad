@@ -1,15 +1,21 @@
 package jp.ghostserver.ghostshuttle.ListViewClasses;
 
+
 public abstract class BaseShuttleListItem {
 
-    protected String Title;
-    protected int ID;
+    private String Title;
+    private int ID;
 
-    public String getTitle(){
+    public BaseShuttleListItem(String title, int id) {
+        Title = title;
+        ID = id;
+    }
+
+    public String getTitle() {
         return Title;
     }
 
-    public int getID(){
+    public int getID() {
         return ID;
     }
 

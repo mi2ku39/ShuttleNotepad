@@ -22,6 +22,7 @@ import jp.ghostserver.ghostshuttle.memofileaccessor.MemoFileManager;
 import jp.ghostserver.ghostshuttle.preferenceaccessor.PreferenceAccessor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SetViews {
     public static void findIDs(MainActivity targetActivity){
@@ -146,7 +147,7 @@ public class SetViews {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
 
         if(pref.getBoolean("list_style",false)){
-            ArrayList<ShuttleListItem> listItems = new ArrayList<>();
+            List<ShuttleListItem> listItems = new ArrayList<>();
             for(int i=0; i<cursor.getCount(); i++){
                 int icon = activity.getResources().getIdentifier(cursor.getString(2), "drawable",activity.getPackageName());
                 ShuttleListItem item = new ShuttleListItem(icon,cursor.getString(0),activity.getResources().getString(R.string.cd) + cursor.getString(1),cursor.getString(3),cursor.getInt(4));
@@ -157,7 +158,7 @@ public class SetViews {
             ShuttleListAdapter adapter = new ShuttleListAdapter(activity, R.layout.shuttle_listitem, listItems);
             activity.listView.setAdapter(adapter);
         }else{
-            ArrayList<SimpleListItem> listItems = new ArrayList<>();
+            List<SimpleListItem> listItems = new ArrayList<>();
             for(int i=0; i<cursor.getCount(); i++){
                 SimpleListItem item = new SimpleListItem(cursor.getString(0),cursor.getInt(4));
                 listItems.add(item);

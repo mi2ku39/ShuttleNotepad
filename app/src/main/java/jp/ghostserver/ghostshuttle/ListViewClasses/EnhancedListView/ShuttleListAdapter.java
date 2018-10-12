@@ -32,12 +32,9 @@ public class ShuttleListAdapter extends ArrayAdapter<ShuttleListItem> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        View view;
+    public View getView(int position, View view, @NonNull ViewGroup parent) {
 
-        if (convertView != null) {
-            view = convertView;
-        } else {
+        if (view == null) {
             view = _inflater.inflate(_resource, null);
         }
 

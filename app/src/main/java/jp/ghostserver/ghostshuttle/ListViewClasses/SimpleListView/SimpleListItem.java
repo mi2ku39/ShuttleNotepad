@@ -9,8 +9,7 @@ import jp.ghostserver.ghostshuttle.ListViewClasses.BaseShuttleListItem;
 public class SimpleListItem extends BaseShuttleListItem {
 
     public SimpleListItem(String title,int id){
-        this.Title = title;
-        this.ID = id;
+        super(title, id);
     }
 
 }

@@ -1,6 +1,7 @@
 package jp.ghostserver.ghostshuttle.ListViewClasses;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 
@@ -16,11 +17,13 @@ public abstract class BaseShuttleListAdapter extends ArrayAdapter {
             Context context,
             int resource,
             List<? extends BaseShuttleListItem> itemList) {
-        super(context, resource);
+        super(context, resource, itemList);
 
         Resource = resource;
         ItemList = itemList;
         Inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        Log.d("Adapter", "List Count : " + itemList.size());
     }
 
 }
