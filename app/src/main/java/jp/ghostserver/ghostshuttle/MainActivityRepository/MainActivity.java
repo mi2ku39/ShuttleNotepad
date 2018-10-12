@@ -19,8 +19,11 @@ import android.widget.ListView;
 import com.example.denpa.ghostshuttle.R;
 import jp.ghostserver.ghostshuttle.AppDetail;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDBHelper;
+import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
+import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
 import jp.ghostserver.ghostshuttle.DeleteActivity;
 import jp.ghostserver.ghostshuttle.EditActivityRepository.EditActivity;
+import jp.ghostserver.ghostshuttle.ListViewClasses.BaseShuttleListItem;
 import jp.ghostserver.ghostshuttle.ListViewClasses.EnhancedListView.ShuttleListItem;
 import jp.ghostserver.ghostshuttle.ListViewClasses.SimpleListView.SimpleListItem;
 import jp.ghostserver.ghostshuttle.SettingActivity;
@@ -146,55 +149,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.change_icon:
-                if(list_style) {
-                    ShuttleListItem list_item = (ShuttleListItem) listView.getItemAtPosition(contextPosition);
+                BaseShuttleListItem listItem = (BaseShuttleListItem) listView.getItemAtPosition(contextPosition);
+                MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(this, listItem.getID());
 
-                    Intent Icon = new Intent(getApplicationContext(), iconActivity.class);
-                    Icon.putExtra("memo_id", list_item.getID());
-                    Icon.putExtra("memo_title", list_item.getTitle());
-
-                    Log.d("TEST", String.valueOf(list_item.getID()));
-
-                    MemoDBHelper Helper = new MemoDBHelper(this);
-                    SQLiteDatabase read_db = Helper.getReadableDatabase();
-                    Cursor cursor = read_db.query("memo", new String[]{"icon_img", "icon_color"}, "_id = '" + list_item.getID() + "'", null, null, null, null);
-                    cursor.moveToFirst();
-                    Icon.putExtra("icon_img",cursor.getString(0));
-                    Icon.putExtra("icon_color",cursor.getString(1));
-
-                    cursor.close();
-                    read_db.close();
-
-                    startActivity(Icon);
-                    overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
-                }else{
-                    SimpleListItem list_item = (SimpleListItem) listView.getItemAtPosition(contextPosition);
-
-                    Log.d("test",String.valueOf(list_item.getID()));
-
-                    Intent Icon = new Intent(getApplicationContext(), iconActivity.class);
-                    Icon.putExtra("memo_id",list_item.getID());
-                    Icon.putExtra("memo_title",list_item.getTitle());
-
-                    Log.d("TEST",String.valueOf(list_item.getID()));
-
-                    MemoDBHelper Helper = new MemoDBHelper(this);
-                    SQLiteDatabase read_db = Helper.getReadableDatabase();
-                    Cursor cursor = read_db.query("memo",new String[] {"icon_img","icon_color"},"_id = '" + list_item.getID() + "'",null,null,null,null );
-                    cursor.moveToFirst();
-                    Icon.putExtra("icon_img",cursor.getString(0));
-                    Icon.putExtra("icon_color",cursor.getString(1));
-
-                    cursor.close();
-                    read_db.close();
-
-                    startActivity(Icon);
-                    overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
+                if(record == null){
+                    return false;
                 }
 
+                Intent iconIntent = new Intent(getApplicationContext(), iconActivity.class);
+
+                iconIntent.putExtra("memo_id", record.getID());
+                iconIntent.putExtra("memo_title", record.getMemoTitle());
+                iconIntent.putExtra("icon_img", record.getIconImg());
+                iconIntent.putExtra("icon_color", record.getIconColor());
+
+                startActivity(iconIntent);
+                overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
+
                 break;
-
-
         }
         return false;
     }
