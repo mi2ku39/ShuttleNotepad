@@ -3,8 +3,6 @@ package jp.ghostserver.ghostshuttle.MainActivityRepository;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
@@ -12,13 +10,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.example.denpa.ghostshuttle.R;
 import jp.ghostserver.ghostshuttle.AppDetail;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDBHelper;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
 import jp.ghostserver.ghostshuttle.DeleteActivity;
@@ -105,34 +101,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // OK ボタンクリック処理
-                                String title;
+                                BaseShuttleListItem item = (BaseShuttleListItem) listView.getItemAtPosition(contextPosition);
+                                int id = item.getID();
 
-                                if(list_style) {
-                                    ShuttleListItem item = (ShuttleListItem) listView.getItemAtPosition(contextPosition);
-                                    title = item.getTitle();
-                                }else{
-                                    SimpleListItem item = (SimpleListItem) listView.getItemAtPosition(contextPosition);
-                                    title = item.getTitle();
-                                }
-
-                                //データベースの取得・クエリ実行
-                                MemoDBHelper Helper = new MemoDBHelper(MainActivity.this);
-                                SQLiteDatabase write_db = Helper.getWritableDatabase();
-                                Cursor cursor = write_db.query("memo", new String[]{"filepath", "_id"}, "title = '" + title + "'", null, null, null, null);
-
-                                //データベースからの情報を格納する変数のゼロクリア
-                                cursor.moveToFirst();
-                                int db_id = cursor.getInt(1);
-                                String path = cursor.getString(0);
-
-                                write_db.delete("memo", "_id = " + db_id, null);
-                                write_db.delete("NOTIFICATION", "_id = " + db_id, null);
-
-                                deleteFile(path + ".gs");
-
-                                cursor.close();
-                                write_db.close();
-
+                                MemoDatabaseAccessor.DeleteMemoById(MainActivity.this, id);
                                 SetViews.syncList(MainActivity.this);
                             }
                         });

@@ -1,8 +1,8 @@
 package jp.ghostserver.ghostshuttle.DataBaseAccesser;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 public class MemoDatabaseAccessor {
 
@@ -38,7 +38,7 @@ public class MemoDatabaseAccessor {
     }
 
     public static MemoDataBaseRecord getRecordById(Context context, int memoID) {
-        @SuppressLint("Recycle") Cursor cursor =
+        Cursor cursor =
                 new MemoDBHelper(context).getReadableDatabase().query(
                         "memo", new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"},
                         "_id like '" + memoID + "'", null, null, null, null);
@@ -57,6 +57,23 @@ public class MemoDatabaseAccessor {
         } else {
             return null;
         }
+    }
+
+    public static void DeleteMemoById(Context context, int id) {
+        //データベースの取得・クエリ実行
+        MemoDataBaseRecord record = getRecordById(context, id);
+        if (record == null) {
+            return;
+        }
+
+        context.deleteFile(record.getFilePath());
+
+        SQLiteDatabase write_db = new MemoDBHelper(context).getWritableDatabase();
+        write_db.delete("memo", "_id = " + id, null);
+        write_db.delete("NOTIFICATION", "_id = " + id, null);
+
+        write_db.close();
+
     }
 
     private static Boolean exchangeIntToBool(int boolInt) {
