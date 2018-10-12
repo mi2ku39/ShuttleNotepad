@@ -57,7 +57,7 @@ public class SetViews {
                 if(PreferenceAccessor.getListStyle(activity)){
                     //変数宣言
                     ShuttleListItem item = (ShuttleListItem) activity.listView.getItemAtPosition(position);
-                    title = item.getmTitle();
+                    title = item.getTitle();
                 }else{
                     SimpleListItem item = (SimpleListItem)activity.listView.getItemAtPosition(position);
                     title = item.getTitle();

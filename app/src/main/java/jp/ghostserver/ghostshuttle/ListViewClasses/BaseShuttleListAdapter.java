@@ -1,17 +1,22 @@
 package jp.ghostserver.ghostshuttle.ListViewClasses;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import com.example.denpa.ghostshuttle.R;
 
 import java.util.List;
 
 public abstract class BaseShuttleListAdapter extends ArrayAdapter {
 
-    protected int Resource;
+    private int Resource;
     protected List<? extends BaseShuttleListItem> ItemList;
-    protected LayoutInflater Inflater;
+    private LayoutInflater Inflater;
 
     public BaseShuttleListAdapter(
             Context context,
@@ -26,4 +31,19 @@ public abstract class BaseShuttleListAdapter extends ArrayAdapter {
         Log.d("Adapter", "List Count : " + itemList.size());
     }
 
+    @NonNull
+    @Override
+    public View getView(int position, View view, @NonNull ViewGroup parent) {
+        if (view == null) {
+            view = Inflater.inflate(Resource, null);
+        }
+
+        BaseShuttleListItem item = ItemList.get(position);
+
+        // タイトルを設定
+        TextView title = view.findViewById(R.id.title);
+        title.setText(item.getTitle());
+
+        return view;
+    }
 }

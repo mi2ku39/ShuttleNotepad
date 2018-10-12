@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(list_style){
             ShuttleListItem item = (ShuttleListItem) listView.getItemAtPosition(info.position);
             contextPosition = info.position;
-            context_title = item.getmTitle();
-            String title = item.getmTitle();
+            context_title = item.getTitle();
+            String title = item.getTitle();
             menu.setHeaderTitle(title);
         }else{
             SimpleListItem item = (SimpleListItem) listView.getItemAtPosition(info.position);
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                 if(list_style) {
                                     ShuttleListItem item = (ShuttleListItem) listView.getItemAtPosition(contextPosition);
-                                    title = item.getmTitle();
+                                    title = item.getTitle();
                                 }else{
                                     SimpleListItem item = (SimpleListItem) listView.getItemAtPosition(contextPosition);
                                     title = item.getTitle();
@@ -149,14 +149,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     ShuttleListItem list_item = (ShuttleListItem) listView.getItemAtPosition(contextPosition);
 
                     Intent Icon = new Intent(getApplicationContext(), iconActivity.class);
-                    Icon.putExtra("memo_id",list_item.getId());
-                    Icon.putExtra("memo_title",list_item.getmTitle());
+                    Icon.putExtra("memo_id", list_item.getID());
+                    Icon.putExtra("memo_title", list_item.getTitle());
 
-                    Log.d("TEST",String.valueOf(list_item.getId()));
+                    Log.d("TEST", String.valueOf(list_item.getID()));
 
                     MemoDBHelper Helper = new MemoDBHelper(this);
                     SQLiteDatabase read_db = Helper.getReadableDatabase();
-                    Cursor cursor = read_db.query("memo",new String[] {"icon_img","icon_color"},"_id = '" + list_item.getId() + "'",null,null,null,null );
+                    Cursor cursor = read_db.query("memo", new String[]{"icon_img", "icon_color"}, "_id = '" + list_item.getID() + "'", null, null, null, null);
                     cursor.moveToFirst();
                     Icon.putExtra("icon_img",cursor.getString(0));
                     Icon.putExtra("icon_color",cursor.getString(1));
