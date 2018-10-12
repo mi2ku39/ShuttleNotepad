@@ -22,7 +22,7 @@ public class MemoDBHelper extends SQLiteOpenHelper {
     public static final String TITLE ="title";
     //ファイルパスカラム
     public static final String FILEPATH ="filepath";
-    //通知日時
+    //通知が有効か無効か
     public static final String NOTIFI_ENABLED ="notifi_enabled";
 
 
