@@ -169,17 +169,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     SimpleListItem list_item = (SimpleListItem) listView.getItemAtPosition(contextPosition);
 
-                    Log.d("test",String.valueOf(list_item.getId()));
+                    Log.d("test",String.valueOf(list_item.getID()));
 
                     Intent Icon = new Intent(getApplicationContext(), iconActivity.class);
-                    Icon.putExtra("memo_id",list_item.getId());
+                    Icon.putExtra("memo_id",list_item.getID());
                     Icon.putExtra("memo_title",list_item.getTitle());
 
-                    Log.d("TEST",String.valueOf(list_item.getId()));
+                    Log.d("TEST",String.valueOf(list_item.getID()));
 
                     MemoDBHelper Helper = new MemoDBHelper(this);
                     SQLiteDatabase read_db = Helper.getReadableDatabase();
-                    Cursor cursor = read_db.query("memo",new String[] {"icon_img","icon_color"},"_id = '" + list_item.getId() + "'",null,null,null,null );
+                    Cursor cursor = read_db.query("memo",new String[] {"icon_img","icon_color"},"_id = '" + list_item.getID() + "'",null,null,null,null );
                     cursor.moveToFirst();
                     Icon.putExtra("icon_img",cursor.getString(0));
                     Icon.putExtra("icon_color",cursor.getString(1));

@@ -1,21 +1,16 @@
 package jp.ghostserver.ghostshuttle.ListViewClasses.SimpleListView;
 
+import jp.ghostserver.ghostshuttle.ListViewClasses.BaseShuttleListItem;
+
 /**
  * Created by denpa on 2018/01/22.
  */
 
-public class SimpleListItem {
-
-    private String title;
-    private int id;
+public class SimpleListItem extends BaseShuttleListItem {
 
     public SimpleListItem(String title,int id){
-        this.title = title;
-        this.id = id;
+        this.Title = title;
+        this.ID = id;
     }
-
-    public String getTitle(){return title;}
-
-    public int getId(){return id;}
 
 }
