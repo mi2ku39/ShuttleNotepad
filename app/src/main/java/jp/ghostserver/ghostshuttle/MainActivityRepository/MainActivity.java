@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SetViews.setToolbar(this);
         SetViews.findIDs(this);
         SetViews.initListView(this);
+        SetViews.checkStartAppFromNotify(this);
 
     }
 

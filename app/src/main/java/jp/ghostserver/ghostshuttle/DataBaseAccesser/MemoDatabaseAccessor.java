@@ -1,16 +1,19 @@
 package jp.ghostserver.ghostshuttle.DataBaseAccesser;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 public class MemoDatabaseAccessor {
 
     public static MemoDataBaseRecord[] getAllMemoRecordsArray(Context context) {
-        MemoDBHelper Helper = new MemoDBHelper(context);
-        SQLiteDatabase read_db = Helper.getReadableDatabase();
-
-        Cursor cursor = read_db.query("memo", new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"}, null, null, null, null, "data_modified desc");
+        Cursor cursor =
+                new MemoDBHelper(context).getReadableDatabase().query(
+                        "memo",
+                        new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"},
+                        null, null, null, null,
+                        "data_modified desc"
+                );
         cursor.moveToFirst();
 
         MemoDataBaseRecord[] records = new MemoDataBaseRecord[cursor.getCount()];
@@ -32,6 +35,28 @@ public class MemoDatabaseAccessor {
         cursor.close();
 
         return records;
+    }
+
+    public static MemoDataBaseRecord getRecordById(Context context, int memoID) {
+        @SuppressLint("Recycle") Cursor cursor =
+                new MemoDBHelper(context).getReadableDatabase().query(
+                        "memo", new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"},
+                        "_id like '" + memoID + "'", null, null, null, null);
+        cursor.moveToFirst();
+
+        if (cursor.getCount() > 0) {
+            return new MemoDataBaseRecord(
+                    cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    exchangeIntToBool(cursor.getInt(4)),
+                    cursor.getString(5),
+                    cursor.getString(6)
+            );
+        } else {
+            return null;
+        }
     }
 
     private static Boolean exchangeIntToBool(int boolInt) {

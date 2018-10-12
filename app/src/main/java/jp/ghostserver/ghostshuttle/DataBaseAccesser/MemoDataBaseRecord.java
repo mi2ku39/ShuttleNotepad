@@ -19,7 +19,7 @@ public class MemoDataBaseRecord {
             String icon_color) {
         this._id = _id;
         this.title = title;
-        this.filePath = filePath;
+        this.filePath = filePath + ".gs";
         this.timestamp = timestamp;
         this.isNotifyEnabled = isNotifyEnabled;
         this.icon_img = icon_img;
