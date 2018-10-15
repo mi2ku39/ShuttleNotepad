@@ -13,7 +13,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
 import android.widget.Button;
@@ -29,22 +28,20 @@ import jp.ghostserver.ghostshuttle.TimePickerFragment;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Objects;
 import java.util.Random;
 import java.util.TimeZone;
 
-public class EditActivity extends AppCompatActivity implements View.OnClickListener,DatePickerDialog.OnDateSetListener,TimePickerDialog.OnTimeSetListener{
+public class EditActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     //変数宣言
-    EditText title,editmemo;
-    Button date_b,time_b;
-    boolean Edit_flag;
-    boolean Notifi_flag = false;
-    int db_id ;
-    int year,month,day,hour,min;
+    EditText titleField, memoField;
+    Button date_b, time_b;
+    private boolean isEdited;
+    boolean isNotifyEnabled = false;
+    int db_id;
+    int year, month, day, hour, min;
 
-    String memo_before;
-    String title_before;
+    String _memoBeforeEditing, _titleBeforeEditing;
 
     MemoDBHelper DBHelper = new MemoDBHelper(this);
 
@@ -54,33 +51,27 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_edit);
 
         //画面上部の「戻るボタン」設定
-        Toolbar toolbar =findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        //画面上部のタイトル設定
-        setTitle(getResources().getString(R.string.edit_title));
+        setViews.setActionBar(this);
 
         //初期設定系の関数
-        findid();
+        setViews.findIDs(this);
 
-        Intent ei = getIntent();
-        Edit_flag = ei.getBooleanExtra("flag",false);
+        Intent intent = getIntent();
+        isEdited = intent.getBooleanExtra("isEditMode", false);
 
-        if(Edit_flag) {
-            title.setText(ei.getStringExtra("TITLE"));
-            editmemo.setText(ei.getStringExtra("MEMO"));
-            this.db_id = ei.getIntExtra("_ID",1);
+        if (isEdited) {
+            titleField.setText(intent.getStringExtra("TITLE"));
+            memoField.setText(intent.getStringExtra("MEMO"));
+            this.db_id = intent.getIntExtra("_ID", 1);
 
-            if(ei.getIntExtra("Notifi",0) == 1){
-
-                //debaglog.setText("Early Access (Version : 0.0)\nNotification : True");
-                Notifi_flag = true;
+            if (intent.getIntExtra("Notify", 0) == 1) {
+                isNotifyEnabled = true;
 
                 //データベースの取得・クエリ実行
                 SQLiteDatabase read_db = DBHelper.getReadableDatabase();
-                Cursor cursor = read_db.query("NOTIFICATION",new String[] {"notifi_year","notifi_month","notifi_day","notifi_hour","notifi_min"},"_id = '" + db_id + "'",null,null,null,null,null);
+                Cursor cursor = read_db.query("NOTIFICATION", new String[]{"notifi_year", "notifi_month", "notifi_day", "notifi_hour", "notifi_min"}, "_id = '" + db_id + "'", null, null, null, null, null);
                 cursor.moveToFirst();
-                Log.d("test",String.valueOf(db_id));
+                Log.d("test", String.valueOf(db_id));
 
                 year = cursor.getInt(0);
                 month = cursor.getInt(1);
@@ -93,50 +84,34 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
                 //通知時間の確認（過去だったらFalse）
                 Calendar calendar = Calendar.getInstance();
-                if(calendar.get(Calendar.YEAR) - year > 0){
-                    Notifi_flag = false;
-                }else if(calendar.get(Calendar.MONTH) - month > 0){
-                    Notifi_flag = false;
-                }else if(calendar.get(Calendar.DAY_OF_MONTH) - day > 0){
-                    Notifi_flag = false;
-                }else if(calendar.get(Calendar.HOUR_OF_DAY) - hour > 0){
-                    Notifi_flag = false;
-                }else if(calendar.get(Calendar.MINUTE) - min >= 0){
-                    Notifi_flag = false;
+                if (calendar.get(Calendar.YEAR) - year > 0) {
+                    isNotifyEnabled = false;
+                } else if (calendar.get(Calendar.MONTH) - month > 0) {
+                    isNotifyEnabled = false;
+                } else if (calendar.get(Calendar.DAY_OF_MONTH) - day > 0) {
+                    isNotifyEnabled = false;
+                } else if (calendar.get(Calendar.HOUR_OF_DAY) - hour > 0) {
+                    isNotifyEnabled = false;
+                } else if (calendar.get(Calendar.MINUTE) - min >= 0) {
+                    isNotifyEnabled = false;
                 }
 
             }
 
-        }else{
+        } else {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            if(pref.getString("title_template","").length() == 0){}else{
-                title.setText(pref.getString("title_template",""));
-            }
-            if(pref.getString("memo_template","").length() == 0){}else{
-                editmemo.setText(pref.getString("memo_template",""));
-            }
+            titleField.setText(getResources().getString(R.string.titleTemplate));
+            memoField.setText(pref.getString(getResources().getString(R.string.memoTemplate), ""));
         }
 
-        search_before();
+        checkValues.setBeforeEditing(this);
         invalidateOptionsMenu();
 
     }
 
-    //編集されてるかどうかを判断する変数の設定
-    private void search_before(){
-        memo_before = editmemo.getText().toString();
-        title_before = title.getText().toString();
-    }
-
-    //findViewByIdする関数
-    private void findid(){
-        title = findViewById(R.id.editText);
-        editmemo = findViewById(R.id.editmemo);
-    }
-
     @Override
-    public void onClick(View v){
-        switch(v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
 
             //日付を設定するやつ
             case R.id.date_b:
@@ -162,24 +137,24 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     //ActionBarのメニューを設定
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu){
+    public boolean onCreateOptionsMenu(final Menu menu) {
         final MenuInflater inflater = getMenuInflater();
 
-        if(PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move",false)){
-            inflater.inflate(R.menu.edit_menu_unit,menu);
-        }else{
-            inflater.inflate(R.menu.edit_menu,menu);
+        if (PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move", false)) {
+            inflater.inflate(R.menu.edit_menu_unit, menu);
+        } else {
+            inflater.inflate(R.menu.edit_menu, menu);
         }
 
-        if(Notifi_flag){
+        if (isNotifyEnabled) {
 
-            MenuItem Notifi_item = menu.findItem(R.id.notifi);
-            Notifi_item.setIcon(R.mipmap.notifi_b);
+            MenuItem Notify_item = menu.findItem(R.id.notifi);
+            Notify_item.setIcon(R.mipmap.notifi_b);
 
-        }else{
+        } else {
 
-            MenuItem Notifi_item = menu.findItem(R.id.notifi);
-            Notifi_item.setIcon(R.mipmap.notifi_a);
+            MenuItem Notify_item = menu.findItem(R.id.notifi);
+            Notify_item.setIcon(R.mipmap.notifi_a);
 
         }
 
@@ -187,30 +162,27 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //日付・時刻設定ボタンの初期値設定
-    private void setPrimary()
-    {
-        if(Notifi_flag){
-
-        }else{
+    private void setPrimary() {
+        if (!isNotifyEnabled) {
             Calendar calendar = Calendar.getInstance();
             int Month = calendar.get(Calendar.MONTH) + 1;
-            date_b.setText( calendar.get(Calendar.YEAR) + "/ " + Month + "/ " + calendar.get(Calendar.DAY_OF_MONTH) );
-            time_b.setText( hour_convert(calendar.get(Calendar.HOUR_OF_DAY))+":"+String.format("%02d",calendar.get(Calendar.MINUTE)) );
+            date_b.setText(calendar.get(Calendar.YEAR) + "/ " + Month + "/ " + calendar.get(Calendar.DAY_OF_MONTH));
+            time_b.setText(setViews.hour_convert(this, calendar.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", calendar.get(Calendar.MINUTE)));
 
             this.year = calendar.get(Calendar.YEAR);
             this.month = calendar.get(Calendar.MONTH);
-            this.day=calendar.get(Calendar.DAY_OF_MONTH);
+            this.day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            this.hour=calendar.get(Calendar.HOUR_OF_DAY);
-            this.min=calendar.get(Calendar.MINUTE);
+            this.hour = calendar.get(Calendar.HOUR_OF_DAY);
+            this.min = calendar.get(Calendar.MINUTE);
         }
 
     }
 
     //ボタンに日付表示をする関数
     @Override
-    public void onDateSet(DatePicker view,int year,int month,int day){
-        date_b.setText( String.valueOf(year)  + "/ " + String.valueOf(month+1) + "/ " + String.valueOf(day) );
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        date_b.setText(String.valueOf(year) + "/ " + String.valueOf(month + 1) + "/ " + String.valueOf(day));
 
         this.year = year;
         this.month = month;
@@ -219,47 +191,47 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     //ボタンに時刻表示をする関数
     @Override
-    public void onTimeSet(TimePicker view, int hour, int min){
-        time_b.setText( hour_convert(hour)+":"+String.format("%02d",min ));
+    public void onTimeSet(TimePicker view, int hour, int min) {
+        time_b.setText(setViews.hour_convert(this, hour) + ":" + String.format("%02d", min));
 
         this.hour = hour;
         this.min = min;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         boolean result;
-        switch(id){
+        switch (id) {
 
             //「戻るボタン」のクリックイベント
             case android.R.id.home:
 
-                if(PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move",false)){
+                if (PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move", false)) {
 
                     //統合戻るキーの挙動
-                    if(db_save()) {
-                        if (Notifi_flag) {
-                            setNotification();
-                        }else{
+                    if (db_save()) {
+                        if (isNotifyEnabled) {
+                            setNotify();
+                        } else {
                             Notify_cancel();
                         }
 
                         finish();
                     }
-                }else{
+                } else {
                     //旧バージョン挙動・確認ダイアログの表示
-                    backdialog();
+                    backDialog();
                 }
 
                 break;
 
             case R.id.save:
 
-                if(db_save()) {
-                    if (Notifi_flag) {
-                        setNotification();
-                    }else{
+                if (db_save()) {
+                    if (isNotifyEnabled) {
+                        setNotify();
+                    } else {
                         Notify_cancel();
                     }
                     finish();
@@ -269,21 +241,21 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.now_save:
 
                 db_save();
-                search_before();
+                checkValues.setBeforeEditing(this);
 
-                Edit_flag = true;
+                isEdited = true;
                 break;
 
             case R.id.notifi:
 
-                if(Notifi_flag){
+                if (isNotifyEnabled) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(getResources().getString(R.string.notify_disable));
                     builder.setPositiveButton(getResources().getString(R.string.disable), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // OK ボタンクリック処理
-                            Notifi_flag = false;
+                            isNotifyEnabled = false;
                             invalidateOptionsMenu();
                         }
                     });
@@ -295,13 +267,13 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     // 表示
                     builder.create().show();
 
-                }else{
+                } else {
                     // アラートダイアログ を生成
                     LayoutInflater a_inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-                    final View notifi_dialog = a_inflater.inflate(R.layout.notifi_dialog, (ViewGroup) findViewById(R.id.notifidialog_cl));
+                    final View notify_dialog = a_inflater.inflate(R.layout.notifi_dialog, (ViewGroup) findViewById(R.id.notifidialog_cl));
 
-                    date_b=notifi_dialog.findViewById(R.id.date_b);
-                    time_b=notifi_dialog.findViewById(R.id.time_b);
+                    date_b = notify_dialog.findViewById(R.id.date_b);
+                    time_b = notify_dialog.findViewById(R.id.time_b);
                     date_b.setOnClickListener(this);
                     time_b.setOnClickListener(this);
 
@@ -309,11 +281,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(getResources().getString(R.string.Notify));
-                    builder.setView(notifi_dialog);
+                    builder.setView(notify_dialog);
                     builder.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // OK ボタンクリック処理
-                            Notifi_flag = true;
+                            isNotifyEnabled = true;
                             invalidateOptionsMenu();
                         }
                     });
@@ -348,22 +320,21 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     //戻るキーのクリックイベント
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        // TODO Auto-generated method stub
-        if (event.getAction()==KeyEvent.ACTION_DOWN) {
-            if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 
-                if(PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move",false)){
+                if (PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move", false)) {
                     //統合戻るキーの挙動
-                    if(title.length() <= 0 && editmemo.length() <= 0){
+                    if (titleField.length() <= 0 && memoField.length() <= 0) {
                         //タイトルかメモが空白の時
                         finish();
 
-                    }else{
+                    } else {
 
-                        if(db_save()) {
-                            if (Notifi_flag) {
-                                setNotification();
-                            }else{
+                        if (db_save()) {
+                            if (isNotifyEnabled) {
+                                setNotify();
+                            } else {
                                 Notify_cancel();
                             }
 
@@ -373,9 +344,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
 
-                }else{
+                } else {
                     //旧バージョン挙動・確認ダイアログの表示
-                    backdialog();
+                    backDialog();
                 }
 
                 return false;
@@ -384,13 +355,13 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         return super.dispatchKeyEvent(event);
     }
 
-    private void backdialog() {
+    private void backDialog() {
 
-        if(title_before.equals(title.getText().toString()) && memo_before.equals(editmemo.getText().toString())) {
+        if (_titleBeforeEditing.equals(titleField.getText().toString()) && _memoBeforeEditing.equals(memoField.getText().toString())) {
 
-                finish();
+            finish();
 
-        }else{
+        } else {
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setTitle(getResources().getString(R.string.edit_cancel));
@@ -398,10 +369,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             alertDialogBuilder.setPositiveButton(getResources().getString(R.string.save),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if(db_save()) {
-                                if (Notifi_flag) {
-                                    setNotification();
-                                }else{
+                            if (db_save()) {
+                                if (isNotifyEnabled) {
+                                    setNotify();
+                                } else {
                                     Notify_cancel();
                                 }
                                 finish();
@@ -429,7 +400,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         SQLiteDatabase memo_db = DBHelper.getWritableDatabase();
 
         //メモデータをEditTextから取得
-        String memo_raw = editmemo.getText().toString();
+        String memo_raw = memoField.getText().toString();
 
         String title_raw;
         boolean title_not = true;
@@ -437,21 +408,21 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         Random rand = new Random();
         long filepath = rand.nextLong();
 
-        if (title.length() != 0) {
+        if (titleField.length() != 0) {
             // タイトルの取得
-            title_raw = title.getText().toString();
+            title_raw = titleField.getText().toString();
         } else {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            title_raw = pref.getString("default_title","");
+            title_raw = pref.getString("default_title", "");
             title_not = false;
         }
 
         //データベースに保存するレコードの用意
         ContentValues values = new ContentValues();
-        values.put("title", title_raw);
+        values.put("titleField", title_raw);
         values.put("filepath", String.valueOf(filepath));
 
-        if (Notifi_flag == true) {
+        if (isNotifyEnabled == true) {
             values.put("notifi_enabled", true);
         } else {
             values.put("notifi_enabled", false);
@@ -466,7 +437,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
         //編集か、新規作成かの分岐
         //true=編集 false=新規作成
-        if (Edit_flag) {
+        if (isEdited) {
             //編集Mode
 
             String where_words = "_id = " + db_id;
@@ -484,9 +455,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         count++;
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-                        title_raw =  pref.getString("default_title","") + "(" + count + ")";
-                        values.put("title", title_raw);
-                        title.setText(title_raw);
+                        title_raw = pref.getString("default_title", "") + "(" + count + ")";
+                        values.put("titleField", title_raw);
+                        titleField.setText(title_raw);
                     }
                 }
             }
@@ -510,17 +481,17 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     while (db_id == -1) {
                         count++;
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-                        title_raw = pref.getString("default_title","") + "(" + count + ")";
-                        values.put("title", title_raw);
+                        title_raw = pref.getString("default_title", "") + "(" + count + ")";
+                        values.put("titleField", title_raw);
                         filepath = rand.nextLong();
                         values.put("filepath", String.valueOf(filepath));
                         db_id = memo_db.insert("memo", null, values);
                     }
-                    title.setText(title_raw);
+                    titleField.setText(title_raw);
                 }
             }
 
-            Log.d("test",String.valueOf(db_id));
+            Log.d("test", String.valueOf(db_id));
             this.db_id = (int) db_id;
         }
 
@@ -530,7 +501,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    private void setNotification(){
+    private void setNotify() {
 
         //データベースオブジェクトの取得（書き込み可能）
         SQLiteDatabase Notifi_db = DBHelper.getWritableDatabase();
@@ -538,7 +509,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         //データベースに保存するレコードの用意
         ContentValues values = new ContentValues();
 
-        values.put("_id",this.db_id);
+        values.put("_id", this.db_id);
         values.put("notifi_year", this.year);
         values.put("notifi_month", this.month);
         values.put("notifi_day", this.day);
@@ -546,9 +517,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         values.put("notifi_min", this.min);
 
         long test = Notifi_db.insert("NOTIFICATION", null, values);
-        if(test == -1){
-            String where_words= "_ID = '" + this.db_id + "'";
-            Notifi_db.update("NOTIFICATION", values, where_words , null);
+        if (test == -1) {
+            String where_words = "_ID = '" + this.db_id + "'";
+            Notifi_db.update("NOTIFICATION", values, where_words, null);
         }
 
         Calendar calendar = Calendar.getInstance();
@@ -561,11 +532,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         calendar.set(Calendar.MILLISECOND, 0);
 
         Intent intent = new Intent(getApplicationContext(), AlarmBroadcastReceiver.class);
-        intent.putExtra("ID",this.db_id);
-        intent.putExtra("title", title.getText().toString());
+        intent.putExtra("ID", this.db_id);
+        intent.putExtra("titleField", titleField.getText().toString());
 
         PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, intent, 0);
-        AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending);
 
         Notifi_db.close();
@@ -573,32 +544,22 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void Notify_cancel(){
+    private void Notify_cancel() {
         Intent intent = new Intent(getApplicationContext(), AlarmBroadcastReceiver.class);
         PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), this.db_id, intent, 0);
 
         // アラームを解除する
-        AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         am.cancel(pending);
 
     }
 
-    private String hour_convert(int hour){
-        String am_pm=getResources().getString(R.string.am);
-
-        if (hour >= 12){
-            am_pm =getResources().getString(R.string.pm);
-            hour = hour - 12;
-        }
-        return (am_pm+" "+hour);
-    }
-
-    public void saveFile(String filepath,String memo){
-        try{
+    public void saveFile(String filepath, String memo) {
+        try {
             String str = memo;
-            FileOutputStream out = openFileOutput( filepath + ".gs", MODE_PRIVATE );
-            out.write( str.getBytes()   );
-        }catch( IOException e ){
+            FileOutputStream out = openFileOutput(filepath + ".gs", MODE_PRIVATE);
+            out.write(str.getBytes());
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

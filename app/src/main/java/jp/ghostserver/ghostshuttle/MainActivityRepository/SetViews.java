@@ -160,8 +160,8 @@ public class SetViews {
         intent.putExtra("TITLE", record.getMemoTitle());
         intent.putExtra("MEMO", MemoFileManager.readFile(record.getFilePath(), mainActivity));
         intent.putExtra("_ID", record.getID());
-        intent.putExtra("flag", true);
-        intent.putExtra("Notifi", record.getIsNotifyEnabled());
+        intent.putExtra("isEditMode", true);
+        intent.putExtra("Notify", record.getIsNotifyEnabled());
 
         mainActivity.startActivity(intent);
     }
