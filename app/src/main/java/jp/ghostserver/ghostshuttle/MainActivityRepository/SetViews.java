@@ -24,42 +24,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SetViews {
-    /**
-     * ID見つけてくるやつ
-     *
-     * @param targetActivity
-     */
-    public static void findIDs(MainActivity targetActivity) {
-        targetActivity.fab = targetActivity.findViewById(R.id.fab);
+
+    static void findIDs(final MainActivity targetActivity) {
+        targetActivity.findViewById(R.id.fab).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //FABが押されたときの動作
+                        Intent intent = new Intent(targetActivity, EditActivity.class);
+                        targetActivity.startActivity(intent);
+                    }
+                }
+        );
         targetActivity.listView = targetActivity.findViewById(R.id.listview);
-        targetActivity.cl = targetActivity.findViewById(R.id.coordinatorLayout);
-        targetActivity.fab.setOnClickListener(targetActivity);
+        targetActivity.coordinatorLayout = targetActivity.findViewById(R.id.coordinatorLayout);
     }
 
-    /**
-     * Toolbarをセットするやつ
-     * @param activity
-     */
     public static void setToolbar(MainActivity activity) {
         Toolbar toolbar = activity.findViewById(R.id.toolbar);
         activity.setSupportActionBar(toolbar);
         activity.setTitle(activity.getResources().getString(R.string.app_name));
     }
 
-    /**
-     * Preference Screenを設定するやつ
-     * @param activity
-     */
-    public static void setPreferenceScreen(MainActivity activity) {
+    static void setPreferenceScreen(MainActivity activity) {
         PreferenceManager.getDefaultSharedPreferences(activity);
         PreferenceManager.setDefaultValues(activity, R.xml.preference_setting, true);
     }
 
-    /**
-     * ListVIewを初期化する。
-     * @param activity
-     */
-    public static void initListView(final MainActivity activity) {
+    static void initListView(final MainActivity activity) {
         //ListViewのアイテムがタップされたときの処理
         activity.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -79,12 +71,7 @@ public class SetViews {
 
     }
 
-
-    /**
-     * 通知からの起動かどうかチェックして、通知からの起動の場合はビュワーを起動する。
-     * @param activity
-     */
-    public static void checkStartAppFromNotify(MainActivity activity) {
+    static void checkStartAppFromNotify(MainActivity activity) {
         activity.listView.setEmptyView(activity.findViewById(R.id.EmptyText));
         activity.listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
         activity.registerForContextMenu(activity.listView);
@@ -102,11 +89,7 @@ public class SetViews {
         }
     }
 
-    /**
-     * ListViewにメモ一覧を表示する
-     * @param activity
-     */
-    public static void syncList(MainActivity activity) {
+    static void syncList(MainActivity activity) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
 
         MemoDataBaseRecord[] records = MemoDatabaseAccessor.getAllMemoRecordsArray(activity);
@@ -157,11 +140,6 @@ public class SetViews {
 
     }
 
-    /**
-     * memoDBのidを元にビュワーを起動する
-     * @param mainActivity
-     * @param id
-     */
     private static void wakeupMemoViewerById(MainActivity mainActivity, int id) {
         MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(
                 mainActivity, id

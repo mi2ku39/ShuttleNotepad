@@ -2,11 +2,8 @@ package jp.ghostserver.ghostshuttle.MainActivityRepository;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,26 +15,15 @@ import jp.ghostserver.ghostshuttle.AppDetail;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
 import jp.ghostserver.ghostshuttle.DeleteActivity;
-import jp.ghostserver.ghostshuttle.EditActivityRepository.EditActivity;
 import jp.ghostserver.ghostshuttle.ListViewClasses.BaseShuttleListItem;
-import jp.ghostserver.ghostshuttle.ListViewClasses.EnhancedListView.ShuttleListItem;
-import jp.ghostserver.ghostshuttle.ListViewClasses.SimpleListView.SimpleListItem;
 import jp.ghostserver.ghostshuttle.SettingActivity;
 import jp.ghostserver.ghostshuttle.iconActivity;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity {
 
     //変数宣言
-    public FloatingActionButton fab ;
-    public ListView listView;
-    public CoordinatorLayout cl;
-
-    private int contextPosition = 0;
-    private String context_title;
-    private Boolean list_style;
-
-    //画面遷移で使うやつ
-    private static final int REQUEST_CODE_ANOTHER_CALC_1 = 1;
+    public CoordinatorLayout coordinatorLayout;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SetViews.findIDs(this);
         SetViews.initListView(this);
         SetViews.checkStartAppFromNotify(this);
-
     }
 
     @Override
@@ -60,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         inflater.inflate(R.menu.main_menu,menu);
 
         return super.onCreateOptionsMenu(menu);
-
     }
 
     @Override
@@ -68,26 +52,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreateContextMenu(menu, v, Info);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) Info;
 
-        if(list_style){
-            ShuttleListItem item = (ShuttleListItem) listView.getItemAtPosition(info.position);
-            contextPosition = info.position;
-            context_title = item.getTitle();
-            String title = item.getTitle();
-            menu.setHeaderTitle(title);
-        }else{
-            SimpleListItem item = (SimpleListItem) listView.getItemAtPosition(info.position);
-            contextPosition = info.position;
-            context_title = item.getTitle();
-            String title = item.getTitle();
-            menu.setHeaderTitle(title);
-        }
+        BaseShuttleListItem item = (BaseShuttleListItem) listView.getItemAtPosition(info.position);
+        String title = item.getTitle();
+        menu.setHeaderTitle(title);
 
         getMenuInflater().inflate(R.menu.context_menu, menu);
-
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo Info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final BaseShuttleListItem listItem = (BaseShuttleListItem) listView.getItemAtPosition(Info.position);
 
         switch(item.getItemId()){
 
@@ -95,16 +70,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //ダイアログの表示
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(MainActivity.this);
-                alertDlg.setTitle(context_title);
+                alertDlg.setTitle(listItem.getTitle());
                 alertDlg.setMessage(getResources().getString(R.string.delete_question));
                 alertDlg.setPositiveButton(getResources().getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // OK ボタンクリック処理
-                                BaseShuttleListItem item = (BaseShuttleListItem) listView.getItemAtPosition(contextPosition);
-                                int id = item.getID();
-
-                                MemoDatabaseAccessor.DeleteMemoById(MainActivity.this, id);
+                                MemoDatabaseAccessor.DeleteMemoById(MainActivity.this, listItem.getID());
                                 SetViews.syncList(MainActivity.this);
                             }
                         });
@@ -121,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.change_icon:
-                BaseShuttleListItem listItem = (BaseShuttleListItem) listView.getItemAtPosition(contextPosition);
                 MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(this, listItem.getID());
 
                 if(record == null){
@@ -147,51 +118,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onResume(){
         super.onResume();
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        list_style = pref.getBoolean("list_style",false);
         SetViews.syncList(this);
-    }
-
-    @Override
-    public void onClick(View v){
-        switch(v.getId()){
-            case R.id.fab:
-                //FABが押されたときの動作
-                Intent intent = new Intent(this, EditActivity.class);
-                startActivityForResult(intent,REQUEST_CODE_ANOTHER_CALC_1);
-                break;
-        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.detail:
-                Intent intent = new Intent(this, AppDetail.class);
-                startActivityForResult(intent,REQUEST_CODE_ANOTHER_CALC_1);
+                startActivity(new Intent(this, AppDetail.class));
                 break;
 
             case R.id.mode:
                 if(listView.getCount() != 0) {
                     Intent delete_intent = new Intent(this, DeleteActivity.class);
                     delete_intent.putExtra("item", listView.getCount());
-                    startActivityForResult(delete_intent, REQUEST_CODE_ANOTHER_CALC_1);
+                    startActivity(delete_intent);
                 }else{
-                    Snackbar.make(cl, getResources().getString(R.string.error_d), Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_d), Snackbar.LENGTH_SHORT).show();
                 }
                 break;
 
             case R.id.settings:
-                Intent setting_intent = new Intent(this, SettingActivity.class);
-                    startActivity(setting_intent);
-                break;
-
-            default:
+                startActivity(new Intent(this, SettingActivity.class));
                 break;
         }
         return true;
     }
-
-
 
 }
