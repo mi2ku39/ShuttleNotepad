@@ -3,46 +3,46 @@
 
     <PreferenceCategory android:title="@string/setting_list_title">
         <SwitchPreference
-            android:defaultValue="true"
-            android:key="list_style"
-            android:summary="@string/enhance_summary"
-            android:title="@string/enable_enhance" />
+                android:defaultValue="true"
+                android:key="@string/isEnableEnhancedList"
+                android:summary="@string/enhance_summary"
+                android:title="@string/enable_enhance"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_memo_title">
 
         <EditTextPreference
-            android:defaultValue="タイトルのないメモ"
-            android:key="default_title"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="@string/not_title_summary"
-            android:title="@string/not_title" />
+                android:defaultValue="タイトルのないメモ"
+                android:key="@string/defaultTitle"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:summary="@string/not_title_summary"
+                android:title="@string/not_title"/>
         <EditTextPreference
-            android:key="title_template"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="@string/title_tmp_summary"
-            android:title="@string/tmp_title" />
+                android:key="@string/titleTemplate"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:summary="@string/title_tmp_summary"
+                android:title="@string/tmp_title"/>
         <EditTextPreference
-            android:key="memo_template"
-            android:selectAllOnFocus="true"
-            android:singleLine="false"
-            android:summary="@string/memo_tmp_summary"
-            android:title="@string/memo_tmp" />
+                android:key="@string/memoTemplate"
+                android:selectAllOnFocus="true"
+                android:singleLine="false"
+                android:summary="@string/memo_tmp_summary"
+                android:title="@string/memo_tmp"/>
 
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/move_s">
 
         <SwitchPreference
-            android:defaultValue="false"
-            android:key="backKey_move"
-            android:summary="@string/backKey_settings_summary"
-            android:title="@string/backKey_settings_title" />
+                android:defaultValue="false"
+                android:key="@string/isEnableIntegratedBackKey"
+                android:summary="@string/backKey_settings_summary"
+                android:title="@string/backKey_settings_title"/>
         <SwitchPreference
-            android:defaultValue="false"
-            android:key="viewer_used"
-            android:summary="@string/viewer_settings_summary"
-            android:title="@string/viewer_settings_title" />
+                android:defaultValue="false"
+                android:key="@string/isEnableViewer"
+                android:summary="@string/viewer_settings_summary"
+                android:title="@string/viewer_settings_title"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

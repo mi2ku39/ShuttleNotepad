@@ -94,7 +94,7 @@ public class SetViews {
 
         MemoDataBaseRecord[] records = MemoDatabaseAccessor.getAllMemoRecordsArray(activity);
 
-        if (pref.getBoolean("list_style", false)) {
+        if (pref.getBoolean(activity.getResources().getString(R.string.isEnableEnhancedList), false)) {
 
             List<ShuttleListItem> listItems = new ArrayList<>();
             for (MemoDataBaseRecord record : records) {
@@ -150,7 +150,7 @@ public class SetViews {
         }
 
         Class nextActivity;
-        if (PreferenceManager.getDefaultSharedPreferences(mainActivity).getBoolean("viewer_used", false)) {
+        if (PreferenceManager.getDefaultSharedPreferences(mainActivity).getBoolean(mainActivity.getResources().getString(R.string.isUsingViewer), false)) {
             nextActivity = ViewerActivity.class;
         } else {
             nextActivity = EditActivity.class;
