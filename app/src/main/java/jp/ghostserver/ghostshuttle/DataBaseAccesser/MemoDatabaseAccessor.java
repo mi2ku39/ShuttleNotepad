@@ -54,9 +54,8 @@ public class MemoDatabaseAccessor {
                     cursor.getString(5),
                     cursor.getString(6)
             );
-        } else {
-            return null;
         }
+        return null;
     }
 
     public static void DeleteMemoById(Context context, int id) {

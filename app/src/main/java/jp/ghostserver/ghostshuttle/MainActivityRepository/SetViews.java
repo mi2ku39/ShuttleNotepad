@@ -158,7 +158,7 @@ public class SetViews {
 
         Intent intent = new Intent(mainActivity.getApplicationContext(), nextActivity);
         intent.putExtra("TITLE", record.getMemoTitle());
-        intent.putExtra("MEMO", MemoFileManager.readFile(record.getFilePath(), mainActivity));
+        intent.putExtra("MEMO", MemoFileManager.readFile(mainActivity, record.getFilePath()));
         intent.putExtra("_ID", record.getID());
         intent.putExtra("isEditMode", true);
         intent.putExtra("Notify", record.getIsNotifyEnabled());
