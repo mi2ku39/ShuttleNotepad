@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ghost Shuttle</string>
+    <string name="app_name">Shuttle Notepad</string>
     <string name="app_version">Version : 0.52(Early Access)</string>
     <string name="app_details">ソフトウェア情報</string>
     <string name="app_settings">設定</string>

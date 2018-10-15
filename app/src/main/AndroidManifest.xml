@@ -12,32 +12,31 @@
         android:roundIcon="@mipmap/gs_logo_color"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="jp.ghostserver.ghostshuttle.MainActivityRepository.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditActivity" />
-        <activity android:name=".AppDetail" />
+        <activity android:name="jp.ghostserver.ghostshuttle.EditActivityRepository.EditActivity"/>
+        <activity android:name="jp.ghostserver.ghostshuttle.AppDetail"/>
 
         <receiver
-            android:name=".AlarmBroadcastReceiver"
-            android:process=":remote" />
+                android:name="jp.ghostserver.ghostshuttle.AlarmBroadcastReceiver"
+                android:process=":remote" />
 
-        <activity android:name=".DeleteActivity" />
-        <activity android:name=".iconActivity" />
+        <activity android:name="jp.ghostserver.ghostshuttle.DeleteActivity"/>
+        <activity android:name="jp.ghostserver.ghostshuttle.iconActivity"/>
         <!--
             縦固定
             android:screenOrientation="portrait"
         -->
-        <activity android:name=".SettingActivity" />
-        <activity android:name="jp.ghostserver.ghostshuttle.MemoViewActivity" />
+        <activity android:name="jp.ghostserver.ghostshuttle.SettingActivity"/>
         <activity
-            android:name="jp.ghostserver.ghostshuttle.ViewerActivity"
-            android:label="@string/title_activity_viewer"
-            android:theme="@style/AppTheme"></activity>
+                android:name="jp.ghostserver.ghostshuttle.ViewerActivity"
+                android:label="@string/title_activity_viewer"
+                android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>
