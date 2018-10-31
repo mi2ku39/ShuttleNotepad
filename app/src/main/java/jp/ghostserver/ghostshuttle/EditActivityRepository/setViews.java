@@ -58,10 +58,12 @@ class setViews {
 
     static void setDefaultTexts(EditActivity activity) {
         if (activity.isEdited) {
+            //編集モードの動作
             MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(activity, activity.memoID);
             if (record == null) {
                 return;
             }
+
             activity.titleField.setText(record.getMemoTitle());
             activity.memoField.setText(MemoFileManager.readFile(activity, record.getFilePath()));
         } else {
@@ -69,7 +71,7 @@ class setViews {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
 
             //テンプレートの適用
-            activity.titleField.setText(activity.getResources().getString(R.string.titleTemplate));
+            activity.titleField.setText(pref.getString(activity.getResources().getString(R.string.titleTemplate),""));
             activity.memoField.setText(pref.getString(activity.getResources().getString(R.string.memoTemplate), ""));
         }
     }
