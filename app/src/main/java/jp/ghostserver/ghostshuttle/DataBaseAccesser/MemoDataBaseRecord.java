@@ -9,7 +9,7 @@ public class MemoDataBaseRecord {
     private String icon_img;
     private String icon_color;
 
-    MemoDataBaseRecord(
+    public MemoDataBaseRecord(
             int _id,
             String title,
             String filePath,
@@ -17,6 +17,7 @@ public class MemoDataBaseRecord {
             Boolean isNotifyEnabled,
             String icon_img,
             String icon_color) {
+
         this._id = _id;
         this.title = title;
         this.filePath = filePath + ".gs";
@@ -24,7 +25,6 @@ public class MemoDataBaseRecord {
         this.isNotifyEnabled = isNotifyEnabled;
         this.icon_img = icon_img;
         this.icon_color = icon_color;
-
     }
 
     public int getID() {

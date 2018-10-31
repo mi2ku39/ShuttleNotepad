@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
 import jp.ghostserver.ghostshuttle.DatePickerDialogFragment;
 import jp.ghostserver.ghostshuttle.TimePickerFragment;
 import jp.ghostserver.ghostshuttle.memofileaccessor.MemoFileManager;
+import jp.ghostserver.ghostshuttle.notifyRepository.NotifyManager;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -143,6 +146,54 @@ class setViews {
         });
         // 表示
         builder.create().show();
+    }
+
+    static void showDatabaseErrorSnackBar(EditActivity activity) {
+        ConstraintLayout cl = activity.findViewById(R.id.cl);
+        Snackbar.make(cl, activity.getResources().getString(R.string.DB_failed), Snackbar.LENGTH_SHORT).show();
+    }
+
+    static void backDialog(final EditActivity activity) {
+
+        if (activity._titleBeforeEditing.equals(activity.titleField.getText().toString()) && activity._memoBeforeEditing.equals(activity.memoField.getText().toString())) {
+
+            activity.finish();
+
+        } else {
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+            alertDialogBuilder.setTitle(activity.getResources().getString(R.string.edit_cancel));
+            alertDialogBuilder.setMessage(activity.getResources().getString(R.string.cancel));
+
+            //ポジティブボタン
+            alertDialogBuilder.setPositiveButton(activity.getResources().getString(R.string.save),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (activity.db_save()) {
+                                if (activity.isNotifyEnabled) {
+                                    activity.setNotify();
+                                } else {
+                                    NotifyManager.notifyDisableByMemoID(activity, activity.memoID);
+                                }
+                                activity.finish();
+                            }
+                        }
+                    });
+
+            //ネガティブボタン
+            alertDialogBuilder.setNegativeButton(activity.getResources().getString(R.string.edit_cancel),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            activity.finish();
+                        }
+                    });
+
+            alertDialogBuilder.setCancelable(true);
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+        }
+
     }
 
     static void FinishEdit() {

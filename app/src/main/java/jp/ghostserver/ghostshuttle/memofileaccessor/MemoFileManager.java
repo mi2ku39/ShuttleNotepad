@@ -24,7 +24,7 @@ public class MemoFileManager {
         return str.toString();
     }
 
-    public void saveFile(Context context, String filepath, String memo) {
+    public static void saveFile(Context context, String filepath, String memo) {
         try {
             FileOutputStream out = context.openFileOutput(filepath + ".gs", MODE_PRIVATE);
             out.write(memo.getBytes());

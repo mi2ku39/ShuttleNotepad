@@ -2,17 +2,9 @@ package jp.ghostserver.ghostshuttle.EditActivityRepository;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,13 +14,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import com.example.denpa.ghostshuttle.R;
+import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
+import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.NotifyDataBaseAccessor;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.NotifyDateBaseRecord;
+import jp.ghostserver.ghostshuttle.memofileaccessor.MemoFileManager;
 import jp.ghostserver.ghostshuttle.notifyRepository.NotifyManager;
 
-import java.util.Calendar;
 import java.util.Random;
-import java.util.TimeZone;
 
 public class EditActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -55,14 +48,14 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         //初期設定系の関数
         setViews.findIDs(this);
 
-        //レコードの初期化
-        _notifyRecord = new NotifyDateBaseRecord();
-
         //EditTextへデフォルトのテキストを入れる
         setViews.setDefaultTexts(this);
 
         //編集前の状態を控える
         checkValues.setBeforeEditing(this);
+
+        //レコードの初期化
+        _notifyRecord = new NotifyDateBaseRecord();
 
         //編集状態であれば通知の有無を確認する
         if (isEdited) {
@@ -148,7 +141,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
 
                 } else {
                     //旧バージョン挙動・確認ダイアログの表示
-                    backDialog();
+                    setViews.backDialog(this);
                 }
                 break;
 
@@ -196,9 +189,9 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 
                 if (PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move", false)) {
-                    //統合戻るキーの挙動
+                    //戻るキーに統合しているときの挙動
                     if (titleField.length() <= 0 && memoField.length() <= 0) {
-                        //タイトルかメモが空白の時
+                        //タイトルとメモが空白の時
                         finish();
 
                     } else {
@@ -224,149 +217,57 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         return super.dispatchKeyEvent(event);
     }
 
-    private void backDialog() {
-
-        if (_titleBeforeEditing.equals(titleField.getText().toString()) && _memoBeforeEditing.equals(memoField.getText().toString())) {
-
-            finish();
-
-        } else {
-
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            alertDialogBuilder.setTitle(getResources().getString(R.string.edit_cancel));
-            alertDialogBuilder.setMessage(getResources().getString(R.string.cancel));
-            alertDialogBuilder.setPositiveButton(getResources().getString(R.string.save),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (db_save()) {
-                                if (isNotifyEnabled) {
-                                    setNotify();
-                                } else {
-                                    NotifyManager.notifyDisableByMemoID(this, memoID);
-                                }
-                                finish();
-                            }
-                        }
-                    });
-
-            alertDialogBuilder.setNegativeButton(getResources().getString(R.string.edit_cancel),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
-
-            alertDialogBuilder.setCancelable(true);
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
-
-        }
-
-    }
-
     private boolean db_save() {
-        //データベースオブジェクトの取得（書き込み可能）
-        SQLiteDatabase memo_db = DBHelper.getWritableDatabase();
+        // タイトルの取得（バリデーション済み）
+        String title = EditActivityFunctions.getEditingMemoTitle(this);
 
         //メモデータをEditTextから取得
-        String memo_raw = memoField.getText().toString();
+        String memoString = memoField.getText().toString();
 
-        String title_raw;
-        boolean title_not = true;
-        int count = 0;
+        //ファイルパスの取得
+        String filepath;
         Random rand = new Random();
-        long filepath = rand.nextLong();
-
-        if (titleField.length() != 0) {
-            // タイトルの取得
-            title_raw = titleField.getText().toString();
-        } else {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            title_raw = pref.getString("default_title", "");
-            title_not = false;
-        }
-
-        //データベースに保存するレコードの用意
-        ContentValues values = new ContentValues();
-        values.put("titleField", title_raw);
-        values.put("filepath", String.valueOf(filepath));
-
-        if (isNotifyEnabled) {
-            values.put("notifi_enabled", true);
-        } else {
-            values.put("notifi_enabled", false);
-        }
-
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        String timestamp = String.format("%d-%02d-%02d %02d:%02d:%02d", calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-
-        values.put("data_modified", timestamp);
+        do {
+            filepath = String.valueOf(rand.nextLong());
+        } while (!MemoDatabaseAccessor.checkOverlapFilepath(this, filepath));
 
         //編集か、新規作成かの分岐
         //true=編集 false=新規作成
         if (isEdited) {
             //編集Mode
 
-            String where_words = "_id = " + db_id;
+            MemoDataBaseRecord record = new MemoDataBaseRecord(
+                    memoID,
+                    title,
+                    memoString,
+                    null,
+                    isNotifyEnabled,
+                    null,
+                    null
+            );
+            if (MemoDatabaseAccessor.updateRecord(this, memoID, record) == -1) {
 
-            while (true) {
-                try {
-                    memo_db.update("memo", values, where_words, null);
-                    break;
-                } catch (Exception e) {
-                    if (title_not) {
-                        //データベースへ追加に失敗したときの処理
-                        ConstraintLayout cl = findViewById(R.id.cl);
-                        Snackbar.make(cl, getResources().getString(R.string.DB_failed), Snackbar.LENGTH_SHORT).show();
-                        return false;
-                    } else {
-                        count++;
-                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-                        title_raw = pref.getString("default_title", "") + "(" + count + ")";
-                        values.put("titleField", title_raw);
-                        titleField.setText(title_raw);
-                    }
-                }
             }
 
         } else {
             //else（新規作成されていた場合。）
 
-            values.put("icon_img", "paper");
-            values.put("icon_color", "#ffffff");
+            //レコード形式に詰める
+            MemoDataBaseRecord record = new MemoDataBaseRecord(
+                    memoID,
+                    title,
+                    memoString,
+                    null,
+                    isNotifyEnabled,
+                    "paper",
+                    "#ffffff"
+            );
 
-            //データベースへ保存する記述
-            long db_id = memo_db.insert("memo", null, values);
-
-            if (db_id == -1) {
-                if (title_not) {
-                    //データベースへ追加に失敗したときの処理
-                    ConstraintLayout cl = findViewById(R.id.cl);
-                    Snackbar.make(cl, getResources().getString(R.string.DB_failed), Snackbar.LENGTH_SHORT).show();
-                    return false;
-                } else {
-                    while (db_id == -1) {
-                        count++;
-                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-                        title_raw = pref.getString("default_title", "") + "(" + count + ")";
-                        values.put("titleField", title_raw);
-                        filepath = rand.nextLong();
-                        values.put("filepath", String.valueOf(filepath));
-                        db_id = memo_db.insert("memo", null, values);
-                    }
-                    titleField.setText(title_raw);
-                }
-            }
-
-            Log.d("test", String.valueOf(db_id));
-            this.db_id = (int) db_id;
+            MemoDatabaseAccessor.insertMemoRecord(this, record);
         }
 
-        memo_db.close();
-
-        saveFile(String.valueOf(filepath), memo_raw);
+        //メモをファイルへ保存
+        MemoFileManager.saveFile(this, filepath, memoString);
         return true;
     }
 

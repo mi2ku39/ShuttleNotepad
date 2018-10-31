@@ -48,7 +48,7 @@
     <string name="save">保存</string>
     <string name="am">午前</string>
     <string name="pm">午後</string>
-    <string name="DB_failed">データベースへ追加失敗 : タイトルが他のメモと重複しています。</string>
+    <string name="DB_failed">保存に失敗しました。開発者にお問い合わせください。</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
     <string name="cd">作成日時(UTC) : </string>

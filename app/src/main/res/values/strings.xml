@@ -46,7 +46,7 @@
     <string name="Notify">Notification</string>
     <string name="ok">Ok</string>
     <string name="save">Save</string>
-    <string name="DB_failed">Add to database failed: title is duplicated with other memo.</string>
+    <string name="DB_failed">Saving failed. Please contact the developer.</string>
     <string name="am">AM</string>
     <string name="pm">PM</string>
     <string name="yes">Yes</string>
