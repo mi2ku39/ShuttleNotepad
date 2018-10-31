@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="@string/setting_list_title">
         <SwitchPreference
                 android:defaultValue="true"
-                android:key="@string/isEnableEnhancedList"
+                android:key="isEnableEnhancedList"
                 android:summary="@string/enhance_summary"
                 android:title="@string/enable_enhance"/>
     </PreferenceCategory>
@@ -12,19 +12,19 @@
 
         <EditTextPreference
                 android:defaultValue="タイトルのないメモ"
-                android:key="@string/defaultTitle"
+                android:key="defaultTitle"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:summary="@string/not_title_summary"
                 android:title="@string/not_title"/>
         <EditTextPreference
-                android:key="@string/titleTemplate"
+                android:key="titleTemplate"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:summary="@string/title_tmp_summary"
                 android:title="@string/tmp_title"/>
         <EditTextPreference
-                android:key="@string/memoTemplate"
+                android:key="memoTemplate"
                 android:selectAllOnFocus="true"
                 android:singleLine="false"
                 android:summary="@string/memo_tmp_summary"
@@ -35,12 +35,12 @@
 
         <SwitchPreference
                 android:defaultValue="false"
-                android:key="@string/isEnableIntegratedBackKey"
+                android:key="isEnableIntegratedBackKey"
                 android:summary="@string/backKey_settings_summary"
                 android:title="@string/backKey_settings_title"/>
         <SwitchPreference
                 android:defaultValue="false"
-                android:key="@string/isEnableViewer"
+                android:key="isUsingViewer"
                 android:summary="@string/viewer_settings_summary"
                 android:title="@string/viewer_settings_title"/>
     </PreferenceCategory>

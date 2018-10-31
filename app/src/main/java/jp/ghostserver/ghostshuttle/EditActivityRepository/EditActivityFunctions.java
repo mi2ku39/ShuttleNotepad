@@ -26,15 +26,4 @@ public class EditActivityFunctions {
 
         return title;
     }
-
-    void backKeyEvent(EditActivity activity) {
-
-    }
-
-    void finishFunction(EditActivity activity, boolean isEditMode) {
-        if (isEditMode) {
-            //EditModeならupdate処理
-
-        }
-    }
 }

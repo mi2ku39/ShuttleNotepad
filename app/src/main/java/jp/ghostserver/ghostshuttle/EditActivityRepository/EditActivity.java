@@ -195,8 +195,9 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                         finish();
 
                     } else {
-
+                        //保存が成功したら（trueが返って来たら）activityを閉じる
                         if (db_save()) {
+                            //通知系の確認とセット
                             if (isNotifyEnabled) {
                                 setNotify();
                             } else {
@@ -205,10 +206,9 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                             finish();
                         }
                     }
-
                 } else {
-                    //旧バージョン挙動・確認ダイアログの表示
-                    backDialog();
+                    //戻るキーを統合してない時の動作。
+                    setViews.backDialog(this);
                 }
 
                 return false;
@@ -217,7 +217,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         return super.dispatchKeyEvent(event);
     }
 
-    private boolean db_save() {
+    boolean db_save() {
         // タイトルの取得（バリデーション済み）
         String title = EditActivityFunctions.getEditingMemoTitle(this);
 
@@ -271,7 +271,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         return true;
     }
 
-    private void setNotify() {
+    void setNotify() {
         //BDへぶち込む
         NotifyDataBaseAccessor.insertRecord(this, _notifyRecord);
 

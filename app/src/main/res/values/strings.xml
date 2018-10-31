@@ -44,7 +44,7 @@
     <string name="edit_cancel">Discard and exit</string>
     <string name="cancel_edit">Cancel creating/editing memo</string>
     <string name="Notify">Notification</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="save">Save</string>
     <string name="DB_failed">Saving failed. Please contact the developer.</string>
     <string name="am">AM</string>

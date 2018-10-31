@@ -195,8 +195,4 @@ class setViews {
         }
 
     }
-
-    static void FinishEdit() {
-
-    }
 }
