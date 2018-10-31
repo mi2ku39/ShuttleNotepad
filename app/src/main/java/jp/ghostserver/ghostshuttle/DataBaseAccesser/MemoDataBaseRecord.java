@@ -1,7 +1,7 @@
 package jp.ghostserver.ghostshuttle.DataBaseAccesser;
 
 public class MemoDataBaseRecord {
-    private int _id;
+    private long _id;
     private String title;
     private String filePath;
     private String timestamp;
@@ -10,7 +10,7 @@ public class MemoDataBaseRecord {
     private String icon_color;
 
     public MemoDataBaseRecord(
-            int _id,
+            long _id,
             String title,
             String filePath,
             String timestamp,
@@ -20,14 +20,14 @@ public class MemoDataBaseRecord {
 
         this._id = _id;
         this.title = title;
-        this.filePath = filePath + ".gs";
+        this.filePath = filePath;
         this.timestamp = timestamp;
         this.isNotifyEnabled = isNotifyEnabled;
         this.icon_img = icon_img;
         this.icon_color = icon_color;
     }
 
-    public int getID() {
+    public long getID() {
         return _id;
     }
 

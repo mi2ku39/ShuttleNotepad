@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -13,7 +14,7 @@ public class MemoDatabaseAccessor {
     public static MemoDataBaseRecord[] getAllMemoRecordsArray(Context context) {
         Cursor cursor =
                 new MemoDBHelper(context).getReadableDatabase().query(
-                        "memo",
+                        MemoDBHelper.TABLE_NAME,
                         new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"},
                         null, null, null, null,
                         "data_modified desc"
@@ -41,10 +42,10 @@ public class MemoDatabaseAccessor {
         return records;
     }
 
-    public static MemoDataBaseRecord getRecordById(Context context, int memoID) {
+    public static MemoDataBaseRecord getRecordById(Context context, long memoID) {
         Cursor cursor =
                 new MemoDBHelper(context).getReadableDatabase().query(
-                        "memo", new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"},
+                        MemoDBHelper.TABLE_NAME, new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"},
                         "_id = '" + memoID + "'", null, null, null, null);
         cursor.moveToFirst();
 
@@ -62,7 +63,7 @@ public class MemoDatabaseAccessor {
         return null;
     }
 
-    public static void DeleteMemoById(Context context, int id) {
+    public static void DeleteMemoById(Context context, long id) {
         //データベースの取得・クエリ実行
         MemoDataBaseRecord record = getRecordById(context, id);
         if (record == null) {
@@ -72,8 +73,8 @@ public class MemoDatabaseAccessor {
         context.deleteFile(record.getFilePath());
 
         SQLiteDatabase write_db = new MemoDBHelper(context).getWritableDatabase();
-        write_db.delete("memo", "_id = " + id, null);
-        write_db.delete("NOTIFICATION", "_id = " + id, null);
+        write_db.delete(MemoDBHelper.TABLE_NAME, "_id = " + id, null);
+        write_db.delete(MemoDBHelper.NotifyTableName, "_id = " + id, null);
 
         write_db.close();
 
@@ -102,7 +103,7 @@ public class MemoDatabaseAccessor {
     public static Boolean checkOverlapFilepath(Context context, String filepath) {
         Cursor cursor =
                 new MemoDBHelper(context).getReadableDatabase().query(
-                        "memo", new String[]{"_id"},
+                        MemoDBHelper.TABLE_NAME, new String[]{"_id"},
                         "filepath = '" + filepath + "'", null, null, null, null);
 
         if (cursor.getCount() == 0) {
@@ -116,7 +117,7 @@ public class MemoDatabaseAccessor {
     public static MemoDataBaseRecord[] getRecordsArrayByTitleLike(Context context, String searchWord) {
         Cursor cursor =
                 new MemoDBHelper(context).getReadableDatabase().query(
-                        "memo", new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"},
+                        MemoDBHelper.TABLE_NAME, new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"},
                         "title like '" + searchWord + "'", null, null, null, null);
 
         if (cursor.getCount() == 0) {

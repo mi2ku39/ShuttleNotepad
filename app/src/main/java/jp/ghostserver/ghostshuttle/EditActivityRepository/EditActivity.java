@@ -29,11 +29,11 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
     EditText titleField, memoField;
 
     boolean isEdited;
-    int memoID;
     boolean isNotifyEnabled;
 
-    String _memoBeforeEditing, _titleBeforeEditing;
+    String _memoBeforeEdit, _titleBeforeEdit;
     private NotifyDateBaseRecord _notifyRecord;
+    MemoDataBaseRecord memoRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +59,14 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
 
         //編集状態であれば通知の有無を確認する
         if (isEdited) {
-            _notifyRecord = NotifyDataBaseAccessor.getRecordByMemoID(this, memoID);
+            _notifyRecord = NotifyDataBaseAccessor.getRecordByMemoID(this, (int) memoRecord.getID());
 
             //nullだったらレコードが見つからなかった→通知なし
             isNotifyEnabled = !(_notifyRecord == null);
 
             //通知が過去の日付だったら削除
             if (isNotifyEnabled && !checkValues.checkNotifyDate(_notifyRecord)) {
-                NotifyManager.notifyDisableByMemoID(this, memoID);
+                NotifyManager.notifyDisableByMemoID(this, (int) memoRecord.getID());
                 isNotifyEnabled = false;
             }
         }
@@ -130,11 +130,11 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                 if (PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move", false)) {
 
                     //統合戻るキーの挙動
-                    if (db_save()) {
+                    if (saveMemo()) {
                         if (isNotifyEnabled) {
                             setNotify();
                         } else {
-                            NotifyManager.notifyDisableByMemoID(this, memoID);
+                            NotifyManager.notifyDisableByMemoID(this, (int) memoRecord.getID());
                         }
                         finish();
                     }
@@ -146,18 +146,20 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                 break;
 
             case R.id.save:
-                if (db_save()) {
+                if (saveMemo()) {
                     if (isNotifyEnabled) {
                         setNotify();
                     } else {
-                        NotifyManager.notifyDisableByMemoID(this, memoID);
+                        if (memoRecord != null) {
+                            NotifyManager.notifyDisableByMemoID(this, (int) memoRecord.getID());
+                        }
                     }
                     finish();
                 }
                 break;
 
             case R.id.now_save:
-                db_save();
+                saveMemo();
                 checkValues.setBeforeEditing(this);
                 isEdited = true;
                 break;
@@ -196,12 +198,12 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
 
                     } else {
                         //保存が成功したら（trueが返って来たら）activityを閉じる
-                        if (db_save()) {
+                        if (saveMemo()) {
                             //通知系の確認とセット
                             if (isNotifyEnabled) {
                                 setNotify();
                             } else {
-                                NotifyManager.notifyDisableByMemoID(this, memoID);
+                                NotifyManager.notifyDisableByMemoID(this, (int) memoRecord.getID());
                             }
                             finish();
                         }
@@ -217,53 +219,59 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         return super.dispatchKeyEvent(event);
     }
 
-    boolean db_save() {
+    boolean saveMemo() {
         // タイトルの取得（バリデーション済み）
         String title = EditActivityFunctions.getEditingMemoTitle(this);
 
         //メモデータをEditTextから取得
         String memoString = memoField.getText().toString();
 
-        //ファイルパスの取得
         String filepath;
-        Random rand = new Random();
-        do {
-            filepath = String.valueOf(rand.nextLong());
-        } while (!MemoDatabaseAccessor.checkOverlapFilepath(this, filepath));
 
         //編集か、新規作成かの分岐
         //true=編集 false=新規作成
         if (isEdited) {
             //編集Mode
-
             MemoDataBaseRecord record = new MemoDataBaseRecord(
-                    memoID,
+                    memoRecord.getID(),
                     title,
-                    memoString,
+                    null,
                     null,
                     isNotifyEnabled,
                     null,
                     null
             );
-            if (MemoDatabaseAccessor.updateRecord(this, memoID, record) == -1) {
-
+            if (MemoDatabaseAccessor.updateRecord(this, memoRecord.getID(), record) == -1) {
+                setViews.showDatabaseErrorSnackBar(this);
+                return false;
             }
+
+            filepath = memoRecord.getFilePath();
 
         } else {
             //else（新規作成されていた場合。）
 
+            //ファイルパスの取得
+            Random rand = new Random();
+            do {
+                filepath = String.valueOf(Math.abs(rand.nextLong())) + ".gs";
+            } while (!MemoDatabaseAccessor.checkOverlapFilepath(this, filepath));
+
             //レコード形式に詰める
             MemoDataBaseRecord record = new MemoDataBaseRecord(
-                    memoID,
+                    -1,
                     title,
-                    memoString,
+                    filepath,
                     null,
                     isNotifyEnabled,
                     "paper",
                     "#ffffff"
             );
 
-            MemoDatabaseAccessor.insertMemoRecord(this, record);
+            if (MemoDatabaseAccessor.insertMemoRecord(this, record) == -1) {
+                setViews.showDatabaseErrorSnackBar(this);
+                return false;
+            }
         }
 
         //メモをファイルへ保存

@@ -4,9 +4,9 @@ package jp.ghostserver.ghostshuttle.ListViewClasses;
 public abstract class BaseShuttleListItem {
 
     private String Title;
-    private int ID;
+    private long ID;
 
-    public BaseShuttleListItem(String title, int id) {
+    public BaseShuttleListItem(String title, long id) {
         Title = title;
         ID = id;
     }
@@ -15,7 +15,7 @@ public abstract class BaseShuttleListItem {
         return Title;
     }
 
-    public int getID() {
+    public long getID() {
         return ID;
     }
 

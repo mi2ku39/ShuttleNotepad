@@ -1,6 +1,7 @@
 package jp.ghostserver.ghostshuttle.memofileaccessor;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.*;
 
@@ -8,6 +9,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MemoFileManager {
     public static String readFile(Context context, String file) {
+        Log.d("read File",file);
         StringBuilder str = new StringBuilder();
         String tmp;
         try {
@@ -25,12 +27,13 @@ public class MemoFileManager {
     }
 
     public static void saveFile(Context context, String filepath, String memo) {
+        Log.d("save File",filepath);
+
         try {
-            FileOutputStream out = context.openFileOutput(filepath + ".gs", MODE_PRIVATE);
+            FileOutputStream out = context.openFileOutput(filepath, MODE_PRIVATE);
             out.write(memo.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

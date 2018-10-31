@@ -34,7 +34,8 @@ class setViews {
     static void parseIntent(EditActivity activity) {
         Intent intent = activity.getIntent();
         activity.isEdited = intent.getBooleanExtra("isEditMode", false);
-        activity.memoID = intent.getIntExtra("_ID", -1);
+
+        activity.memoRecord = MemoDatabaseAccessor.getRecordById(activity, intent.getLongExtra("_ID", -1));
     }
 
     static void setActionBar(EditActivity activity) {
@@ -59,7 +60,7 @@ class setViews {
     static void setDefaultTexts(EditActivity activity) {
         if (activity.isEdited) {
             //編集モードの動作
-            MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(activity, activity.memoID);
+            MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(activity, activity.memoRecord.getID());
             if (record == null) {
                 return;
             }
@@ -157,7 +158,7 @@ class setViews {
 
     static void backDialog(final EditActivity activity) {
 
-        if (activity._titleBeforeEditing.equals(activity.titleField.getText().toString()) && activity._memoBeforeEditing.equals(activity.memoField.getText().toString())) {
+        if (activity._titleBeforeEdit.equals(activity.titleField.getText().toString()) && activity._memoBeforeEdit.equals(activity.memoField.getText().toString())) {
 
             activity.finish();
 
@@ -171,11 +172,11 @@ class setViews {
             alertDialogBuilder.setPositiveButton(activity.getResources().getString(R.string.save),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if (activity.db_save()) {
+                            if (activity.saveMemo()) {
                                 if (activity.isNotifyEnabled) {
                                     activity.setNotify();
                                 } else {
-                                    NotifyManager.notifyDisableByMemoID(activity, activity.memoID);
+                                    NotifyManager.notifyDisableByMemoID(activity, (int)activity.memoRecord.getID());
                                 }
                                 activity.finish();
                             }

@@ -58,7 +58,7 @@ public class SetViews {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 BaseShuttleListItem item = (BaseShuttleListItem) activity.listView.getItemAtPosition(position);
-                int itemID = item.getID();
+                long itemID = item.getID();
 
                 wakeupMemoViewerById(activity, itemID);
 
@@ -140,14 +140,7 @@ public class SetViews {
 
     }
 
-    private static void wakeupMemoViewerById(MainActivity mainActivity, int id) {
-        MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(
-                mainActivity, id
-        );
-
-        if (record == null) {
-            return;
-        }
+    private static void wakeupMemoViewerById(MainActivity mainActivity, long id) {
 
         Class nextActivity;
         if (PreferenceManager.getDefaultSharedPreferences(mainActivity).getBoolean(mainActivity.getResources().getString(R.string.isUsingViewer), false)) {
@@ -157,11 +150,8 @@ public class SetViews {
         }
 
         Intent intent = new Intent(mainActivity.getApplicationContext(), nextActivity);
-        intent.putExtra("TITLE", record.getMemoTitle());
-        intent.putExtra("MEMO", MemoFileManager.readFile(mainActivity, record.getFilePath()));
-        intent.putExtra("_ID", record.getID());
+        intent.putExtra("_ID", id);
         intent.putExtra("isEditMode", true);
-        intent.putExtra("Notify", record.getIsNotifyEnabled());
 
         mainActivity.startActivity(intent);
     }

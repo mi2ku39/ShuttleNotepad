@@ -7,8 +7,8 @@ import java.util.Calendar;
 public class checkValues {
     //編集されてるかどうかを判断する変数の設定
     static void setBeforeEditing(EditActivity activity) {
-        activity._memoBeforeEditing = activity.memoField.getText().toString();
-        activity._titleBeforeEditing = activity.titleField.getText().toString();
+        activity._memoBeforeEdit = activity.memoField.getText().toString();
+        activity._titleBeforeEdit = activity.titleField.getText().toString();
     }
 
     //通知時間の確認（過去だったらFalse）
