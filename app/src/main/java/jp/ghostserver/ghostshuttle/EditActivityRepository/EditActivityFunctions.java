@@ -1,8 +1,8 @@
 package jp.ghostserver.ghostshuttle.EditActivityRepository;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
+import jp.ghostserver.ghostshuttle.preferenceaccessor.PreferenceAccessor;
 
 public class EditActivityFunctions {
 
@@ -10,8 +10,7 @@ public class EditActivityFunctions {
 
         if (title.length() == 0) {
             //タイトル欄未記入
-            title = PreferenceManager.getDefaultSharedPreferences(context)
-                    .getString("default_title", "");
+            title = PreferenceAccessor.getDefaultTitle(context);
         }
 
         //重複の確認

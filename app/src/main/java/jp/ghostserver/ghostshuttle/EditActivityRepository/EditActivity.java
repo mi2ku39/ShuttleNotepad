@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -22,6 +21,7 @@ import jp.ghostserver.ghostshuttle.DataBaseAccesser.NotifyDataBaseAccessor;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.NotifyDateBaseRecord;
 import jp.ghostserver.ghostshuttle.memofileaccessor.MemoFileManager;
 import jp.ghostserver.ghostshuttle.notifyRepository.NotifyManager;
+import jp.ghostserver.ghostshuttle.preferenceaccessor.PreferenceAccessor;
 
 import java.util.Objects;
 import java.util.Random;
@@ -98,7 +98,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         final MenuInflater inflater = getMenuInflater();
 
         //統合バックキーだったら保存ボタンを非表示にする
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isEnableIntegratedBackKey", false)) {
+        if (PreferenceAccessor.isIntegrateBackKey(this)) {
             inflater.inflate(R.menu.edit_menu_unit, menu);
         } else {
             inflater.inflate(R.menu.edit_menu, menu);
@@ -144,7 +144,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
 
             //「戻るボタン」のクリックイベント
             case android.R.id.home:
-                if (PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move", false)) {
+                if (PreferenceAccessor.isIntegrateBackKey(this)) {
 
                     //統合戻るキーの挙動
                     if (saveMemo()) {
@@ -208,7 +208,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 
-                if (PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("isEnableIntegratedBackKey", false)) {
+                if (PreferenceAccessor.isIntegrateBackKey(this)) {
                     //戻るキーに統合しているときの挙動
                     if (titleField.length() <= 0 && memoField.length() <= 0) {
                         //タイトルとメモが空白の時

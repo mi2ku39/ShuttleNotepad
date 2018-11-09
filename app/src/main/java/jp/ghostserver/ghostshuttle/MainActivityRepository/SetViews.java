@@ -18,7 +18,7 @@ import jp.ghostserver.ghostshuttle.ListViewClasses.EnhancedListView.ShuttleListI
 import jp.ghostserver.ghostshuttle.ListViewClasses.SimpleListView.SimpleListAdapter;
 import jp.ghostserver.ghostshuttle.ListViewClasses.SimpleListView.SimpleListItem;
 import jp.ghostserver.ghostshuttle.ViewerActivity;
-import jp.ghostserver.ghostshuttle.memofileaccessor.MemoFileManager;
+import jp.ghostserver.ghostshuttle.preferenceaccessor.PreferenceAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,6 @@ public class SetViews {
         activity.listView.setEmptyView(activity.findViewById(R.id.EmptyText));
         activity.listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
         activity.registerForContextMenu(activity.listView);
-
     }
 
     static void checkStartAppFromNotify(MainActivity activity) {
@@ -94,7 +93,7 @@ public class SetViews {
 
         MemoDataBaseRecord[] records = MemoDatabaseAccessor.getAllMemoRecordsArray(activity);
 
-        if (pref.getBoolean(activity.getResources().getString(R.string.isEnableEnhancedList), false)) {
+        if (PreferenceAccessor.isUsingEnhancedList(activity)) {
 
             List<ShuttleListItem> listItems = new ArrayList<>();
             for (MemoDataBaseRecord record : records) {
@@ -143,7 +142,7 @@ public class SetViews {
     private static void wakeupMemoViewerById(MainActivity mainActivity, long id) {
 
         Class nextActivity;
-        if (PreferenceManager.getDefaultSharedPreferences(mainActivity).getBoolean(mainActivity.getResources().getString(R.string.isUsingViewer), false)) {
+        if (PreferenceAccessor.isUsingViewer(mainActivity)) {
             nextActivity = ViewerActivity.class;
         } else {
             nextActivity = EditActivity.class;
