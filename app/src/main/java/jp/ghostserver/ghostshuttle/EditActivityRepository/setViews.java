@@ -2,6 +2,8 @@ package jp.ghostserver.ghostshuttle.EditActivityRepository;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -10,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.denpa.ghostshuttle.R;
+import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
 import jp.ghostserver.ghostshuttle.DatePickerDialogFragment;
 import jp.ghostserver.ghostshuttle.TimePickerFragment;
+import jp.ghostserver.ghostshuttle.memofileaccessor.MemoFileManager;
 import jp.ghostserver.ghostshuttle.notifyRepository.NotifyManager;
 
 import java.util.Calendar;
@@ -37,6 +41,20 @@ class setViews {
         dateButton.setText(calendar.get(Calendar.YEAR) + "/ " + Month + "/ " + calendar.get(Calendar.DAY_OF_MONTH));
         timeButton.setText(setViews.hour_convert(context, calendar.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", calendar.get(Calendar.MINUTE)));
 
+    }
+
+    //編集画面起動時のデフォルト値を返すメソッド
+    static String[] getDefaultTexts(Context context, boolean isEdited, MemoDataBaseRecord record) {
+        if (isEdited) {
+            //編集モードの動作
+            return new String[]{record.getMemoTitle(), MemoFileManager.readFile(context, record.getFilePath())};
+        } else {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            return new String[]{
+                    pref.getString(context.getResources().getString(R.string.titleTemplate), ""),
+                    pref.getString(context.getResources().getString(R.string.memoTemplate), "")
+            };
+        }
     }
 
     static void showNotifySettingDialog(final EditActivity activity) {

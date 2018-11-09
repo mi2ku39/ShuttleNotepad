@@ -3,7 +3,6 @@ package jp.ghostserver.ghostshuttle.EditActivityRepository;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -32,7 +31,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
     //変数宣言
     EditText titleField, memoField;
 
-    boolean isEdited;
+    private boolean isEdited;
     boolean isNotifyEnabled;
 
     String _memoBeforeEdit, _titleBeforeEdit;
@@ -43,10 +42,13 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+
         //intentの受け取り
         Intent intent = getIntent();
         isEdited = intent.getBooleanExtra("isEditMode", false);
-        memoRecord = MemoDatabaseAccessor.getRecordById(this, intent.getLongExtra("_ID", -1));
+        if (isEdited) {
+            memoRecord = MemoDatabaseAccessor.getRecordById(this, intent.getLongExtra("_ID", -1));
+        }
 
         //画面上部の「戻るボタン」設定
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -61,23 +63,9 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         memoField = findViewById(R.id.editmemo);
 
         //EditTextへデフォルトのテキストを入れる
-        if (isEdited) {
-            //編集モードの動作
-            MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(this, memoRecord.getID());
-            if (record == null) {
-                return;
-            }
-
-            titleField.setText(record.getMemoTitle());
-            memoField.setText(MemoFileManager.readFile(this, record.getFilePath()));
-        } else {
-            //新規作成時の動作
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-
-            //テンプレートの適用
-            titleField.setText(pref.getString(getResources().getString(R.string.titleTemplate), ""));
-            memoField.setText(pref.getString(getResources().getString(R.string.memoTemplate), ""));
-        }
+        String[] texts = setViews.getDefaultTexts(this, isEdited, memoRecord);
+        titleField.setText(texts[0]);
+        memoField.setText(texts[1]);
 
         //編集前の状態を控える
         _memoBeforeEdit = memoField.getText().toString();
@@ -189,7 +177,8 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
 
             case R.id.now_save:
                 saveMemo();
-                checkValues.setBeforeEditing(this);
+                _memoBeforeEdit = memoField.getText().toString();
+                _titleBeforeEdit = titleField.getText().toString();
                 isEdited = true;
                 break;
 
@@ -219,7 +208,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 
-                if (PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move", false)) {
+                if (PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("isEnableIntegratedBackKey", false)) {
                     //戻るキーに統合しているときの挙動
                     if (titleField.length() <= 0 && memoField.length() <= 0) {
                         //タイトルとメモが空白の時
@@ -290,7 +279,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
             } while (!MemoDatabaseAccessor.checkOverlapFilepath(this, filepath));
 
             //レコード形式に詰める
-            MemoDataBaseRecord record = new MemoDataBaseRecord(
+            memoRecord = new MemoDataBaseRecord(
                     -1,
                     title,
                     filepath,
@@ -300,7 +289,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                     "#ffffff"
             );
 
-            if (MemoDatabaseAccessor.insertMemoRecord(this, record) == -1) {
+            if (MemoDatabaseAccessor.insertMemoRecord(this, memoRecord) == -1) {
                 setViews.showDatabaseErrorSnackBar(this);
                 return false;
             }
