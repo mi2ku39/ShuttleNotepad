@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -86,17 +85,19 @@ public class MemoDatabaseAccessor {
 
     //タイトルが重複している数を数えます。重複なしの場合は0。
     public static int checkOverlapTitle(Context context, String title) {
-        if (getRecordsArrayByTitleLike(context, title) == null) {
+        MemoDataBaseRecord[] records = getRecordsArrayByTitleLike(context, title);
+
+        if (records == null) {
             return 0;
         }
 
-        MemoDataBaseRecord[] records = getRecordsArrayByTitleLike(context, title + "(_)");
+        records = getRecordsArrayByTitleLike(context, title + "(%)");
 
         if (records == null) {
             return 1;
         }
 
-        return records.length;
+        return records.length + 1;
     }
 
     //ファイルパスの重複を確認

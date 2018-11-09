@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -203,7 +204,9 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                             if (isNotifyEnabled) {
                                 setNotify();
                             } else {
-                                NotifyManager.notifyDisableByMemoID(this, (int) memoRecord.getID());
+                                if (isEdited) {
+                                    NotifyManager.notifyDisableByMemoID(this, (int) memoRecord.getID());
+                                }
                             }
                             finish();
                         }
@@ -222,6 +225,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
     boolean saveMemo() {
         // タイトルの取得（バリデーション済み）
         String title = EditActivityFunctions.getEditingMemoTitle(this);
+        Log.d("save", title);
 
         //メモデータをEditTextから取得
         String memoString = memoField.getText().toString();

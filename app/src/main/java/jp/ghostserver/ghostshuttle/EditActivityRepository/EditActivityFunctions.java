@@ -20,10 +20,12 @@ public class EditActivityFunctions {
         //重複の確認
         int overlapNum = MemoDatabaseAccessor.checkOverlapTitle(activity, title);
 
-        if (overlapNum >= 1) {
-            title = title + "(" + overlapNum + ")";
+        if (activity.isEdited && overlapNum == 1) {
+            return title;
+        } else if (activity.isEdited && overlapNum > 1) {
+            return title + "(" + (overlapNum - 1) + ")";
         }
 
-        return title;
+        return title + "(" + overlapNum + ")";
     }
 }
