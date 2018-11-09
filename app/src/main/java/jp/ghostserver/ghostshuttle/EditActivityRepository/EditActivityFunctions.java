@@ -1,31 +1,37 @@
 package jp.ghostserver.ghostshuttle.EditActivityRepository;
 
+import android.content.Context;
 import android.preference.PreferenceManager;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
 
 public class EditActivityFunctions {
 
-    static String getEditingMemoTitle(EditActivity activity) {
-        String title;
+    static String memoTitleValidation(Context context, String title, boolean isEdited) {
 
-        if (activity.titleField.length() != 0) {
-            //タイトルになんか書かれてるとき
-            title = activity.titleField.getText().toString();
-        } else {
+        if (title.length() == 0) {
             //タイトル欄未記入
-            title = PreferenceManager.getDefaultSharedPreferences(activity)
+            title = PreferenceManager.getDefaultSharedPreferences(context)
                     .getString("default_title", "");
         }
 
         //重複の確認
-        int overlapNum = MemoDatabaseAccessor.checkOverlapTitle(activity, title);
+        int overlapNum = MemoDatabaseAccessor.checkOverlapTitle(context, title);
 
-        if (activity.isEdited && overlapNum == 1) {
-            return title;
-        } else if (activity.isEdited && overlapNum > 1) {
-            return title + "(" + (overlapNum - 1) + ")";
+        if (isEdited) {
+            //編集のとき
+            if (overlapNum <= 1) {
+                return title;
+            } else {
+                return title + "(" + (overlapNum - 1) + ")";
+            }
+        } else {
+            //新規作成のとき
+            if (overlapNum == 0) {
+                return title;
+            } else {
+                return title + "(" + overlapNum + ")";
+            }
         }
 
-        return title + "(" + overlapNum + ")";
     }
 }

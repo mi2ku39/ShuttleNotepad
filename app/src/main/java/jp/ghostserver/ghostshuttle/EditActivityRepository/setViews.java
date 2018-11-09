@@ -1,90 +1,42 @@
 package jp.ghostserver.ghostshuttle.EditActivityRepository;
 
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.denpa.ghostshuttle.R;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
 import jp.ghostserver.ghostshuttle.DatePickerDialogFragment;
 import jp.ghostserver.ghostshuttle.TimePickerFragment;
-import jp.ghostserver.ghostshuttle.memofileaccessor.MemoFileManager;
 import jp.ghostserver.ghostshuttle.notifyRepository.NotifyManager;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 class setViews {
-    static void findIDs(EditActivity activity) {
-        activity.titleField = activity.findViewById(R.id.editText);
-        activity.memoField = activity.findViewById(R.id.editmemo);
-    }
 
-    static void parseIntent(EditActivity activity) {
-        Intent intent = activity.getIntent();
-        activity.isEdited = intent.getBooleanExtra("isEditMode", false);
-
-        activity.memoRecord = MemoDatabaseAccessor.getRecordById(activity, intent.getLongExtra("_ID", -1));
-    }
-
-    static void setActionBar(EditActivity activity) {
-        Toolbar toolbar = activity.findViewById(R.id.toolbar);
-        activity.setSupportActionBar(toolbar);
-        Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
-        //画面上部のタイトル設定
-        activity.setTitle(activity.getResources().getString(R.string.edit_title));
-    }
-
-    static String hour_convert(EditActivity activity, int hour) {
-        String am_pm = activity.getResources().getString(R.string.am);
+    static String hour_convert(Context context, int hour) {
+        String am_pm = context.getResources().getString(R.string.am);
 
         if (hour >= 12) {
-            am_pm = activity.getResources().getString(R.string.pm);
+            am_pm = context.getResources().getString(R.string.pm);
             hour = hour - 12;
         }
         return (am_pm + " " + hour);
     }
 
-    static void setDefaultTexts(EditActivity activity) {
-        if (activity.isEdited) {
-            //編集モードの動作
-            MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(activity, activity.memoRecord.getID());
-            if (record == null) {
-                return;
-            }
-
-            activity.titleField.setText(record.getMemoTitle());
-            activity.memoField.setText(MemoFileManager.readFile(activity, record.getFilePath()));
-        } else {
-            //新規作成時の動作
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
-
-            //テンプレートの適用
-            activity.titleField.setText(pref.getString(activity.getResources().getString(R.string.titleTemplate),""));
-            activity.memoField.setText(pref.getString(activity.getResources().getString(R.string.memoTemplate), ""));
-        }
-    }
-
     //日付・時刻設定ボタンの初期値設定
-    static void setPrimary(EditActivity activity, Button dateButton, Button timeButton) {
-        if (!activity.isNotifyEnabled) {
-            Calendar calendar = Calendar.getInstance();
-            int Month = calendar.get(Calendar.MONTH) + 1;
-            dateButton.setText(calendar.get(Calendar.YEAR) + "/ " + Month + "/ " + calendar.get(Calendar.DAY_OF_MONTH));
-            timeButton.setText(setViews.hour_convert(activity, calendar.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", calendar.get(Calendar.MINUTE)));
-        }
+    static void setPrimary(Context context, Button dateButton, Button timeButton) {
+        Calendar calendar = Calendar.getInstance();
+        int Month = calendar.get(Calendar.MONTH) + 1;
+        dateButton.setText(calendar.get(Calendar.YEAR) + "/ " + Month + "/ " + calendar.get(Calendar.DAY_OF_MONTH));
+        timeButton.setText(setViews.hour_convert(context, calendar.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", calendar.get(Calendar.MINUTE)));
+
     }
 
     static void showNotifySettingDialog(final EditActivity activity) {
@@ -176,7 +128,7 @@ class setViews {
                                 if (activity.isNotifyEnabled) {
                                     activity.setNotify();
                                 } else {
-                                    NotifyManager.notifyDisableByMemoID(activity, (int)activity.memoRecord.getID());
+                                    NotifyManager.notifyDisableByMemoID(activity, (int) activity.memoRecord.getID());
                                 }
                                 activity.finish();
                             }

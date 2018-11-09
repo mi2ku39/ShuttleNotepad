@@ -2,10 +2,12 @@ package jp.ghostserver.ghostshuttle.EditActivityRepository;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +24,7 @@ import jp.ghostserver.ghostshuttle.DataBaseAccesser.NotifyDateBaseRecord;
 import jp.ghostserver.ghostshuttle.memofileaccessor.MemoFileManager;
 import jp.ghostserver.ghostshuttle.notifyRepository.NotifyManager;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class EditActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -41,19 +44,44 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         //intentの受け取り
-        setViews.parseIntent(this);
+        Intent intent = getIntent();
+        isEdited = intent.getBooleanExtra("isEditMode", false);
+        memoRecord = MemoDatabaseAccessor.getRecordById(this, intent.getLongExtra("_ID", -1));
 
         //画面上部の「戻るボタン」設定
-        setViews.setActionBar(this);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        //画面上部のタイトル設定
+        setTitle(getResources().getString(R.string.edit_title));
 
         //初期設定系の関数
-        setViews.findIDs(this);
+        titleField = findViewById(R.id.editText);
+        memoField = findViewById(R.id.editmemo);
 
         //EditTextへデフォルトのテキストを入れる
-        setViews.setDefaultTexts(this);
+        if (isEdited) {
+            //編集モードの動作
+            MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(this, memoRecord.getID());
+            if (record == null) {
+                return;
+            }
+
+            titleField.setText(record.getMemoTitle());
+            memoField.setText(MemoFileManager.readFile(this, record.getFilePath()));
+        } else {
+            //新規作成時の動作
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+            //テンプレートの適用
+            titleField.setText(pref.getString(getResources().getString(R.string.titleTemplate), ""));
+            memoField.setText(pref.getString(getResources().getString(R.string.memoTemplate), ""));
+        }
 
         //編集前の状態を控える
-        checkValues.setBeforeEditing(this);
+        _memoBeforeEdit = memoField.getText().toString();
+        _titleBeforeEdit = titleField.getText().toString();
 
         //レコードの初期化
         _notifyRecord = new NotifyDateBaseRecord();
@@ -82,7 +110,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         final MenuInflater inflater = getMenuInflater();
 
         //統合バックキーだったら保存ボタンを非表示にする
-        if (PreferenceManager.getDefaultSharedPreferences(EditActivity.this).getBoolean("backKey_move", false)) {
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isEnableIntegratedBackKey", false)) {
             inflater.inflate(R.menu.edit_menu_unit, menu);
         } else {
             inflater.inflate(R.menu.edit_menu, menu);
@@ -223,9 +251,9 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     boolean saveMemo() {
-        // タイトルの取得（バリデーション済み）
-        String title = EditActivityFunctions.getEditingMemoTitle(this);
-        Log.d("save", title);
+        // タイトルの取得
+        String title = titleField.getText().toString();
+        title = EditActivityFunctions.memoTitleValidation(this, title, isEdited);
 
         //メモデータをEditTextから取得
         String memoString = memoField.getText().toString();
