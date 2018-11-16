@@ -3,27 +3,26 @@ package jp.ghostserver.ghostshuttle.MainActivityRepository;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.example.denpa.ghostshuttle.R;
 import jp.ghostserver.ghostshuttle.AppDetail;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
 import jp.ghostserver.ghostshuttle.DeleteActivity;
+import jp.ghostserver.ghostshuttle.EditActivityRepository.EditActivity;
 import jp.ghostserver.ghostshuttle.ListViewClasses.BaseShuttleListItem;
 import jp.ghostserver.ghostshuttle.SettingActivity;
 import jp.ghostserver.ghostshuttle.iconActivity;
 
 public class MainActivity extends AppCompatActivity {
-
-    //変数宣言
-    public CoordinatorLayout coordinatorLayout;
-    ListView listView;
+    ListView listView = findViewById(R.id.listview);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +30,30 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_main);
 
-        SetViews.setPreferenceScreen(this);
-        SetViews.setToolbar(this);
-        SetViews.findIDs(this);
-        SetViews.initListView(this);
-        SetViews.checkStartAppFromNotify(this);
+        MainActivityMethods.setPreferenceScreen(this);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setTitle(getResources().getString(R.string.app_name));
+
+        findViewById(R.id.fab).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //FABが押されたときの動作
+                        Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        );
+        MainActivityMethods.initListView(this, listView, (TextView) findViewById(R.id.EmptyText));
+        registerForContextMenu(listView);
+        MainActivityMethods.checkStartAppByNotify(this, getIntent());
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
 
         final MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu,menu);
+        inflater.inflate(R.menu.main_menu, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -64,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo Info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         final BaseShuttleListItem listItem = (BaseShuttleListItem) listView.getItemAtPosition(Info.position);
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.delete_memo:
 
@@ -77,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 // OK ボタンクリック処理
                                 MemoDatabaseAccessor.DeleteMemoById(MainActivity.this, listItem.getID());
-                                SetViews.syncList(MainActivity.this);
+                                MainActivityMethods.syncList(MainActivity.this, listView);
                             }
                         });
                 alertDlg.setNegativeButton(
@@ -95,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.change_icon:
                 MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(this, listItem.getID());
 
-                if(record == null){
+                if (record == null) {
                     return false;
                 }
 
@@ -116,25 +127,26 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        SetViews.syncList(this);
+        overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
+        MainActivityMethods.syncList(this, listView);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.detail:
                 startActivity(new Intent(this, AppDetail.class));
                 break;
 
             case R.id.mode:
-                if(listView.getCount() != 0) {
+                if (listView.getCount() != 0) {
                     Intent delete_intent = new Intent(this, DeleteActivity.class);
                     delete_intent.putExtra("item", listView.getCount());
                     startActivity(delete_intent);
-                }else{
-                    Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_d), Snackbar.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(findViewById(R.id.coordinatorLayout), getResources().getString(R.string.error_d), Snackbar.LENGTH_SHORT).show();
                 }
                 break;
 
