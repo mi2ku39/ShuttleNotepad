@@ -14,7 +14,7 @@ import android.widget.Button;
 import com.example.denpa.ghostshuttle.R;
 import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
 import jp.ghostserver.ghostshuttle.DatePickerDialogFragment;
-import jp.ghostserver.ghostshuttle.TimePickerFragment;
+import jp.ghostserver.ghostshuttle.TimePickerDialogFragment;
 import jp.ghostserver.ghostshuttle.memofileaccessor.MemoFileManager;
 import jp.ghostserver.ghostshuttle.notifyRepository.NotifyManager;
 
@@ -75,7 +75,7 @@ class setViews {
         timeDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerFragment newTimeFragment = new TimePickerFragment();
+                TimePickerDialogFragment newTimeFragment = new TimePickerDialogFragment();
                 newTimeFragment.show(activity.getSupportFragmentManager(), "timePicker");
             }
         });
