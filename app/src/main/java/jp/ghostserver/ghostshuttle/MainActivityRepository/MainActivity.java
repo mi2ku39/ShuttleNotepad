@@ -22,7 +22,7 @@ import jp.ghostserver.ghostshuttle.SettingActivity;
 import jp.ghostserver.ghostshuttle.iconActivity;
 
 public class MainActivity extends AppCompatActivity {
-    ListView listView = findViewById(R.id.listview);
+    private ListView listView = findViewById(R.id.listview);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
