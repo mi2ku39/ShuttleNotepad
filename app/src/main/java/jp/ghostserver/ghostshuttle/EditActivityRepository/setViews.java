@@ -67,7 +67,7 @@ class setViews {
             @Override
             public void onClick(View v) {
                 DatePickerDialogFragment newDateFragment = new DatePickerDialogFragment();
-                newDateFragment.show(activity.getFragmentManager(), "datePicker");
+                newDateFragment.show(activity.getSupportFragmentManager(), "datePicker");
             }
         });
 

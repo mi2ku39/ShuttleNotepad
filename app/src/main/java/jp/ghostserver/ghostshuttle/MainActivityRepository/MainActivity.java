@@ -22,11 +22,14 @@ import jp.ghostserver.ghostshuttle.SettingActivity;
 import jp.ghostserver.ghostshuttle.iconActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private ListView listView = findViewById(R.id.listview);
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        listView  = findViewById(R.id.listview);
+
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_main);
 
@@ -44,7 +47,24 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-        MainActivityMethods.initListView(this, listView, (TextView) findViewById(R.id.EmptyText));
+
+        //MainActivityMethods.initListView(this, listView, (TextView) findViewById(R.id.EmptyText));
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                BaseShuttleListItem item = (BaseShuttleListItem) listView.getItemAtPosition(position);
+                long itemID = item.getID();
+
+                MainActivityMethods.wakeupMemoViewerById(MainActivity.this, itemID);
+
+            }
+        });
+
+        listView.setEmptyView(findViewById(R.id.EmptyText));
+        listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+
         registerForContextMenu(listView);
         MainActivityMethods.checkStartAppByNotify(this, getIntent());
     }

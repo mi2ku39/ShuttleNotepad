@@ -138,7 +138,7 @@ public class MainActivityMethods {
      * @param context コンテキスト
      * @param id      レコードのid
      */
-    private static void wakeupMemoViewerById(Context context, long id) {
+    static void wakeupMemoViewerById(Context context, long id) {
 
         Class nextActivity;
         if (PreferenceAccessor.isUsingViewer(context)) {
