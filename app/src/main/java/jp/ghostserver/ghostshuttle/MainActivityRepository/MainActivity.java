@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, Info);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) Info;
 
-        BaseShuttleListItem item = (BaseShuttleListItem) listView.getItemAtPosition(info.position);
+        BaseShuttleListItem item = (BaseShuttleListItem) ((ListView)findViewById(R.id.listview)).getItemAtPosition(info.position);
         String title = item.getTitle();
         menu.setHeaderTitle(title);
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo Info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        final BaseShuttleListItem listItem = (BaseShuttleListItem) listView.getItemAtPosition(Info.position);
+        final BaseShuttleListItem listItem = (BaseShuttleListItem) ((ListView)findViewById(R.id.listview)).getItemAtPosition(Info.position);
 
         switch (item.getItemId()) {
 
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 // OK ボタンクリック処理
                                 MemoDatabaseAccessor.DeleteMemoById(MainActivity.this, listItem.getID());
-                                MainActivityMethods.syncList(MainActivity.this, listView);
+                                MainActivityMethods.syncList(MainActivity.this, (ListView)findViewById(R.id.listview));
                             }
                         });
                 alertDlg.setNegativeButton(
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
-        MainActivityMethods.syncList(this, listView);
+        MainActivityMethods.syncList(this, (ListView)findViewById(R.id.listview));
     }
 
     @Override
@@ -161,9 +161,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.mode:
-                if (listView.getCount() != 0) {
+                if (((ListView)findViewById(R.id.listview)).getCount() != 0) {
                     Intent delete_intent = new Intent(this, DeleteActivity.class);
-                    delete_intent.putExtra("item", listView.getCount());
+                    delete_intent.putExtra("item", ((ListView)findViewById(R.id.listview)).getCount());
                     startActivity(delete_intent);
                 } else {
                     Snackbar.make(findViewById(R.id.coordinatorLayout), getResources().getString(R.string.error_d), Snackbar.LENGTH_SHORT).show();
