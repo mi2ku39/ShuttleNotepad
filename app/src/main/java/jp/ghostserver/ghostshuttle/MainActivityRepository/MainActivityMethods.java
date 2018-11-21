@@ -23,7 +23,7 @@ import jp.ghostserver.ghostshuttle.preferenceaccessor.PreferenceAccessor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivityMethods {
+class MainActivityMethods {
 
     /**
      * Preference Screenを初期化するメソッド
@@ -43,17 +43,18 @@ public class MainActivityMethods {
      * @param emptyView emptyView
      */
     static void initListView(final Context context, final ListView listView, TextView emptyView) {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        listView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                BaseShuttleListItem item = (BaseShuttleListItem) listView.getItemAtPosition(position);
-                long itemID = item.getID();
+                        BaseShuttleListItem item = (BaseShuttleListItem) listView.getItemAtPosition(position);
+                        long itemID = item.getID();
 
-                wakeupMemoViewerById(context, itemID);
+                        wakeupMemoViewerById(context, itemID);
 
-            }
-        });
+                    }
+                });
 
         listView.setEmptyView(emptyView);
         listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
@@ -138,7 +139,7 @@ public class MainActivityMethods {
      * @param context コンテキスト
      * @param id      レコードのid
      */
-    private static void wakeupMemoViewerById(Context context, long id) {
+    static void wakeupMemoViewerById(Context context, long id) {
 
         Class nextActivity;
         if (PreferenceAccessor.isUsingViewer(context)) {
