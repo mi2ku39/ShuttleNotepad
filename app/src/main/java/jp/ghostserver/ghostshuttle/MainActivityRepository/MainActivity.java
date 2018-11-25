@@ -22,13 +22,10 @@ import jp.ghostserver.ghostshuttle.SettingActivity;
 import jp.ghostserver.ghostshuttle.iconActivity;
 
 public class MainActivity extends AppCompatActivity {
-    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        listView  = findViewById(R.id.listview);
 
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_main);
@@ -48,24 +45,12 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        //MainActivityMethods.initListView(this, listView, (TextView) findViewById(R.id.EmptyText));
+        MainActivityMethods.initListView(this, (ListView) findViewById(R.id.listview), (TextView) findViewById(R.id.EmptyText));
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ((ListView) findViewById(R.id.listview)).setEmptyView(findViewById(R.id.EmptyText));
+        ((ListView) findViewById(R.id.listview)).setChoiceMode(ListView.CHOICE_MODE_NONE);
 
-                BaseShuttleListItem item = (BaseShuttleListItem) listView.getItemAtPosition(position);
-                long itemID = item.getID();
-
-                MainActivityMethods.wakeupMemoViewerById(MainActivity.this, itemID);
-
-            }
-        });
-
-        listView.setEmptyView(findViewById(R.id.EmptyText));
-        listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
-
-        registerForContextMenu(listView);
+        registerForContextMenu(findViewById(R.id.listview));
         MainActivityMethods.checkStartAppByNotify(this, getIntent());
     }
 
@@ -83,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, Info);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) Info;
 
-        BaseShuttleListItem item = (BaseShuttleListItem) ((ListView)findViewById(R.id.listview)).getItemAtPosition(info.position);
+        BaseShuttleListItem item = (BaseShuttleListItem) ((ListView) findViewById(R.id.listview)).getItemAtPosition(info.position);
         String title = item.getTitle();
         menu.setHeaderTitle(title);
 
@@ -93,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo Info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        final BaseShuttleListItem listItem = (BaseShuttleListItem) ((ListView)findViewById(R.id.listview)).getItemAtPosition(Info.position);
+        final BaseShuttleListItem listItem = (BaseShuttleListItem) ((ListView) findViewById(R.id.listview)).getItemAtPosition(Info.position);
 
         switch (item.getItemId()) {
 
@@ -108,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 // OK ボタンクリック処理
                                 MemoDatabaseAccessor.DeleteMemoById(MainActivity.this, listItem.getID());
-                                MainActivityMethods.syncList(MainActivity.this, (ListView)findViewById(R.id.listview));
+                                MainActivityMethods.syncList(MainActivity.this, (ListView) findViewById(R.id.listview));
                             }
                         });
                 alertDlg.setNegativeButton(
@@ -150,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         overridePendingTransition(R.animator.slide_in_under, R.animator.slide_out_under);
-        MainActivityMethods.syncList(this, (ListView)findViewById(R.id.listview));
+        MainActivityMethods.syncList(this, (ListView) findViewById(R.id.listview));
     }
 
     @Override
@@ -161,9 +146,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.mode:
-                if (((ListView)findViewById(R.id.listview)).getCount() != 0) {
+                if (((ListView) findViewById(R.id.listview)).getCount() != 0) {
                     Intent delete_intent = new Intent(this, DeleteActivity.class);
-                    delete_intent.putExtra("item", ((ListView)findViewById(R.id.listview)).getCount());
+                    delete_intent.putExtra("item", ((ListView) findViewById(R.id.listview)).getCount());
                     startActivity(delete_intent);
                 } else {
                     Snackbar.make(findViewById(R.id.coordinatorLayout), getResources().getString(R.string.error_d), Snackbar.LENGTH_SHORT).show();
