@@ -12,7 +12,7 @@ public class ShuttleListItem extends BaseShuttleListItem {
     private String detail;
     private String color;
 
-    public ShuttleListItem(int icon, String title,String detail,String color,int id) {
+    public ShuttleListItem(int icon, String title,String detail,String color,long id) {
         super(title, id);
         list_icon = icon;
         this.detail = detail;

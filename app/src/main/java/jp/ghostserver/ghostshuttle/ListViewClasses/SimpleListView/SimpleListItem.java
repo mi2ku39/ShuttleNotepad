@@ -8,7 +8,7 @@ import jp.ghostserver.ghostshuttle.ListViewClasses.BaseShuttleListItem;
 
 public class SimpleListItem extends BaseShuttleListItem {
 
-    public SimpleListItem(String title,int id){
+    public SimpleListItem(String title,long id){
         super(title, id);
     }
 

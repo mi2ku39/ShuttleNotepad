@@ -25,12 +25,12 @@ public class MemoDBHelper extends SQLiteOpenHelper {
     //通知が有効か無効か
     public static final String NOTIFI_ENABLED ="notifi_enabled";
 
-
-    public static final String NOTIFI_YEAR ="notifi_year";
-    public static final String NOTIFI_MONTH ="notifi_month";
-    public static final String NOTIFI_DAY ="notifi_day";
-    public static final String NOTIFI_HOUR ="notifi_hour";
-    public static final String NOTIFI_MIN ="notifi_min";
+    public static final String NotifyTableName = "NOTIFICATION";
+    public static final String NOTIFY_YEAR = "notifi_year";
+    public static final String NOTIFY_MONTH = "notifi_month";
+    public static final String NOTIFY_DAY = "notifi_day";
+    public static final String NOTIFY_HOUR = "notifi_hour";
+    public static final String NOTIFY_MIN = "notifi_min";
 
     public static final String icon_img = "icon_img";
     public static final String icon_color ="icon_color";
@@ -53,9 +53,9 @@ public class MemoDBHelper extends SQLiteOpenHelper {
         //SQL文実行
         db.execSQL(createTable);
 
-        String createTable2 = "CREATE TABLE NOTIFICATION ( _id_primal INTEGER PRIMARY KEY AUTOINCREMENT, _ID INTEGER NOT NULL," + NOTIFI_YEAR + " INTEGER NOT NULL,"
-                + NOTIFI_MONTH + " INTEGER NOT NULL," + NOTIFI_DAY + " INTEGER NOT NULL,"
-                + NOTIFI_HOUR + " INTEGER NOT NULL," + NOTIFI_MIN + " INTEGER NOT NULL)";
+        String createTable2 = "CREATE TABLE " + NotifyTableName + " ( _id_primal INTEGER PRIMARY KEY AUTOINCREMENT, _ID INTEGER NOT NULL," + NOTIFY_YEAR + " INTEGER NOT NULL,"
+                + NOTIFY_MONTH + " INTEGER NOT NULL," + NOTIFY_DAY + " INTEGER NOT NULL,"
+                + NOTIFY_HOUR + " INTEGER NOT NULL," + NOTIFY_MIN + " INTEGER NOT NULL)";
 
         db.execSQL(createTable2);
     }
