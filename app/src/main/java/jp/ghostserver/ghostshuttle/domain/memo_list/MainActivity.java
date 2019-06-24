@@ -7,26 +7,33 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.*;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.example.denpa.ghostshuttle.R;
+
+import jp.ghostserver.ghostshuttle.entities.memo.MemoRecord;
+import jp.ghostserver.ghostshuttle.entities.memo.MemoDatabaseAccessor;
 import jp.ghostserver.ghostshuttle.domain.app_detail.AppDetail;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
-import jp.ghostserver.ghostshuttle.domain.selected_memo_delete.DeleteActivity;
-import jp.ghostserver.ghostshuttle.domain.editor.EditActivity;
 import jp.ghostserver.ghostshuttle.domain.comopnents.BaseShuttleListItem;
-import jp.ghostserver.ghostshuttle.domain.settings.SettingActivity;
+import jp.ghostserver.ghostshuttle.domain.editor.EditActivity;
 import jp.ghostserver.ghostshuttle.domain.icon_picker.iconActivity;
+import jp.ghostserver.ghostshuttle.domain.selected_memo_delete.DeleteActivity;
+import jp.ghostserver.ghostshuttle.domain.settings.SettingActivity;
 
 public class MainActivity extends AppCompatActivity {
+
+    private MemoListActivityContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_main);
 
@@ -109,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.change_icon:
-                MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(this, listItem.getID());
+                MemoRecord record = MemoDatabaseAccessor.getRecordById(this, listItem.getID());
 
                 if (record == null) {
                     return false;

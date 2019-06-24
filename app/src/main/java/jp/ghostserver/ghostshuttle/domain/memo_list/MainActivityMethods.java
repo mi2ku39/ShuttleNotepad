@@ -9,8 +9,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.denpa.ghostshuttle.R;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
+import jp.ghostserver.ghostshuttle.entities.memo.MemoRecord;
+import jp.ghostserver.ghostshuttle.entities.memo.MemoDatabaseAccessor;
 import jp.ghostserver.ghostshuttle.domain.editor.EditActivity;
 import jp.ghostserver.ghostshuttle.domain.comopnents.BaseShuttleListItem;
 import jp.ghostserver.ghostshuttle.domain.comopnents.EnhancedListView.ShuttleListAdapter;
@@ -69,7 +69,7 @@ class MainActivityMethods {
     static void checkStartAppByNotify(Context context, Intent intent) {
         if (intent.getBooleanExtra("FLAG", false)) {
             int id = intent.getIntExtra("ID", -1);
-            MemoDataBaseRecord record = MemoDatabaseAccessor.getRecordById(context, id);
+            MemoRecord record = MemoDatabaseAccessor.getRecordById(context, id);
 
             if (record != null) {
                 wakeupMemoViewerById(context, record.getID());
@@ -85,12 +85,12 @@ class MainActivityMethods {
      * @param listView ListViewへの参照
      */
     static void syncList(Context context, ListView listView) {
-        MemoDataBaseRecord[] records = MemoDatabaseAccessor.getAllMemoRecordsArray(context);
+        MemoRecord[] records = MemoDatabaseAccessor.getAllMemoRecordsArray(context);
 
         if (PreferenceAccessor.isUsingEnhancedList(context)) {
 
             List<ShuttleListItem> listItems = new ArrayList<>();
-            for (MemoDataBaseRecord record : records) {
+            for (MemoRecord record : records) {
                 int icon =
                         context.getResources().getIdentifier(
                                 record.getIconImg(),
@@ -116,7 +116,7 @@ class MainActivityMethods {
         } else {
 
             List<SimpleListItem> listItems = new ArrayList<>();
-            for (MemoDataBaseRecord record : records) {
+            for (MemoRecord record : records) {
                 SimpleListItem item =
                         new SimpleListItem(
                                 record.getMemoTitle(),

@@ -1,4 +1,4 @@
-package jp.ghostserver.ghostshuttle.DataBaseAccesser;
+package jp.ghostserver.ghostshuttle.entities.notify;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Calendar;
+
+import jp.ghostserver.ghostshuttle.entities.memo.MemoDBHelper;
 
 public class NotifyDataBaseAccessor {
     public static NotifyDateBaseRecord getRecordByMemoID(Context context, int memoID) {

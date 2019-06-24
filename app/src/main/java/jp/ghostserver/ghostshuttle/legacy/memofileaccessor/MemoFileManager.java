@@ -3,13 +3,18 @@ package jp.ghostserver.ghostshuttle.legacy.memofileaccessor;
 import android.content.Context;
 import android.util.Log;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class MemoFileManager {
     public static String readFile(Context context, String file) {
-        Log.d("read File",file);
+        Log.d("read File", file);
+
         StringBuilder str = new StringBuilder();
         String tmp;
         try {
@@ -27,7 +32,7 @@ public class MemoFileManager {
     }
 
     public static void saveFile(Context context, String filepath, String memo) {
-        Log.d("save File",filepath);
+        Log.d("save File", filepath);
 
         try {
             FileOutputStream out = context.openFileOutput(filepath, MODE_PRIVATE);

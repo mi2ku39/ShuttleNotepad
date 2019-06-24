@@ -1,4 +1,4 @@
-package jp.ghostserver.ghostshuttle.DataBaseAccesser;
+package jp.ghostserver.ghostshuttle.entities.notify;
 
 public class NotifyDateBaseRecord {
     public int Memo_ID;

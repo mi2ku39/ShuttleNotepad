@@ -1,7 +1,7 @@
 package jp.ghostserver.ghostshuttle.domain.editor;
 
 import android.content.Context;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
+import jp.ghostserver.ghostshuttle.entities.memo.MemoDatabaseAccessor;
 import jp.ghostserver.ghostshuttle.legacy.preferenceaccessor.PreferenceAccessor;
 
 public class EditActivityFunctions {

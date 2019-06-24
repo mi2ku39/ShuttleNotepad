@@ -15,10 +15,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import com.example.denpa.ghostshuttle.R;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDatabaseAccessor;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.NotifyDataBaseAccessor;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.NotifyDateBaseRecord;
+import jp.ghostserver.ghostshuttle.entities.memo.MemoRecord;
+import jp.ghostserver.ghostshuttle.entities.memo.MemoDatabaseAccessor;
+import jp.ghostserver.ghostshuttle.entities.notify.NotifyDataBaseAccessor;
+import jp.ghostserver.ghostshuttle.entities.notify.NotifyDateBaseRecord;
 import jp.ghostserver.ghostshuttle.legacy.memofileaccessor.MemoFileManager;
 import jp.ghostserver.ghostshuttle.legacy.notifyRepository.NotifyManager;
 import jp.ghostserver.ghostshuttle.legacy.preferenceaccessor.PreferenceAccessor;
@@ -36,7 +36,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
 
     String _memoBeforeEdit, _titleBeforeEdit;
     private NotifyDateBaseRecord _notifyRecord;
-    MemoDataBaseRecord memoRecord;
+    MemoRecord memoRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -253,7 +253,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         //true=編集 false=新規作成
         if (isEdited) {
             //編集Mode
-            MemoDataBaseRecord record = new MemoDataBaseRecord(
+            MemoRecord record = new MemoRecord(
                     memoRecord.getID(),
                     title,
                     null,
@@ -279,7 +279,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
             } while (!MemoDatabaseAccessor.checkOverlapFilepath(this, filepath));
 
             //レコード形式に詰める
-            memoRecord = new MemoDataBaseRecord(
+            memoRecord = new MemoRecord(
                     -1,
                     title,
                     filepath,

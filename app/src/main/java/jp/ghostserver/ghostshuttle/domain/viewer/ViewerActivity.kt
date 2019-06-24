@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.TextView
 import com.example.denpa.ghostshuttle.R
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDBHelper
+import jp.ghostserver.ghostshuttle.entities.memo.MemoDBHelper
 import jp.ghostserver.ghostshuttle.domain.editor.EditActivity
 import kotlinx.android.synthetic.main.activity_viewer.*
 import java.io.BufferedReader

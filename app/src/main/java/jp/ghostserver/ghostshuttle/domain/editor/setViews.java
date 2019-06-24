@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.denpa.ghostshuttle.R;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDataBaseRecord;
+import jp.ghostserver.ghostshuttle.entities.memo.MemoRecord;
 import jp.ghostserver.ghostshuttle.legacy.DatePickerDialogFragment;
 import jp.ghostserver.ghostshuttle.legacy.TimePickerDialogFragment;
 import jp.ghostserver.ghostshuttle.legacy.memofileaccessor.MemoFileManager;
@@ -44,7 +44,7 @@ class setViews {
     }
 
     //編集画面起動時のデフォルト値を返すメソッド
-    static String[] getDefaultTexts(Context context, boolean isEdited, MemoDataBaseRecord record) {
+    static String[] getDefaultTexts(Context context, boolean isEdited, MemoRecord record) {
         if (isEdited) {
             //編集モードの動作
             return new String[]{record.getMemoTitle(), MemoFileManager.readFile(context, record.getFilePath())};

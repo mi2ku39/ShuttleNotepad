@@ -1,6 +1,6 @@
 package jp.ghostserver.ghostshuttle.domain.editor;
 
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.NotifyDateBaseRecord;
+import jp.ghostserver.ghostshuttle.entities.notify.NotifyDateBaseRecord;
 
 import java.util.Calendar;
 

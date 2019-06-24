@@ -1,6 +1,6 @@
-package jp.ghostserver.ghostshuttle.DataBaseAccesser;
+package jp.ghostserver.ghostshuttle.entities.memo;
 
-public class MemoDataBaseRecord {
+public class MemoRecord {
     private long _id;
     private String title;
     private String filePath;
@@ -9,7 +9,7 @@ public class MemoDataBaseRecord {
     private String icon_img;
     private String icon_color;
 
-    public MemoDataBaseRecord(
+    public MemoRecord(
             long _id,
             String title,
             String filePath,

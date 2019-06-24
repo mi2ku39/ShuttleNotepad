@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.example.denpa.ghostshuttle.R;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDBHelper;
+import jp.ghostserver.ghostshuttle.entities.memo.MemoDBHelper;
 
 import java.util.ArrayList;
 

@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import com.example.denpa.ghostshuttle.R;
-import jp.ghostserver.ghostshuttle.DataBaseAccesser.MemoDBHelper;
+import jp.ghostserver.ghostshuttle.entities.memo.MemoDBHelper;
 import jp.ghostserver.ghostshuttle.domain.comopnents.ColorGridView.ColorAdapter;
 import jp.ghostserver.ghostshuttle.domain.comopnents.ColorGridView.ColorGridItem;
 import jp.ghostserver.ghostshuttle.domain.comopnents.IconGridItem.GridAdapter;

@@ -1,4 +1,4 @@
-package jp.ghostserver.ghostshuttle.DataBaseAccesser;
+package jp.ghostserver.ghostshuttle.entities.memo;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +10,7 @@ import java.util.TimeZone;
 
 public class MemoDatabaseAccessor {
 
-    public static MemoDataBaseRecord[] getAllMemoRecordsArray(Context context) {
+    public static MemoRecord[] getAllMemoRecordsArray(Context context) {
         Cursor cursor =
                 new MemoDBHelper(context).getReadableDatabase().query(
                         MemoDBHelper.TABLE_NAME,
@@ -20,11 +20,11 @@ public class MemoDatabaseAccessor {
                 );
         cursor.moveToFirst();
 
-        MemoDataBaseRecord[] records = new MemoDataBaseRecord[cursor.getCount()];
+        MemoRecord[] records = new MemoRecord[cursor.getCount()];
 
         for (int i = 0; i < cursor.getCount(); i++) {
 
-            records[i] = new MemoDataBaseRecord(
+            records[i] = new MemoRecord(
                     cursor.getInt(0),
                     cursor.getString(1),
                     cursor.getString(2),
@@ -41,7 +41,7 @@ public class MemoDatabaseAccessor {
         return records;
     }
 
-    public static MemoDataBaseRecord getRecordById(Context context, long memoID) {
+    public static MemoRecord getRecordById(Context context, long memoID) {
         Cursor cursor =
                 new MemoDBHelper(context).getReadableDatabase().query(
                         MemoDBHelper.TABLE_NAME, new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"},
@@ -49,7 +49,7 @@ public class MemoDatabaseAccessor {
         cursor.moveToFirst();
 
         if (cursor.getCount() > 0) {
-            return new MemoDataBaseRecord(
+            return new MemoRecord(
                     cursor.getInt(0),
                     cursor.getString(1),
                     cursor.getString(2),
@@ -64,7 +64,7 @@ public class MemoDatabaseAccessor {
 
     public static void DeleteMemoById(Context context, long id) {
         //データベースの取得・クエリ実行
-        MemoDataBaseRecord record = getRecordById(context, id);
+        MemoRecord record = getRecordById(context, id);
         if (record == null) {
             return;
         }
@@ -85,7 +85,7 @@ public class MemoDatabaseAccessor {
 
     //タイトルが重複している数を数えます。重複なしの場合は0。
     public static int checkOverlapTitle(Context context, String title) {
-        MemoDataBaseRecord[] records = getRecordsArrayByTitleLike(context, title);
+        MemoRecord[] records = getRecordsArrayByTitleLike(context, title);
 
         if (records == null) {
             return 0;
@@ -115,7 +115,7 @@ public class MemoDatabaseAccessor {
         return false;
     }
 
-    public static MemoDataBaseRecord[] getRecordsArrayByTitleLike(Context context, String searchWord) {
+    public static MemoRecord[] getRecordsArrayByTitleLike(Context context, String searchWord) {
         Cursor cursor =
                 new MemoDBHelper(context).getReadableDatabase().query(
                         MemoDBHelper.TABLE_NAME, new String[]{"_id", "title", "filepath", "data_modified", "notifi_enabled", "icon_img", "icon_color"},
@@ -127,10 +127,10 @@ public class MemoDatabaseAccessor {
 
         cursor.moveToFirst();
 
-        MemoDataBaseRecord[] records = new MemoDataBaseRecord[cursor.getCount()];
+        MemoRecord[] records = new MemoRecord[cursor.getCount()];
         for (int i = 0; i < cursor.getCount(); i++) {
 
-            records[i] = new MemoDataBaseRecord(
+            records[i] = new MemoRecord(
                     cursor.getInt(0),
                     cursor.getString(1),
                     cursor.getString(2),
@@ -147,7 +147,7 @@ public class MemoDatabaseAccessor {
         return records;
     }
 
-    public static long updateRecord(Context context, long record_id, MemoDataBaseRecord record) {
+    public static long updateRecord(Context context, long record_id, MemoRecord record) {
         ContentValues values = makeContentValues(record);
 
         return new MemoDBHelper(context).getWritableDatabase().update
@@ -159,7 +159,7 @@ public class MemoDatabaseAccessor {
                 );
     }
 
-    public static long insertMemoRecord(Context context, MemoDataBaseRecord record) {
+    public static long insertMemoRecord(Context context, MemoRecord record) {
         ContentValues values = makeContentValues(record);
 
         return new MemoDBHelper(context).getWritableDatabase().insert(
@@ -174,7 +174,7 @@ public class MemoDatabaseAccessor {
                 calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
     }
 
-    private static ContentValues makeContentValues(MemoDataBaseRecord record) {
+    private static ContentValues makeContentValues(MemoRecord record) {
         ContentValues values = new ContentValues();
 
         //タイトル
