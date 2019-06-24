@@ -12,29 +12,29 @@
         android:roundIcon="@mipmap/gs_logo_color"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="jp.ghostserver.ghostshuttle.MainActivityRepository.MainActivity">
+        <activity android:name="jp.ghostserver.ghostshuttle.domain.memo_list.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="jp.ghostserver.ghostshuttle.EditActivityRepository.EditActivity"/>
-        <activity android:name="jp.ghostserver.ghostshuttle.AppDetail"/>
+        <activity android:name="jp.ghostserver.ghostshuttle.domain.editor.EditActivity"/>
+        <activity android:name="jp.ghostserver.ghostshuttle.domain.app_detail.AppDetail"/>
 
         <receiver
-                android:name="jp.ghostserver.ghostshuttle.AlarmBroadcastReceiver"
+                android:name="jp.ghostserver.ghostshuttle.legacy.AlarmBroadcastReceiver"
                 android:process=":remote" />
 
-        <activity android:name="jp.ghostserver.ghostshuttle.DeleteActivity"/>
-        <activity android:name="jp.ghostserver.ghostshuttle.iconActivity"/>
+        <activity android:name="jp.ghostserver.ghostshuttle.domain.selected_memo_delete.DeleteActivity"/>
+        <activity android:name="jp.ghostserver.ghostshuttle.domain.icon_picker.iconActivity"/>
         <!--
             縦固定
             android:screenOrientation="portrait"
         -->
-        <activity android:name="jp.ghostserver.ghostshuttle.SettingActivity"/>
+        <activity android:name="jp.ghostserver.ghostshuttle.domain.settings.SettingActivity"/>
         <activity
-                android:name="jp.ghostserver.ghostshuttle.ViewerActivity"
+                android:name="jp.ghostserver.ghostshuttle.domain.viewer.ViewerActivity"
                 android:theme="@style/AppTheme"/>
     </application>
 
